@@ -1,0 +1,62 @@
+SUDHARSAN SRINIVASAN
+	  (682) 283-0833 ✉ sudharsanak1010@gmail.com 🔗 linkedin.com/in/sudharsan-srinivasan10 🖥 github.com/sudharsan-ak   Dallas, TX
+
+SOFTWARE ENGINEER
+________________________________________
+Full Stack Developer with 5+ years of experience in Full Stack Development, building scalable, interactive web applications using JavaScript, Node.js, and MongoDB. Skilled in performance optimization and UI/UX improvements, with a strong record of collaboration in Agile and cross-functional teams, delivering high-quality, user-centric web solutions accessed by multiple clients and internal teams.
+ 
+EDUCATION
+________________________________________
+University of Texas, Arlington, Master’s in Science - Computer Science, GPA: 3.58		                                                 Aug 2019 – May 2021
+Coursework: Web Data Management, Software Engineering, Algorithms, Advanced Database Systems, Advanced Software Testing
+
+Anna University, Tamil Nadu, India, Bachelor of Engineering in Computer Science and Engineering, GPA: 7.74                              Jul 2013 – Apr 2017
+Coursework: Data Structures, Design and Analysis of Algorithms, Software Development, Object-Oriented Analysis and Design, DBMS
+
+PROFESSIONAL EXPERIENCE
+________________________________________
+FORTRESS INFORMATION SECURITY, Orlando, FL | Software Engineer (Website)	                                                                        Jun 2021 - Present
+Technologies: Meteor, HTML, CSS, Jade, Lodash, JavaScript, MongoDB
+•	Optimized internal tools for Cyber Supply Chain and Asset Vulnerability Management, reducing data processing time by ~15%.
+•	Refactored frontend JavaScript code modules using Meteor and Lodash, led updates to a Meteor-based vendor/client portal with Jade and MongoDB integration, reducing load times by ~30%, boosting performance, and improving content accessibility for multiple clients.
+•	Delivered solutions through full SDLC, collaborating with 5+ cross-functional team members to ship high-quality releases on time.
+•	Integrated frontend with backend APIs and MongoDB workflows, handling high-volume data across the platform/portal.
+•	Implemented RBAC access control for the company’s platform, conducted code reviews, and mentored 3+ junior engineers, improving security and code quality.
+•	Contributed to SBOM and HBOM initiatives, enhancing software transparency and improving security and compliance across internal and client-facing applications.
+
+MERCH, Orlando, FL | Full Stack Developer Intern (Website)			         		                               Aug 2020 – May 2021 
+Technologies: HTML, CSS, JavaScript, TypeScript, XAMPP, WordPress CMS
+•	Designed and deployed dynamic front-end pages integrated with WordPress Content Management System.
+•	Reduced average page load time to <5 seconds, improving user retention and SEO.
+•	Increased organic traffic by 20% over a 3-month period, using topic clusters and SEO optimization.
+•	Integrated APIs for standalone applications to enhance customer experience and enabled customized storefronts for partner businesses.
+
+COGNIZANT TECHNOLOGY SOLUTIONS, Chennai, India | Programmer Analyst Trainee                                                                       Jan 2018 – Nov 2018
+Technologies: Mainframes, COBOL, Jira, Kanban
+•	Developed and optimized backend jobs for Policy Management Systems (PMSC) in the insurance domain.
+•	Automated daily jobs, reducing manual intervention and improving execution times by 10%.
+•	Implemented and deployed code changes on IBM Mainframe production servers.
+
+SKILL SET
+________________________________________
+Languages: JavaScript (ES6+), TypeScript, Java, C/C++, PHP, SQL
+Databases/Servers: MongoDB, MySQL, SQL Server, Tomcat
+Frameworks & Libraries: Meteor, React, Angular, Node.js, Lodash, Express, NestJS, Laravel
+Web Technologies: HTML5, CSS3, Jade, JQuery, XML, WordPress 
+Testing: JUnit, Selenium IDE/WebDriver, JaCoCo, Pitclipse
+Tools & Platforms: Cursor, VS Code, Git, Eclipse, NetBeans, Studio3T, Agile (Jira, Kanban, Notion, Monday.com)
+Operating System:  Windows, Linux (Ubuntu)
+AI Tools: ChatGPT, Claude, Gemini, GitHub Copilot, Grok
+
+PROJECTS 
+________________________________________
+PERSONAL PORTFOLIO WEBSITE – FULL STACK (GitHub) | XAMPP, MySQL, HTML, CSS, PHP, JavaScript    		                                           2020	                                                                                    
+•	Built and deployed a responsive portfolio website on UTA cloud to showcase academic and professional work.
+•	Integrated backend with PHPMyAdmin for dynamic content management and streamlined content updates.
+
+EVENT MANAGEMENT SYSTEM (GitHub) | Java, MySQL workbench, Junit, Selenium, Selenium IDE, Eclipse		                                           2020	
+•	Created a web app to manage event booking and cancellation using Java Servlet Pages.
+•	Performed Automation Testing using Selenium IDE and achieved 100% statement coverage and Pit coverage.
+
+SOFTWARE TESTING USING JAVA (GitHub) | Java, Junit, JaCoCo, Pitclipse 							        2019
+•	Performed basis path testing with MCDC criteria, achieving high code quality and test coverage.
