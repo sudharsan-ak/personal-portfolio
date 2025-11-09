@@ -69,23 +69,37 @@ export default function Hero() {
               </Button>
             </div>
 
-            {/* Social Links */}
-            <div className="flex gap-6">
-              <a href="https://github.com/sudharsan-ak" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 hover:text-primary transition-colors">
+            {/* Social Links (Option 3) */}
+            <div className="flex gap-6 mt-4">
+              <a
+                href="https://github.com/sudharsan-ak"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col items-center gap-1 hover:text-primary transition-colors"
+              >
                 <Github className="h-6 w-6" />
                 <span className="text-xs">GitHub</span>
               </a>
-            
-              <a href="https://linkedin.com/in/sudharsan-srinivasan10" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 hover:text-primary transition-colors">
+
+              <a
+                href="https://linkedin.com/in/sudharsan-srinivasan10"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col items-center gap-1 hover:text-primary transition-colors"
+              >
                 <Linkedin className="h-6 w-6" />
                 <span className="text-xs">LinkedIn</span>
               </a>
-            
-              <a href="mailto:sudharsanak1010@gmail.com" className="flex flex-col items-center gap-1 hover:text-primary transition-colors">
+
+              <a
+                href="mailto:sudharsanak1010@gmail.com"
+                className="flex flex-col items-center gap-1 hover:text-primary transition-colors"
+              >
                 <Mail className="h-6 w-6" />
                 <span className="text-xs">Email</span>
               </a>
             </div>
+          </div>
 
           {/* Headshot Section */}
           <div className="flex justify-center lg:justify-end">
