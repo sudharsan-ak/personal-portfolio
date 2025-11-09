@@ -70,26 +70,22 @@ export default function Hero() {
             </div>
 
             {/* Social Links */}
-            <div className="flex gap-4">
-              <Button variant="ghost" size="icon" asChild data-testid="link-github">
-                <a href="https://github.com/sudharsan-ak" target="_blank" rel="noopener noreferrer">
-                  <Github className="h-5 w-5" />
-                </a>
-              </Button>
-
-              <Button variant="ghost" size="icon" asChild data-testid="link-linkedin">
-                <a href="https://linkedin.com/in/sudharsan-srinivasan10" target="_blank" rel="noopener noreferrer">
-                  <Linkedin className="h-5 w-5" />
-                </a>
-              </Button>
-
-              <Button variant="ghost" size="icon" asChild data-testid="link-email">
-                <a href="mailto:sudharsanak1010@gmail.com">
-                  <Mail className="h-5 w-5" />
-                </a>
-              </Button>
+            <div className="flex gap-6">
+              <a href="https://github.com/sudharsan-ak" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 hover:text-primary transition-colors">
+                <Github className="h-6 w-6" />
+                <span className="text-xs">GitHub</span>
+              </a>
+            
+              <a href="https://linkedin.com/in/sudharsan-srinivasan10" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 hover:text-primary transition-colors">
+                <Linkedin className="h-6 w-6" />
+                <span className="text-xs">LinkedIn</span>
+              </a>
+            
+              <a href="mailto:sudharsanak1010@gmail.com" className="flex flex-col items-center gap-1 hover:text-primary transition-colors">
+                <Mail className="h-6 w-6" />
+                <span className="text-xs">Email</span>
+              </a>
             </div>
-          </div>
 
           {/* Headshot Section */}
           <div className="flex justify-center lg:justify-end">
