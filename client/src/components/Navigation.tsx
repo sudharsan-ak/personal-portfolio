@@ -17,9 +17,7 @@ export default function Navigation() {
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -50,7 +48,9 @@ export default function Navigation() {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-background/95 backdrop-blur-md border-b border-border" : "bg-transparent"
+        isScrolled
+          ? "bg-background/90 dark:bg-background/80 backdrop-blur-md border-b border-border shadow-sm"
+          : "bg-background/80 dark:bg-background/70"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -71,7 +71,7 @@ export default function Navigation() {
             </span>
           </button>
 
-          {/* Desktop Navigation Links */}
+          {/* Desktop Links */}
           <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
               <Button
@@ -117,7 +117,7 @@ export default function Navigation() {
 
       {/* Mobile Navigation Links */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-background border-b border-border">
+        <div className="md:hidden bg-background/90 dark:bg-background/80 border-b border-border shadow-sm">
           <div className="px-4 py-4 space-y-2">
             {navLinks.map((link) => (
               <Button
