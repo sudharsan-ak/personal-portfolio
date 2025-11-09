@@ -3,6 +3,13 @@ import { Github, Linkedin, Mail } from "lucide-react";
 import headshotImage from "@/assets/generated_images/Professional_developer_headshot_96bafc1e.png";
 
 export default function Hero() {
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <section
       id="hero"
@@ -29,22 +36,17 @@ export default function Hero() {
               </h2>
             </div>
 
-            {/* View Resume Button */}
+            {/* More About Me Button with blueish gradient hover */}
             <div className="flex flex-wrap gap-4">
               <Button
                 variant="outline"
                 size="lg"
-                asChild
-                className="transition-all duration-300 hover:bg-primary/10 hover:text-primary"
+                onClick={() => scrollToSection("about")}
+                className="relative overflow-hidden transition-all duration-300 group"
+                data-testid="button-more-about"
               >
-                <a
-                  href="https://sudharsan-srinivasan-resume-2025.tiiny.site"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  data-testid="button-view-resume"
-                >
-                  View Resume
-                </a>
+                <span className="relative z-10">More About Me</span>
+                <span className="absolute inset-0 bg-gradient-to-tr from-blue-400 via-transparent to-transparent opacity-0 group-hover:opacity-30 transition-opacity duration-300 rounded-md pointer-events-none" />
               </Button>
             </div>
 
