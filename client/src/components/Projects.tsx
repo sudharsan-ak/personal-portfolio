@@ -10,7 +10,7 @@ export default function Projects() {
       description: "Built and deployed a responsive portfolio website on UTA cloud to showcase academic and professional work. Integrated backend with PHPMyAdmin for dynamic content management and streamlined content updates.",
       technologies: ["XAMPP", "MySQL", "HTML", "CSS", "PHP", "JavaScript"],
       year: "2020",
-      githubUrl: "https://github.com/sudharsan-ak",
+      githubUrl: "https://github.com/sudharsan-ak/Portfolio",
       featured: true,
     },
     {
@@ -18,7 +18,7 @@ export default function Projects() {
       description: "Created a web app to manage event booking and cancellation using Java Servlet Pages. Performed Automation Testing using Selenium IDE and achieved 100% statement coverage and Pit coverage.",
       technologies: ["Java", "MySQL Workbench", "JUnit", "Selenium", "Selenium IDE", "Eclipse"],
       year: "2020",
-      githubUrl: "https://github.com/sudharsan-ak",
+      githubUrl: "https://github.com/sudharsan-ak/CSE-6329-Catering-Management-System",
       featured: false,
     },
     {
@@ -26,7 +26,6 @@ export default function Projects() {
       description: "Performed basis path testing with MCDC criteria, achieving high code quality and test coverage. Demonstrated advanced testing methodologies and quality assurance practices.",
       technologies: ["Java", "JUnit", "JaCoCo", "Pitclipse"],
       year: "2019",
-      githubUrl: "https://github.com/sudharsan-ak",
       featured: false,
     },
   ];
