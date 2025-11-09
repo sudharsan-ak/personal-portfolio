@@ -132,21 +132,14 @@ export default function Experience() {
                     </div>
 
                     {/* Achievements */}
-                    <ul className="space-y-2 text-base leading-relaxed">
-                      {initialAchievements.map((achievement, achIndex) => (
-                        <li key={achIndex} className="flex gap-2 items-start">
-                          <span className="text-primary mt-1">•</span>
-                          <span>{achievement}</span>
-                        </li>
-                      ))}
-
-                      {isExpanded &&
-                        remainingAchievements.map((achievement, achIndex) => (
-                          <li key={achIndex} className="flex gap-2 items-start">
-                            <span className="text-primary mt-1">•</span>
-                            <span>{achievement}</span>
+                    <ul className="space-y-3 text-base leading-relaxed list-none pl-0 border-l-2 border-primary/20">
+                      {[...initialAchievements, ...(isExpanded ? remainingAchievements : [])].map(
+                        (achievement, achIndex) => (
+                          <li key={achIndex} className="pl-4 hover:border-primary/60 transition-all duration-200">
+                            {achievement}
                           </li>
-                        ))}
+                        )
+                      )}
                     </ul>
 
                     {/* Show More / Show Less */}
