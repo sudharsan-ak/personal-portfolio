@@ -1,17 +1,25 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Mail, Linkedin, Github, MapPin, Phone } from "lucide-react";
+import { Mail, Linkedin, Github, Phone } from "lucide-react";
 
 export default function Contact() {
   return (
-    <section id="contact" className="py-20 md:py-32 px-4 sm:px-6 lg:px-8">
+    <section id="contact" className="py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-muted/30">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center" data-testid="heading-contact">
+        {/* Section Heading */}
+        <h2
+          className="text-4xl md:text-5xl font-bold mb-12 text-center"
+          data-testid="heading-contact"
+        >
           Connect With Me
         </h2>
 
+        {/* Intro & Email Button */}
         <div className="text-center mb-12">
-          <p className="text-lg text-muted-foreground mb-8" data-testid="text-contact-intro">
+          <p
+            className="text-lg text-muted-foreground mb-8"
+            data-testid="text-contact-intro"
+          >
             I'm always open to discussing new opportunities, projects, or just having a chat about technology.
           </p>
           <Button size="lg" asChild data-testid="button-email-primary">
@@ -22,8 +30,10 @@ export default function Contact() {
           </Button>
         </div>
 
+        {/* Contact Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="p-6 hover-elevate" data-testid="card-contact-email">
+          {/* Email Card */}
+          <Card className="p-6 bg-background rounded-2xl shadow-md hover:shadow-xl hover:bg-primary/5 transition-all duration-300">
             <div className="flex items-start gap-4">
               <div className="p-3 bg-primary/10 rounded-md">
                 <Mail className="h-6 w-6 text-primary" />
@@ -41,7 +51,8 @@ export default function Contact() {
             </div>
           </Card>
 
-          <Card className="p-6 hover-elevate" data-testid="card-contact-phone">
+          {/* Phone Card */}
+          <Card className="p-6 bg-background rounded-2xl shadow-md hover:shadow-xl hover:bg-primary/5 transition-all duration-300">
             <div className="flex items-start gap-4">
               <div className="p-3 bg-primary/10 rounded-md">
                 <Phone className="h-6 w-6 text-primary" />
@@ -59,7 +70,8 @@ export default function Contact() {
             </div>
           </Card>
 
-          <Card className="p-6 hover-elevate" data-testid="card-contact-linkedin">
+          {/* LinkedIn Card */}
+          <Card className="p-6 bg-background rounded-2xl shadow-md hover:shadow-xl hover:bg-primary/5 transition-all duration-300">
             <div className="flex items-start gap-4">
               <div className="p-3 bg-primary/10 rounded-md">
                 <Linkedin className="h-6 w-6 text-primary" />
@@ -79,7 +91,8 @@ export default function Contact() {
             </div>
           </Card>
 
-          <Card className="p-6 hover-elevate" data-testid="card-contact-github">
+          {/* GitHub Card */}
+          <Card className="p-6 bg-background rounded-2xl shadow-md hover:shadow-xl hover:bg-primary/5 transition-all duration-300">
             <div className="flex items-start gap-4">
               <div className="p-3 bg-primary/10 rounded-md">
                 <Github className="h-6 w-6 text-primary" />
