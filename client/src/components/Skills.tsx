@@ -1,4 +1,3 @@
-import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import {
@@ -17,6 +16,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import InteractiveCard from "@/components/ui/InteractiveCard";
 
 const icons: Record<string, JSX.Element> = {
   Languages: <Code2 className="h-5 w-5 text-primary" />,
@@ -48,12 +48,8 @@ export default function Skills() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {skillCategories.map((cat, index) => (
-            <motion.div
-              key={index}
-              whileHover={{ y: -5 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Card className="p-6 rounded-2xl bg-background shadow-md hover:shadow-xl hover:bg-primary/5 transition-all duration-300">
+            <motion.div key={index} whileHover={{ y: -5 }} transition={{ duration: 0.2 }}>
+              <InteractiveCard className="p-6 rounded-2xl">
                 <div className="flex items-center mb-4 space-x-2">
                   {icons[cat.category]}
                   <h3 className="text-lg font-semibold">{cat.category}</h3>
@@ -78,7 +74,7 @@ export default function Skills() {
                     ))}
                   </div>
                 </TooltipProvider>
-              </Card>
+              </InteractiveCard>
             </motion.div>
           ))}
         </div>
