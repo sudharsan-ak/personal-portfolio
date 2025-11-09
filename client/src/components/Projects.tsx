@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Github, ExternalLink } from "lucide-react";
+import { Github } from "lucide-react";
 
 export default function Projects() {
   const projects = [
@@ -12,7 +12,6 @@ export default function Projects() {
       technologies: ["XAMPP", "MySQL", "HTML", "CSS", "PHP", "JavaScript"],
       year: "2020",
       githubUrl: "https://github.com/sudharsan-ak/Portfolio",
-      featured: true,
     },
     {
       title: "Event Management System",
@@ -21,7 +20,6 @@ export default function Projects() {
       technologies: ["Java", "MySQL Workbench", "JUnit", "Selenium", "Eclipse"],
       year: "2020",
       githubUrl: "https://github.com/sudharsan-ak/CSE-6329-Catering-Management-System",
-      featured: false,
     },
     {
       title: "Software Testing Using Java",
@@ -30,7 +28,6 @@ export default function Projects() {
       technologies: ["Java", "JUnit", "JaCoCo", "Pitclipse"],
       year: "2019",
       githubUrl: "",
-      featured: false,
     },
   ];
 
@@ -45,25 +42,20 @@ export default function Projects() {
           Projects
         </h2>
 
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Vertical stack of project cards */}
+        <div className="space-y-8">
           {projects.map((project, index) => (
             <Card
               key={index}
-              className={`group relative p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 ${
-                project.featured ? "md:col-span-2" : ""
-              }`}
+              className="p-6 md:p-8 bg-background shadow-md hover:shadow-xl hover:bg-primary/5 transition-all duration-300 rounded-2xl"
               data-testid={`card-project-${index}`}
             >
-              {/* Decorative Hover Accent */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity duration-500 pointer-events-none" />
-
-              <div className="relative space-y-5">
-                {/* Title + Year + Links */}
-                <div className="flex items-start justify-between flex-wrap gap-4">
+              <div className="flex flex-col space-y-4">
+                {/* Title + Year + GitHub */}
+                <div className="flex items-center justify-between flex-wrap gap-4">
                   <div>
                     <h3
-                      className="text-2xl font-semibold group-hover:text-primary transition-colors duration-200"
+                      className="text-2xl font-semibold text-foreground hover:text-primary transition-colors duration-200"
                       data-testid={`text-project-title-${index}`}
                     >
                       {project.title}
@@ -76,21 +68,19 @@ export default function Projects() {
                     </p>
                   </div>
 
-                  <div className="flex gap-2">
-                    {project.githubUrl && (
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        asChild
-                        className="hover:bg-primary/10 hover:text-primary transition-colors duration-200"
-                        data-testid={`button-github-${index}`}
-                      >
-                        <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                          <Github className="h-5 w-5" />
-                        </a>
-                      </Button>
-                    )}
-                  </div>
+                  {project.githubUrl && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      asChild
+                      className="hover:bg-primary/10 hover:text-primary transition-colors duration-200"
+                      data-testid={`button-github-${index}`}
+                    >
+                      <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                        <Github className="h-5 w-5" />
+                      </a>
+                    </Button>
+                  )}
                 </div>
 
                 {/* Description */}
