@@ -14,37 +14,33 @@ export default function Footer() {
             </p>
           </div>
 
-          <div className="flex gap-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              asChild
-              data-testid="link-footer-github"
-            >
-              <a href="https://github.com/sudharsan-ak" target="_blank" rel="noopener noreferrer">
-                <Github className="h-5 w-5" />
+          {/* Social Links */}
+            <div className="flex gap-6 mt-4">
+              <a
+                href="https://github.com/sudharsan-ak"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-primary transition-colors"
+              >
+                <Github className="h-6 w-6" />
               </a>
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              asChild
-              data-testid="link-footer-linkedin"
-            >
-              <a href="https://linkedin.com/in/sudharsan-srinivasan10" target="_blank" rel="noopener noreferrer">
-                <Linkedin className="h-5 w-5" />
+
+              <a
+                href="https://linkedin.com/in/sudharsan-srinivasan10"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-primary transition-colors"
+              >
+                <Linkedin className="h-6 w-6" />
               </a>
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              asChild
-              data-testid="link-footer-email"
-            >
-              <a href="mailto:sudharsanak1010@gmail.com">
-                <Mail className="h-5 w-5" />
+
+              <a
+                href="mailto:sudharsanak1010@gmail.com"
+                className="hover:text-primary transition-colors"
+              >
+                <Mail className="h-6 w-6" />
               </a>
-            </Button>
+            </div>
           </div>
         </div>
       </div>
