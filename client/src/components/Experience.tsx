@@ -62,7 +62,7 @@ export default function Experience() {
     <section id="experience" className="py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-muted/30">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-4xl md:text-5xl font-bold mb-12" data-testid="heading-experience">
-          Professional Experience
+          Experience
         </h2>
 
         <div className="space-y-8">
