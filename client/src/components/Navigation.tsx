@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Moon, Sun } from "lucide-react";
+import headshotImage from "@/assets/generated_images/Professional_developer_headshot_96bafc1e.png";
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -54,14 +55,23 @@ export default function Navigation() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
+          {/* Logo + Portfolio Text */}
           <button
             onClick={() => scrollToSection("hero")}
-            className="text-xl font-bold tracking-tight hover-elevate active-elevate-2 px-2 py-1 rounded-md"
+            className="flex items-center gap-2 hover:bg-primary/10 hover:elevate active-elevate-2 px-2 py-1 rounded-md transition-all duration-200"
             data-testid="link-home"
           >
-            SS
+            <img
+              src={headshotImage}
+              alt="Sudharsan"
+              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover"
+            />
+            <span className="font-bold text-lg sm:text-xl tracking-tight">
+              Sudharsan&apos;s Portfolio
+            </span>
           </button>
 
+          {/* Desktop Navigation Links */}
           <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
               <Button
@@ -83,6 +93,7 @@ export default function Navigation() {
             </Button>
           </div>
 
+          {/* Mobile Menu */}
           <div className="md:hidden flex items-center gap-2">
             <Button
               variant="ghost"
@@ -104,6 +115,7 @@ export default function Navigation() {
         </div>
       </div>
 
+      {/* Mobile Navigation Links */}
       {isMobileMenuOpen && (
         <div className="md:hidden bg-background border-b border-border">
           <div className="px-4 py-4 space-y-2">
