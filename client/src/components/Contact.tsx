@@ -98,20 +98,6 @@ export default function Contact() {
               </div>
             </div>
           </Card>
-
-          <Card className="p-6 md:col-span-2 hover-elevate" data-testid="card-contact-location">
-            <div className="flex items-start gap-4">
-              <div className="p-3 bg-primary/10 rounded-md">
-                <MapPin className="h-6 w-6 text-primary" />
-              </div>
-              <div>
-                <h3 className="font-semibold mb-1">Location</h3>
-                <p className="text-sm text-muted-foreground" data-testid="text-location-detail">
-                  Dallas, Texas
-                </p>
-              </div>
-            </div>
-          </Card>
         </div>
       </div>
     </section>
