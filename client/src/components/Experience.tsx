@@ -1,10 +1,10 @@
-import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Calendar } from "lucide-react";
 import { useState } from "react";
 import fortressLogo from "@/assets/generated_images/Fortress_Information_Security_logo_df87ee3c.png";
 import merchLogo from "@/assets/generated_images/Merch_company_logo_c16d827e.png";
 import cognizantLogo from "@/assets/generated_images/Cognizant_Technology_Solutions_logo_56621081.png";
+import InteractiveCard from "@/components/ui/InteractiveCard";
 
 export default function Experience() {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
@@ -61,7 +61,7 @@ export default function Experience() {
   return (
     <section id="experience" className="py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-muted/30">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center" data-testid="heading-experience">
+        <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">
           Experience
         </h2>
 
@@ -72,30 +72,21 @@ export default function Experience() {
             const remainingAchievements = exp.achievements.slice(2);
 
             return (
-              <Card
-                key={index}
-                className="p-6 md:p-8 bg-background shadow-md hover:shadow-xl hover:bg-primary/5 transition-all duration-300 rounded-2xl"
-                data-testid={`card-experience-${index}`}
-              >
+              <InteractiveCard key={index}>
                 <div className="flex flex-col md:flex-row gap-6">
-                  {/* Company Logo */}
                   <div className="flex-shrink-0 flex items-center justify-center md:justify-start">
                     <a href={exp.companyUrl} target="_blank" rel="noopener noreferrer">
                       <img
                         src={exp.logo}
                         alt={exp.company}
                         className="w-20 h-20 object-contain rounded-md opacity-80 hover:opacity-100 transition-opacity duration-200"
-                        data-testid={`img-company-${index}`}
                       />
                     </a>
                   </div>
 
-                  {/* Experience Details */}
                   <div className="flex-1 space-y-4">
                     <div className="space-y-2">
-                      <h3 className="text-2xl font-semibold" data-testid={`text-role-${index}`}>
-                        {exp.role}
-                      </h3>
+                      <h3 className="text-2xl font-semibold">{exp.role}</h3>
                       <p className="text-lg font-medium text-muted-foreground">
                         <a
                           href={exp.companyUrl}
@@ -109,30 +100,27 @@ export default function Experience() {
                       <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                         <div className="flex items-center gap-1">
                           <MapPin className="h-4 w-4" />
-                          <span data-testid={`text-location-${index}`}>{exp.location}</span>
+                          <span>{exp.location}</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <Calendar className="h-4 w-4" />
-                          <span data-testid={`text-duration-${index}`}>{exp.duration}</span>
+                          <span>{exp.duration}</span>
                         </div>
                       </div>
                     </div>
 
-                    {/* Technologies */}
                     <div className="flex flex-wrap gap-2">
                       {exp.technologies.map((tech, techIndex) => (
                         <Badge
                           key={techIndex}
                           variant="secondary"
                           className="text-base px-3 py-1 hover:bg-primary hover:text-white transition-colors duration-200"
-                          data-testid={`badge-tech-${index}-${techIndex}`}
                         >
                           {tech}
                         </Badge>
                       ))}
                     </div>
 
-                    {/* Achievements */}
                     <ul className="space-y-3 text-base leading-relaxed list-none pl-0 border-l-2 border-primary/20">
                       {[...initialAchievements, ...(isExpanded ? remainingAchievements : [])].map(
                         (achievement, achIndex) => (
@@ -143,7 +131,6 @@ export default function Experience() {
                       )}
                     </ul>
 
-                    {/* Show More / Show Less */}
                     {remainingAchievements.length > 0 && (
                       <button
                         onClick={(e) => {
@@ -157,7 +144,7 @@ export default function Experience() {
                     )}
                   </div>
                 </div>
-              </Card>
+              </InteractiveCard>
             );
           })}
         </div>
