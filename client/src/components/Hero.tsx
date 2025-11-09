@@ -36,8 +36,9 @@ export default function Hero() {
               </h2>
             </div>
 
-            {/* More About Me Button with blueish gradient hover */}
+            {/* Buttons */}
             <div className="flex flex-wrap gap-4">
+              {/* More About Me */}
               <Button
                 variant="outline"
                 size="lg"
@@ -47,6 +48,24 @@ export default function Hero() {
               >
                 <span className="relative z-10">More About Me</span>
                 <span className="absolute inset-0 bg-gradient-to-tr from-blue-400 via-transparent to-transparent opacity-0 group-hover:opacity-30 transition-opacity duration-300 rounded-md pointer-events-none" />
+              </Button>
+
+              {/* View Resume */}
+              <Button
+                variant="outline"
+                size="lg"
+                asChild
+                className="relative overflow-hidden transition-all duration-300 group"
+                data-testid="button-view-resume"
+              >
+                <a
+                  href="https://sudharsan-srinivasan-resume-2025.tiiny.site"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span className="relative z-10">View Resume</span>
+                  <span className="absolute inset-0 bg-gradient-to-tr from-blue-400 via-transparent to-transparent opacity-0 group-hover:opacity-30 transition-opacity duration-300 rounded-md pointer-events-none" />
+                </a>
               </Button>
             </div>
 
