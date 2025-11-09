@@ -1,35 +1,30 @@
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Github, Linkedin, Mail } from "lucide-react";
 import headshotImage from "@/assets/generated_images/Professional_developer_headshot_96bafc1e.png";
+import { useEffect, useState } from "react";
 
 export default function Hero() {
-  const [greeting, setGreeting] = useState("Hello");
-  const [emoji, setEmoji] = useState("👋");
+  const [greeting, setGreeting] = useState<string>("Hello");
+  const [greetingIcon, setGreetingIcon] = useState<string>("👋");
 
   useEffect(() => {
     const hour = new Date().getHours();
+
     if (hour >= 5 && hour < 12) {
-      setGreeting("Good morning");
-      setEmoji("🌅");
+      setGreeting("Good morning,");
+      setGreetingIcon("🌅");
     } else if (hour >= 12 && hour < 18) {
-      setGreeting("Good afternoon");
-      setEmoji("☀️");
-    } else if (hour >= 18 && hour < 22) {
-      setGreeting("Good evening");
-      setEmoji("🌇");
+      setGreeting("Good afternoon,");
+      setGreetingIcon("🌇");
     } else {
       setGreeting("Working late?");
-      setEmoji("☕");
+      setGreetingIcon("☕");
     }
   }, []);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
+    if (element) element.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -39,60 +34,38 @@ export default function Hero() {
     >
       <div className="max-w-7xl mx-auto w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          
           {/* Text Section */}
-          <motion.div
-            className="space-y-8"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-          >
+          <div className="space-y-8">
             {/* Greeting and Name */}
             <div className="space-y-2">
-              <motion.h1
-                className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight flex items-center gap-3"
-                data-testid="text-name"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1 }}
-              >
-                <motion.span
-                  className="text-3xl"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3, duration: 1 }}
-                >
-                  {emoji}
-                </motion.span>
-                {greeting}, I’m Sudharsan Srinivasan
-                <span className="inline-block animate-wave origin-[70%_70%]">👋</span>
-              </motion.h1>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold flex items-center gap-2">
+                {greeting} <span>{greetingIcon}</span>
+              </h1>
 
-              <motion.h2
+              <h2
+                className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight flex items-center gap-3"
+                data-testid="text-name"
+              >
+                I’m Sudharsan Srinivasan
+                <span className="inline-block animate-wave origin-[70%_70%]">👋</span>
+              </h2>
+
+              <h3
                 className="text-2xl sm:text-3xl font-semibold text-muted-foreground"
                 data-testid="text-title"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 1 }}
               >
                 Software Engineer
-              </motion.h2>
+              </h3>
             </div>
 
             {/* Buttons */}
-            <motion.div
-              className="flex flex-wrap gap-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6, duration: 1 }}
-            >
+            <div className="flex flex-wrap gap-4">
               {/* More About Me */}
               <Button
                 variant="outline"
                 size="lg"
                 onClick={() => scrollToSection("about")}
                 className="relative overflow-hidden transition-all duration-300 group"
-                data-testid="button-more-about"
               >
                 <span className="relative z-10">More About Me</span>
                 <span className="absolute inset-0 bg-gradient-to-tr from-blue-400 via-transparent to-transparent opacity-0 group-hover:opacity-30 transition-opacity duration-300 rounded-md pointer-events-none" />
@@ -104,7 +77,6 @@ export default function Hero() {
                 size="lg"
                 asChild
                 className="relative overflow-hidden transition-all duration-300 group"
-                data-testid="button-view-resume"
               >
                 <a
                   href="https://sudharsan-srinivasan-resume-2025.tiiny.site"
@@ -115,15 +87,10 @@ export default function Hero() {
                   <span className="absolute inset-0 bg-gradient-to-tr from-blue-400 via-transparent to-transparent opacity-0 group-hover:opacity-30 transition-opacity duration-300 rounded-md pointer-events-none" />
                 </a>
               </Button>
-            </motion.div>
+            </div>
 
             {/* Social Links */}
-            <motion.div
-              className="flex gap-6 mt-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8, duration: 1 }}
-            >
+            <div className="flex gap-6 mt-4">
               <a
                 href="https://github.com/sudharsan-ak"
                 target="_blank"
@@ -148,16 +115,11 @@ export default function Hero() {
               >
                 <Mail className="h-6 w-6" />
               </a>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
 
           {/* Headshot Section */}
-          <motion.div
-            className="flex justify-center lg:justify-end"
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.5, duration: 1 }}
-          >
+          <div className="flex justify-center lg:justify-end">
             <div className="relative">
               <div className="w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 rounded-lg overflow-hidden border border-border">
                 <img
@@ -168,21 +130,37 @@ export default function Hero() {
                 />
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
 
       {/* Waving hand animation */}
       <style jsx>{`
         @keyframes wave {
-          0% { transform: rotate(0deg); }
-          15% { transform: rotate(14deg); }
-          30% { transform: rotate(-8deg); }
-          40% { transform: rotate(14deg); }
-          50% { transform: rotate(-4deg); }
-          60% { transform: rotate(10deg); }
-          70% { transform: rotate(0deg); }
-          100% { transform: rotate(0deg); }
+          0% {
+            transform: rotate(0deg);
+          }
+          15% {
+            transform: rotate(14deg);
+          }
+          30% {
+            transform: rotate(-8deg);
+          }
+          40% {
+            transform: rotate(14deg);
+          }
+          50% {
+            transform: rotate(-4deg);
+          }
+          60% {
+            transform: rotate(10deg);
+          }
+          70% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(0deg);
+          }
         }
         .animate-wave {
           display: inline-block;
