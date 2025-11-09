@@ -7,7 +7,7 @@ export default function Contact() {
     <section id="contact" className="py-20 md:py-32 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center" data-testid="heading-contact">
-          Get In Touch
+          Connect With Me
         </h2>
 
         <div className="text-center mb-12">
