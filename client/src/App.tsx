@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Home from "@/pages/Home";
 import NotFound from "@/pages/not-found";
+import DynamicBackground from "@/components/DynamicBackground"; // Import the background component
 
 function Router() {
   return (
@@ -20,7 +21,9 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
-        <Router />
+        <DynamicBackground>
+          <Router />
+        </DynamicBackground>
       </TooltipProvider>
     </QueryClientProvider>
   );
