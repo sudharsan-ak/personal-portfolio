@@ -1,17 +1,32 @@
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Laptop, Database, Code } from "lucide-react";
+import {
+  Code2,
+  Database,
+  Layers,
+  Globe,
+  FlaskConical,
+  Wrench,
+  Monitor,
+  Brain,
+} from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const icons: Record<string, JSX.Element> = {
-  Languages: <Code />,
-  "Databases/Servers": <Database />,
-  "Frameworks & Libraries": <Laptop />,
-  "Web Technologies": <Laptop />,
-  Testing: <Laptop />,
-  "Tools & Platforms": <Laptop />,
-  "Operating Systems": <Laptop />,
-  "AI Tools": <Laptop />,
+  Languages: <Code2 className="h-5 w-5 text-primary" />,
+  "Databases/Servers": <Database className="h-5 w-5 text-primary" />,
+  "Frameworks & Libraries": <Layers className="h-5 w-5 text-primary" />,
+  "Web Technologies": <Globe className="h-5 w-5 text-primary" />,
+  Testing: <FlaskConical className="h-5 w-5 text-primary" />,
+  "Tools & Platforms": <Wrench className="h-5 w-5 text-primary" />,
+  "Operating Systems": <Monitor className="h-5 w-5 text-primary" />,
+  "AI Tools": <Brain className="h-5 w-5 text-primary" />,
 };
 
 export default function Skills() {
@@ -30,33 +45,40 @@ export default function Skills() {
     <section id="skills" className="py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-muted/30">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">Skills & Technologies</h2>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {skillCategories.map((cat, index) => (
             <motion.div
               key={index}
-              className="bg-background p-6 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300"
               whileHover={{ y: -5 }}
+              transition={{ duration: 0.2 }}
             >
-              <div className="flex items-center mb-4 space-x-2">
-                {icons[cat.category]}
-                <h3 className="text-lg font-semibold">{cat.category}</h3>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <TooltipProvider>
-                  {cat.skills.map((skill, i) => (
-                    <Tooltip key={i}>
-                      <TooltipTrigger asChild>
-                        <Badge variant="outline" className="px-3 py-1 cursor-pointer hover:bg-primary/10 transition">
-                          {skill}
-                        </Badge>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{`Experience with ${skill}`}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  ))}
+              <Card className="p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 bg-background">
+                <div className="flex items-center mb-4 space-x-2">
+                  {icons[cat.category]}
+                  <h3 className="text-lg font-semibold">{cat.category}</h3>
+                </div>
+
+                <TooltipProvider delayDuration={100}>
+                  <div className="flex flex-wrap gap-2">
+                    {cat.skills.map((skill, i) => (
+                      <Tooltip key={i}>
+                        <TooltipTrigger asChild>
+                          <Badge
+                            variant="secondary"
+                            className="px-3 py-1 text-sm cursor-default hover:bg-primary hover:text-white transition-colors duration-200"
+                          >
+                            {skill}
+                          </Badge>
+                        </TooltipTrigger>
+                        <TooltipContent side="top">
+                          <p className="text-xs">{`Experience with ${skill}`}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    ))}
+                  </div>
                 </TooltipProvider>
-              </div>
+              </Card>
             </motion.div>
           ))}
         </div>
