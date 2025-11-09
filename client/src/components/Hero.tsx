@@ -1,6 +1,7 @@
 import { Github, Linkedin, Mail } from "lucide-react";
 import headshotImage from "@/assets/generated_images/Professional_developer_headshot_96bafc1e.png";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import InteractiveButton from "@/components/ui/InteractiveButton";
 import InteractiveCard from "@/components/ui/InteractiveCard";
 import InteractiveIcon from "@/components/ui/InteractiveIcon";
@@ -29,25 +30,45 @@ export default function Hero() {
   };
 
   return (
-    <section id="hero" className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-16">
+    <section
+      id="hero"
+      className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-16"
+    >
       <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
         {/* Text Section */}
         <InteractiveCard className="space-y-8">
-          <div className="space-y-2">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="space-y-2"
+          >
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold flex items-center gap-2">
-              {greeting} <span>{greetingIcon}</span>
+              {greeting}{" "}
+              <motion.span
+                whileHover={{ scale: 1.3, rotate: [0, 15, -15, 0] }}
+                transition={{ duration: 0.6 }}
+              >
+                {greetingIcon}
+              </motion.span>
             </h1>
 
             <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight flex items-center gap-3">
               I’m Sudharsan Srinivasan
-              <span className="inline-block animate-wave origin-[70%_70%]">👋</span>
+              <motion.span
+                className="inline-block animate-wave origin-[70%_70%]"
+                whileHover={{ scale: 1.2 }}
+                transition={{ duration: 0.3 }}
+              >
+                👋
+              </motion.span>
             </h2>
 
             <h3 className="text-2xl sm:text-3xl font-semibold text-muted-foreground">
               Software Engineer
             </h3>
-          </div>
+          </motion.div>
 
           <div className="flex flex-wrap gap-4">
             <InteractiveButton variant="outline" size="lg" onClick={() => scrollToSection("about")}>
@@ -55,7 +76,11 @@ export default function Hero() {
             </InteractiveButton>
 
             <InteractiveButton variant="outline" size="lg" asChild>
-              <a href="https://sudharsan-srinivasan-resume-2025.tiiny.site" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://sudharsan-srinivasan-resume-2025.tiiny.site"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 View Resume
               </a>
             </InteractiveButton>
@@ -74,17 +99,22 @@ export default function Hero() {
           </div>
         </InteractiveCard>
 
-        {/* Headshot */}
+        {/* Headshot with floating animation */}
         <div className="flex justify-center lg:justify-end">
-          <InteractiveCard className="w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 p-0 overflow-hidden border-none rounded-lg">
-            <img
-              src={headshotImage}
-              alt="Sudharsan Srinivasan"
-              className="w-full h-full object-cover"
-            />
-          </InteractiveCard>
+          <motion.div
+            initial={{ y: -10 }}
+            animate={{ y: [ -10, 0, -10 ] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <InteractiveCard className="w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 p-0 overflow-hidden border-none rounded-lg hover:scale-105 transition-transform duration-300">
+              <img
+                src={headshotImage}
+                alt="Sudharsan Srinivasan"
+                className="w-full h-full object-cover"
+              />
+            </InteractiveCard>
+          </motion.div>
         </div>
-
       </div>
 
       <style jsx>{`
