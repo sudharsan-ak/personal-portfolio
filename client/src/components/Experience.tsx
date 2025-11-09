@@ -1,9 +1,9 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Calendar } from "lucide-react";
-import fortressLogo from "@assets/generated_images/Fortress_Information_Security_logo_df87ee3c.png";
-import merchLogo from "@assets/generated_images/Merch_company_logo_c16d827e.png";
-import cognizantLogo from "@assets/generated_images/Cognizant_Technology_Solutions_logo_56621081.png";
+import fortressLogo from "@/assets/generated_images/Fortress_Information_Security_logo_df87ee3c.png";
+import merchLogo from "@/assets/generated_images/Merch_company_logo_c16d827e.png";
+import cognizantLogo from "@/assets/generated_images/Cognizant_Technology_Solutions_logo_56621081.png";
 
 export default function Experience() {
   const experiences = [
