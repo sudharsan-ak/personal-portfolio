@@ -53,7 +53,7 @@ export default function Skills() {
               whileHover={{ y: -5 }}
               transition={{ duration: 0.2 }}
             >
-              <Card className="p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 bg-background">
+              <Card className="p-6 rounded-2xl bg-background shadow-md hover:shadow-xl hover:bg-primary/5 transition-all duration-300">
                 <div className="flex items-center mb-4 space-x-2">
                   {icons[cat.category]}
                   <h3 className="text-lg font-semibold">{cat.category}</h3>
