@@ -36,7 +36,7 @@ export default function Hero() {
               <Button onClick={() => scrollToSection("projects")} size="lg" data-testid="button-view-projects">
                 View Projects
               </Button>
-              <Button variant="outline" size="lg" data-testid="button-download-resume">
+              <Button variant="outline" size="lg" data-testid="button-download-resume" as="a" href="/Sudharsan Srinivasan Resume 2025.pdf" download>
                 Download Resume
               </Button>
             </div>
