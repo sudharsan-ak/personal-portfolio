@@ -74,19 +74,20 @@ export default function Experience() {
             return (
               <Card
                 key={index}
-                className="p-6 md:p-8 bg-background shadow-md hover:shadow-xl hover:bg-primary/5 transition-all duration-300 rounded-2xl cursor-pointer"
-                onClick={() => window.open(exp.companyUrl, "_blank")}
+                className="p-6 md:p-8 bg-background shadow-md hover:shadow-xl hover:bg-primary/5 transition-all duration-300 rounded-2xl"
                 data-testid={`card-experience-${index}`}
               >
                 <div className="flex flex-col md:flex-row gap-6">
                   {/* Company Logo */}
                   <div className="flex-shrink-0 flex items-center justify-center md:justify-start">
-                    <img
-                      src={exp.logo}
-                      alt={exp.company}
-                      className="w-20 h-20 object-contain rounded-md opacity-80 hover:opacity-100 transition-opacity duration-200"
-                      data-testid={`img-company-${index}`}
-                    />
+                    <a href={exp.companyUrl} target="_blank" rel="noopener noreferrer">
+                      <img
+                        src={exp.logo}
+                        alt={exp.company}
+                        className="w-20 h-20 object-contain rounded-md opacity-80 hover:opacity-100 transition-opacity duration-200"
+                        data-testid={`img-company-${index}`}
+                      />
+                    </a>
                   </div>
 
                   {/* Experience Details */}
