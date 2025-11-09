@@ -90,13 +90,6 @@ export default function Projects() {
                         </a>
                       </Button>
                     )}
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="hover:bg-primary/10 hover:text-primary transition-colors duration-200"
-                    >
-                      <ExternalLink className="h-5 w-5" />
-                    </Button>
                   </div>
                 </div>
 
