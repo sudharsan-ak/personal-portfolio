@@ -34,8 +34,8 @@ export default function Hero() {
     >
       <div className="max-w-7xl mx-auto w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Text Section */}
-          <div className="space-y-8">
+          {/* Text Section with card */}
+          <div className="bg-background/70 dark:bg-background/60 p-6 md:p-12 rounded-2xl space-y-8">
             {/* Greeting and Name */}
             <div className="space-y-2">
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold flex items-center gap-2">
