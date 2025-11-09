@@ -27,11 +27,6 @@ export default function Hero() {
               </p>
             </div>
 
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <MapPin className="h-5 w-5" />
-              <span data-testid="text-location">Dallas, TX</span>
-            </div>
-
             <div className="flex flex-wrap gap-4">
               <Button onClick={() => scrollToSection("projects")} size="lg" data-testid="button-view-projects">
                 View Projects
