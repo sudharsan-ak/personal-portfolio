@@ -9,7 +9,8 @@ export default function Experience() {
   const experiences = [
     {
       company: "Fortress Information Security",
-      role: "Software Engineer (Website)",
+      companyUrl: "https://www.fortressinfosec.com",
+      role: "Software Engineer",
       location: "Orlando, FL",
       duration: "Jun 2021 - Present",
       logo: fortressLogo,
@@ -25,7 +26,8 @@ export default function Experience() {
     },
     {
       company: "Merch",
-      role: "Full Stack Developer Intern (Website)",
+      companyUrl: "https://www.merch.co",
+      role: "Full Stack Developer Intern",
       location: "Orlando, FL",
       duration: "Aug 2020 – May 2021",
       logo: merchLogo,
@@ -77,7 +79,9 @@ export default function Experience() {
                       {exp.role}
                     </h3>
                     <p className="text-lg font-medium text-muted-foreground" data-testid={`text-company-${index}`}>
-                      {exp.company}
+                      <a href={exp.companyUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                        {exp.company}
+                      </a>
                     </p>
                     <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                       <div className="flex items-center gap-1">
