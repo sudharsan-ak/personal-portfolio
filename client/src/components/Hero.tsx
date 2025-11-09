@@ -1,23 +1,35 @@
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Github, Linkedin, Mail } from "lucide-react";
-import { motion } from "framer-motion";
 import headshotImage from "@/assets/generated_images/Professional_developer_headshot_96bafc1e.png";
 
 export default function Hero() {
+  const [greeting, setGreeting] = useState("Hello");
+  const [emoji, setEmoji] = useState("👋");
+
+  useEffect(() => {
+    const hour = new Date().getHours();
+    if (hour >= 5 && hour < 12) {
+      setGreeting("Good morning");
+      setEmoji("🌅");
+    } else if (hour >= 12 && hour < 18) {
+      setGreeting("Good afternoon");
+      setEmoji("☀️");
+    } else if (hour >= 18 && hour < 22) {
+      setGreeting("Good evening");
+      setEmoji("🌇");
+    } else {
+      setGreeting("Working late?");
+      setEmoji("☕");
+    }
+  }, []);
+
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
-  };
-
-  // 🌅 Dynamic greeting based on time of day
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour >= 0 && hour < 5) return "Working late? Grab a coffee ☕";
-    if (hour < 12) return "Good Morning";
-    if (hour < 18) return "Good Afternoon";
-    return "Good Evening";
   };
 
   return (
@@ -29,35 +41,50 @@ export default function Hero() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           
           {/* Text Section */}
-          <div className="space-y-8">
+          <motion.div
+            className="space-y-8"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+          >
             {/* Greeting and Name */}
-            <motion.h1
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight flex items-center gap-3"
-              data-testid="text-name"
-            >
-              {getGreeting()}, I'm Sudharsan Srinivasan
-              <span className="inline-block animate-wave origin-[70%_70%]">👋</span>
-            </motion.h1>
+            <div className="space-y-2">
+              <motion.h1
+                className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight flex items-center gap-3"
+                data-testid="text-name"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1 }}
+              >
+                <motion.span
+                  className="text-3xl"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3, duration: 1 }}
+                >
+                  {emoji}
+                </motion.span>
+                {greeting}, I’m Sudharsan Srinivasan
+                <span className="inline-block animate-wave origin-[70%_70%]">👋</span>
+              </motion.h1>
 
-            <motion.h2
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2 }}
-              className="text-2xl sm:text-3xl font-semibold text-muted-foreground"
-              data-testid="text-title"
-            >
-              Software Engineer
-            </motion.h2>
+              <motion.h2
+                className="text-2xl sm:text-3xl font-semibold text-muted-foreground"
+                data-testid="text-title"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 1 }}
+              >
+                Software Engineer
+              </motion.h2>
+            </div>
 
             {/* Buttons */}
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.4 }}
               className="flex flex-wrap gap-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6, duration: 1 }}
             >
               {/* More About Me */}
               <Button
@@ -92,10 +119,10 @@ export default function Hero() {
 
             {/* Social Links */}
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.6 }}
               className="flex gap-6 mt-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8, duration: 1 }}
             >
               <a
                 href="https://github.com/sudharsan-ak"
@@ -122,14 +149,14 @@ export default function Hero() {
                 <Mail className="h-6 w-6" />
               </a>
             </motion.div>
-          </div>
+          </motion.div>
 
           {/* Headshot Section */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.5 }}
             className="flex justify-center lg:justify-end"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.5, duration: 1 }}
           >
             <div className="relative">
               <div className="w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 rounded-lg overflow-hidden border border-border">
@@ -142,7 +169,6 @@ export default function Hero() {
               </div>
             </div>
           </motion.div>
-
         </div>
       </div>
 
