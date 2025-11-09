@@ -20,21 +20,21 @@ export default function Hero() {
           
           {/* Text Section */}
           <div className="space-y-8">
-            <div className="space-y-4">
-              <h1
-                className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight whitespace-nowrap"
-                data-testid="text-name"
-              >
-                Sudharsan Srinivasan
-              </h1>
+            {/* Greeting and Name */}
+            <h1
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight flex items-center gap-3"
+              data-testid="text-name"
+            >
+              Hi, I'm Sudharsan Srinivasan
+              <span className="inline-block animate-wave origin-[70%_70%]">👋</span>
+            </h1>
 
-              <h2
-                className="text-2xl sm:text-3xl font-semibold text-muted-foreground"
-                data-testid="text-title"
-              >
-                Software Engineer
-              </h2>
-            </div>
+            <h2
+              className="text-2xl sm:text-3xl font-semibold text-muted-foreground"
+              data-testid="text-title"
+            >
+              Software Engineer
+            </h2>
 
             {/* Buttons */}
             <div className="flex flex-wrap gap-4">
@@ -69,17 +69,30 @@ export default function Hero() {
               </Button>
             </div>
 
-            {/* Social Links (Option 3) */}
+            {/* Social Links */}
             <div className="flex gap-6 mt-4">
-              <a href="https://github.com/sudharsan-ak" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 hover:text-primary transition-colors">
+              <a
+                href="https://github.com/sudharsan-ak"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-primary transition-colors"
+              >
                 <Github className="h-6 w-6" />
               </a>
 
-              <a href="https://linkedin.com/in/sudharsan-srinivasan10" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 hover:text-primary transition-colors">
+              <a
+                href="https://linkedin.com/in/sudharsan-srinivasan10"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-primary transition-colors"
+              >
                 <Linkedin className="h-6 w-6" />
               </a>
 
-              <a href="mailto:sudharsanak1010@gmail.com" className="flex flex-col items-center gap-1 hover:text-primary transition-colors">
+              <a
+                href="mailto:sudharsanak1010@gmail.com"
+                className="hover:text-primary transition-colors"
+              >
                 <Mail className="h-6 w-6" />
               </a>
             </div>
@@ -101,6 +114,25 @@ export default function Hero() {
 
         </div>
       </div>
+
+      {/* Waving hand animation */}
+      <style jsx>{`
+        @keyframes wave {
+          0% { transform: rotate(0deg); }
+          15% { transform: rotate(14deg); }
+          30% { transform: rotate(-8deg); }
+          40% { transform: rotate(14deg); }
+          50% { transform: rotate(-4deg); }
+          60% { transform: rotate(10deg); }
+          70% { transform: rotate(0deg); }
+          100% { transform: rotate(0deg); }
+        }
+        .animate-wave {
+          display: inline-block;
+          animation: wave 2s infinite;
+          transform-origin: 70% 70%;
+        }
+      `}</style>
     </section>
   );
 }
