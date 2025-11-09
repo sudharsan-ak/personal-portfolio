@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card"; // ✅ Use Card
 import { Github, Linkedin, Mail } from "lucide-react";
 import headshotImage from "@/assets/generated_images/Professional_developer_headshot_96bafc1e.png";
 import { useEffect, useState } from "react";
@@ -32,10 +33,10 @@ export default function Hero() {
       id="hero"
       className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-16"
     >
-      <div className="max-w-7xl mx-auto w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Text Section with card */}
-          <div className="bg-background/70 dark:bg-background/60 p-6 md:p-12 rounded-2xl space-y-8">
+      <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        {/* Hero Card */}
+        <Card className="p-6 md:p-12 rounded-2xl shadow-md hover:shadow-xl hover:bg-primary/5 transition-all duration-300">
+          <div className="space-y-8">
             {/* Greeting and Name */}
             <div className="space-y-2">
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold flex items-center gap-2">
@@ -60,7 +61,6 @@ export default function Hero() {
 
             {/* Buttons */}
             <div className="flex flex-wrap gap-4">
-              {/* More About Me */}
               <Button
                 variant="outline"
                 size="lg"
@@ -71,7 +71,6 @@ export default function Hero() {
                 <span className="absolute inset-0 bg-gradient-to-tr from-blue-400 via-transparent to-transparent opacity-0 group-hover:opacity-30 transition-opacity duration-300 rounded-md pointer-events-none" />
               </Button>
 
-              {/* View Resume */}
               <Button
                 variant="outline"
                 size="lg"
@@ -117,18 +116,18 @@ export default function Hero() {
               </a>
             </div>
           </div>
+        </Card>
 
-          {/* Headshot Section */}
-          <div className="flex justify-center lg:justify-end">
-            <div className="relative">
-              <div className="w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 rounded-lg overflow-hidden border border-border">
-                <img
-                  src={headshotImage}
-                  alt="Sudharsan Srinivasan"
-                  className="w-full h-full object-cover"
-                  data-testid="img-headshot"
-                />
-              </div>
+        {/* Headshot Section */}
+        <div className="flex justify-center lg:justify-end">
+          <div className="relative">
+            <div className="w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 rounded-lg overflow-hidden border border-border">
+              <img
+                src={headshotImage}
+                alt="Sudharsan Srinivasan"
+                className="w-full h-full object-cover"
+                data-testid="img-headshot"
+              />
             </div>
           </div>
         </div>
