@@ -27,13 +27,6 @@ export default function Hero() {
               >
                 Software Engineer
               </h2>
-
-              <p
-                className="text-lg sm:text-xl text-muted-foreground leading-relaxed max-w-2xl"
-                data-testid="text-tagline"
-              >
-                Full Stack Developer with 5+ years of experience building scalable, interactive web applications using JavaScript, Node.js, and MongoDB.
-              </p>
             </div>
 
             {/* View Resume Button */}
