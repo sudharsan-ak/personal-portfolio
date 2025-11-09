@@ -19,6 +19,10 @@ export default function Hero() {
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight" data-testid="text-name">
                 Sudharsan Srinivasan
               </h1>
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight whitespace-nowrap" data-testid="text-name">
+                Sudharsan Srinivasan
+              </h1>
+
               <h2 className="text-2xl sm:text-3xl font-semibold text-muted-foreground" data-testid="text-title">
                 Software Engineer
               </h2>
