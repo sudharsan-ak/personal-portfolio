@@ -74,7 +74,7 @@ export default function Experience() {
             return (
               <Card
                 key={index}
-                className="p-6 md:p-8 transform hover:scale-105 transition-transform duration-300 shadow-lg hover:shadow-2xl cursor-pointer"
+                className="p-6 md:p-8 bg-background shadow-md hover:shadow-xl hover:bg-primary/5 transition-all duration-300 rounded-2xl cursor-pointer"
                 onClick={() => window.open(exp.companyUrl, "_blank")}
                 data-testid={`card-experience-${index}`}
               >
