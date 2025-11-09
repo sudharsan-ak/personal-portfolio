@@ -32,18 +32,11 @@ export default function Hero() {
 
             {/* CTA Buttons */}
             <div className="flex flex-wrap gap-4">
-              <motion.div whileHover={{ y: -3, scale: 1.02 }} transition={{ duration: 0.2 }}>
-                <Button onClick={() => scrollToSection("projects")} size="lg" data-testid="button-view-projects">
-                  View Projects
-                </Button>
-              </motion.div>
-              <motion.div whileHover={{ y: -3, scale: 1.02 }} transition={{ duration: 0.2 }}>
-                <a href="/Sudharsan Srinivasan Resume 2025.pdf" download>
-                  <Button variant="outline" size="lg">
-                    Download Resume
-                  </Button>
+              <Button variant="outline" size="lg" asChild>
+                <a href="https://sudharsan-srinivasan-resume-2025.tiiny.site" target="_blank" rel="noopener noreferrer" data-testid="button-view-resume">
+                  View Resume
                 </a>
-              </motion.div>
+              </Button>
             </div>
 
             {/* Social Links */}
