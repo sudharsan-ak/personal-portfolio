@@ -16,9 +16,6 @@ export default function Hero() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div className="space-y-8">
             <div className="space-y-4">
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight" data-testid="text-name">
-                Sudharsan Srinivasan
-              </h1>
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight whitespace-nowrap" data-testid="text-name">
                 Sudharsan Srinivasan
               </h1>
