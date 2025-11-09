@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { GraduationCap } from "lucide-react";
-import utaLogo from "@assets/generated_images/UT_Arlington_university_emblem_131f11d1.png";
-import annaUniLogo from "@assets/generated_images/Anna_University_emblem_acbb3f8b.png";
+import utaLogo from "../assets/generated_images/UT_Arlington_university_emblem_131f11d1.png";
+import annaUniLogo from "../assets/generated_images/Anna_University_emblem_acbb3f8b.png";
 
 export default function About() {
   const education = [
