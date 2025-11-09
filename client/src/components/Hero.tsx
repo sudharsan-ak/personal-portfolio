@@ -32,7 +32,7 @@ export default function Hero() {
 
             {/* CTA Buttons */}
             <div className="flex flex-wrap gap-4">
-              <Button variant="outline" size="lg" asChild>
+              <Button variant="outline" size="lg" asChild className="transition-all duration-300 hover:bg-primary/10 hover:text-primary">
                 <a href="https://sudharsan-srinivasan-resume-2025.tiiny.site" target="_blank" rel="noopener noreferrer" data-testid="button-view-resume">
                   View Resume
                 </a>
