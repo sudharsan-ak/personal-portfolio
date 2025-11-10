@@ -72,7 +72,7 @@ export default function Experience() {
             const remainingAchievements = exp.achievements.slice(2);
 
             return (
-              <InteractiveCard key={index}>
+              <InteractiveCard key={index} className="group">
                 <div className="flex flex-col md:flex-row gap-6">
                   <div className="flex-shrink-0 flex items-center justify-center md:justify-start">
                     <a href={exp.companyUrl} target="_blank" rel="noopener noreferrer">
@@ -97,13 +97,13 @@ export default function Experience() {
                           {exp.company}
                         </a>
                       </p>
-                      <div className="group flex flex-wrap gap-4 text-sm text-muted-foreground transition-colors duration-200">
-                        <div className="flex items-center gap-1 group-hover:text-foreground">
-                          <MapPin className="h-4 w-4 transition-colors duration-200" />
+                      <div className="flex flex-wrap gap-4 text-sm text-muted-foreground transition-colors duration-200 group-hover:text-foreground">
+                        <div className="flex items-center gap-1">
+                          <MapPin className="h-4 w-4" />
                           <span>{exp.location}</span>
                         </div>
-                        <div className="flex items-center gap-1 group-hover:text-foreground">
-                          <Calendar className="h-4 w-4 transition-colors duration-200" />
+                        <div className="flex items-center gap-1">
+                          <Calendar className="h-4 w-4" />
                           <span>{exp.duration}</span>
                         </div>
                       </div>
