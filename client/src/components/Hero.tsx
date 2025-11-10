@@ -47,7 +47,7 @@ export default function Hero() {
             transition={{ duration: 0.8 }}
             className="space-y-2"
           >
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold flex items-center gap-2 text-foreground dark:text-foreground group-hover:text-foreground transition-colors duration-200">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold flex items-center gap-2 text-foreground group-hover:text-primary transition-colors duration-200">
               {greeting}{" "}
               <motion.span
                 whileHover={{ scale: 1.3, rotate: [0, 15, -15, 0] }}
@@ -57,7 +57,7 @@ export default function Hero() {
               </motion.span>
             </h1>
 
-            <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight flex items-center gap-3 text-foreground dark:text-foreground group-hover:text-foreground transition-colors duration-200">
+            <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight flex items-center gap-3 text-foreground group-hover:text-primary transition-colors duration-200">
               I’m Sudharsan Srinivasan
               <motion.span
                 className="inline-block animate-wave origin-[70%_70%]"
@@ -68,7 +68,7 @@ export default function Hero() {
               </motion.span>
             </h2>
 
-            <h3 className="text-2xl sm:text-3xl font-semibold text-foreground dark:text-foreground group-hover:text-foreground transition-colors duration-200">
+            <h3 className="text-2xl sm:text-3xl font-semibold text-foreground group-hover:text-primary transition-colors duration-200">
               Software Engineer
             </h3>
           </motion.div>
@@ -95,7 +95,7 @@ export default function Hero() {
               href="https://github.com/sudharsan-ak"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-foreground dark:text-foreground hover:text-primary transition-colors duration-200"
+              className="text-foreground group-hover:text-primary transition-colors duration-200"
             >
               <Github className="h-6 w-6" />
             </InteractiveIcon>
@@ -105,7 +105,7 @@ export default function Hero() {
               href="https://linkedin.com/in/sudharsan-srinivasan10"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-foreground dark:text-foreground hover:text-primary transition-colors duration-200"
+              className="text-foreground group-hover:text-primary transition-colors duration-200"
             >
               <Linkedin className="h-6 w-6" />
             </InteractiveIcon>
@@ -113,7 +113,7 @@ export default function Hero() {
             <InteractiveIcon
               as="a"
               href="mailto:sudharsanak1010@gmail.com"
-              className="text-foreground dark:text-foreground hover:text-primary transition-colors duration-200"
+              className="text-foreground group-hover:text-primary transition-colors duration-200"
             >
               <Mail className="h-6 w-6" />
             </InteractiveIcon>
