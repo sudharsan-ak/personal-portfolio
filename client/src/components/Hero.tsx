@@ -47,7 +47,7 @@ export default function Hero() {
             transition={{ duration: 0.8 }}
             className="space-y-2"
           >
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold flex items-center gap-2 text-foreground group-hover:text-primary transition-colors duration-200">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold flex items-center gap-2 group-hover:text-primary transition-colors duration-200">
               {greeting}{" "}
               <motion.span
                 whileHover={{ scale: 1.3, rotate: [0, 15, -15, 0] }}
@@ -57,7 +57,7 @@ export default function Hero() {
               </motion.span>
             </h1>
 
-            <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight flex items-center gap-3 text-foreground group-hover:text-primary transition-colors duration-200">
+            <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight flex items-center gap-3 group-hover:text-primary transition-colors duration-200">
               I’m Sudharsan Srinivasan
               <motion.span
                 className="inline-block animate-wave origin-[70%_70%]"
@@ -68,7 +68,7 @@ export default function Hero() {
               </motion.span>
             </h2>
 
-            <h3 className="text-2xl sm:text-3xl font-semibold text-foreground group-hover:text-primary transition-colors duration-200">
+            <h3 className="text-2xl sm:text-3xl font-semibold text-muted-foreground group-hover:text-primary transition-colors duration-200">
               Software Engineer
             </h3>
           </motion.div>
@@ -124,7 +124,7 @@ export default function Hero() {
         <div className="flex justify-center lg:justify-end">
           <motion.div
             initial={{ y: -10 }}
-            animate={{ y: [-10, 0, -10] }}
+            animate={{ y: [ -10, 0, -10 ] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           >
             <InteractiveCard className="w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 p-0 overflow-hidden border-none rounded-lg hover:scale-105 transition-transform duration-300">
