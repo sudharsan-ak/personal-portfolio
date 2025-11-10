@@ -97,13 +97,13 @@ export default function Experience() {
                           {exp.company}
                         </a>
                       </p>
-                      <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                        <div className="flex items-center gap-1">
-                          <MapPin className="h-4 w-4" />
+                      <div className="group flex flex-wrap gap-4 text-sm text-muted-foreground transition-colors duration-200">
+                        <div className="flex items-center gap-1 group-hover:text-foreground">
+                          <MapPin className="h-4 w-4 transition-colors duration-200" />
                           <span>{exp.location}</span>
                         </div>
-                        <div className="flex items-center gap-1">
-                          <Calendar className="h-4 w-4" />
+                        <div className="flex items-center gap-1 group-hover:text-foreground">
+                          <Calendar className="h-4 w-4 transition-colors duration-200" />
                           <span>{exp.duration}</span>
                         </div>
                       </div>
