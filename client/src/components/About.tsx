@@ -37,7 +37,10 @@ export default function About() {
   ];
 
   return (
-    <section id="about" className="py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-muted/30">
+    <section
+      id="about"
+      className="py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-muted/30"
+    >
       <div className="max-w-6xl mx-auto">
         <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">
           About Me
@@ -47,13 +50,20 @@ export default function About() {
         <motion.div whileHover={{ y: -5 }} transition={{ duration: 0.3 }}>
           <InteractiveCard className="mb-16">
             <p className="text-base leading-relaxed mb-4">
-              Full Stack Developer with 5+ years of experience in building scalable, interactive web applications using JavaScript, Node.js, and MongoDB.
+              Full Stack Developer with 5+ years of experience in building
+              scalable, interactive web applications using JavaScript, Node.js,
+              and MongoDB.
             </p>
             <p className="text-base leading-relaxed mb-4">
-              Skilled in performance optimization and UI/UX improvements, with a strong record of collaboration in Agile teams. I’ve delivered high-quality, user-centric web solutions accessed by multiple clients and internal teams.
+              Skilled in performance optimization and UI/UX improvements, with a
+              strong record of collaboration in Agile teams. I’ve delivered
+              high-quality, user-centric web solutions accessed by multiple
+              clients and internal teams.
             </p>
             <p className="text-base leading-relaxed">
-              I specialize in modern web technologies and have a proven track record of reducing load times, improving data efficiency, and implementing secure, scalable systems.
+              I specialize in modern web technologies and have a proven track
+              record of reducing load times, improving data efficiency, and
+              implementing secure, scalable systems.
             </p>
           </InteractiveCard>
         </motion.div>
@@ -67,8 +77,12 @@ export default function About() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {education.map((edu, index) => (
-              <motion.div key={index} whileHover={{ y: -5 }} transition={{ duration: 0.3 }}>
-                <InteractiveCard>
+              <motion.div
+                key={index}
+                whileHover={{ y: -5 }}
+                transition={{ duration: 0.3 }}
+              >
+                <InteractiveCard className="group">
                   <div className="flex items-start gap-4">
                     <img
                       src={edu.logo}
@@ -76,9 +90,13 @@ export default function About() {
                       className="w-16 h-16 object-contain rounded-md"
                     />
                     <div className="space-y-2 flex-1">
-                      <h4 className="font-semibold text-lg">{edu.school}</h4>
-                      <p className="text-sm text-muted-foreground">{edu.degree}</p>
-                      <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                      <h4 className="font-semibold text-lg text-foreground group-hover:text-foreground transition-colors duration-200">
+                        {edu.school}
+                      </h4>
+                      <p className="text-sm text-foreground/80 transition-colors duration-200">
+                        {edu.degree}
+                      </p>
+                      <div className="flex flex-wrap gap-4 text-sm text-foreground/80 transition-colors duration-200">
                         <span>GPA: {edu.gpa}</span>
                         <span>{edu.duration}</span>
                       </div>
@@ -86,7 +104,7 @@ export default function About() {
                   </div>
 
                   <div className="mt-4 pt-3 border-t border-muted-foreground/10">
-                    <p className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">
+                    <p className="text-xs font-semibold text-foreground/80 mb-2 uppercase tracking-wide">
                       Relevant Coursework
                     </p>
                     <div className="flex flex-wrap gap-2">
