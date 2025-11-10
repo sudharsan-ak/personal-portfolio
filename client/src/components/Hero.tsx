@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import InteractiveButton from "@/components/ui/InteractiveButton";
 import InteractiveCard from "@/components/ui/InteractiveCard";
-import InteractiveIcon from "@/components/ui/InteractiveIcon";
 
 export default function Hero() {
   const [greeting, setGreeting] = useState("Hello");
@@ -40,14 +39,15 @@ export default function Hero() {
       <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
         {/* Text Section */}
-        <InteractiveCard className="space-y-8 group">
+        <InteractiveCard className="group space-y-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="space-y-2"
           >
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold flex items-center gap-2 group-hover:text-primary transition-colors duration-200">
+            {/* Greeting */}
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold flex items-center gap-2 transition-colors duration-300 group-hover:text-primary">
               {greeting}{" "}
               <motion.span
                 whileHover={{ scale: 1.3, rotate: [0, 15, -15, 0] }}
@@ -57,7 +57,8 @@ export default function Hero() {
               </motion.span>
             </h1>
 
-            <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight flex items-center gap-3 group-hover:text-primary transition-colors duration-200">
+            {/* Name */}
+            <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight flex items-center gap-3 transition-colors duration-300 group-hover:text-primary">
               I’m Sudharsan Srinivasan
               <motion.span
                 className="inline-block animate-wave origin-[70%_70%]"
@@ -68,13 +69,19 @@ export default function Hero() {
               </motion.span>
             </h2>
 
-            <h3 className="text-2xl sm:text-3xl font-semibold text-muted-foreground group-hover:text-primary transition-colors duration-200">
+            {/* Title */}
+            <h3 className="text-2xl sm:text-3xl font-semibold text-muted-foreground transition-colors duration-300 group-hover:text-primary">
               Software Engineer
             </h3>
           </motion.div>
 
+          {/* Buttons */}
           <div className="flex flex-wrap gap-4">
-            <InteractiveButton variant="outline" size="lg" onClick={() => scrollToSection("about")}>
+            <InteractiveButton
+              variant="outline"
+              size="lg"
+              onClick={() => scrollToSection("about")}
+            >
               More About Me
             </InteractiveButton>
 
@@ -89,34 +96,32 @@ export default function Hero() {
             </InteractiveButton>
           </div>
 
+          {/* Social Media Icons */}
           <div className="flex gap-6 mt-4">
-            <InteractiveIcon
-              as="a"
+            <a
               href="https://github.com/sudharsan-ak"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-foreground group-hover:text-primary transition-colors duration-200"
+              className="transition-colors duration-300 text-foreground group-hover:text-primary"
             >
-              <Github className="h-6 w-6" />
-            </InteractiveIcon>
+              <Github className="h-6 w-6 transition-colors duration-300 group-hover:text-primary" />
+            </a>
 
-            <InteractiveIcon
-              as="a"
+            <a
               href="https://linkedin.com/in/sudharsan-srinivasan10"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-foreground group-hover:text-primary transition-colors duration-200"
+              className="transition-colors duration-300 text-foreground group-hover:text-primary"
             >
-              <Linkedin className="h-6 w-6" />
-            </InteractiveIcon>
+              <Linkedin className="h-6 w-6 transition-colors duration-300 group-hover:text-primary" />
+            </a>
 
-            <InteractiveIcon
-              as="a"
+            <a
               href="mailto:sudharsanak1010@gmail.com"
-              className="text-foreground group-hover:text-primary transition-colors duration-200"
+              className="transition-colors duration-300 text-foreground group-hover:text-primary"
             >
-              <Mail className="h-6 w-6" />
-            </InteractiveIcon>
+              <Mail className="h-6 w-6 transition-colors duration-300 group-hover:text-primary" />
+            </a>
           </div>
         </InteractiveCard>
 
@@ -124,7 +129,7 @@ export default function Hero() {
         <div className="flex justify-center lg:justify-end">
           <motion.div
             initial={{ y: -10 }}
-            animate={{ y: [ -10, 0, -10 ] }}
+            animate={{ y: [-10, 0, -10] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           >
             <InteractiveCard className="w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 p-0 overflow-hidden border-none rounded-lg hover:scale-105 transition-transform duration-300">
@@ -149,7 +154,11 @@ export default function Hero() {
           70% { transform: rotate(0deg); }
           100% { transform: rotate(0deg); }
         }
-        .animate-wave { display: inline-block; animation: wave 2s infinite; transform-origin: 70% 70%; }
+        .animate-wave {
+          display: inline-block;
+          animation: wave 2s infinite;
+          transform-origin: 70% 70%;
+        }
       `}</style>
     </section>
   );
