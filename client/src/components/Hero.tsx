@@ -18,6 +18,9 @@ export default function Hero() {
     } else if (hour >= 12 && hour < 18) {
       setGreeting("Good afternoon,");
       setGreetingIcon("🌇");
+    } else if (hour >= 18 && hour < 24) {
+      setGreeting("Good evening,");
+      setGreetingIcon("🌆");
     } else {
       setGreeting("Working late?");
       setGreetingIcon("☕");
