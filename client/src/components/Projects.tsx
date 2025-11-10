@@ -19,7 +19,8 @@ export default function Projects() {
         "Built a web app for event booking and cancellation using Java Servlets and JSP. Automated test cases with Selenium IDE, achieving 100% statement coverage and PIT coverage.",
       technologies: ["Java", "MySQL Workbench", "JUnit", "Selenium", "Eclipse"],
       year: "2020",
-      githubUrl: "https://github.com/sudharsan-ak/CSE-6329-Catering-Management-System",
+      githubUrl:
+        "https://github.com/sudharsan-ak/CSE-6329-Catering-Management-System",
     },
     {
       title: "Software Testing Using Java",
@@ -32,30 +33,56 @@ export default function Projects() {
   ];
 
   return (
-    <section id="projects" className="py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-muted/30">
+    <section
+      id="projects"
+      className="py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-muted/30"
+    >
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">Projects</h2>
+        <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">
+          Projects
+        </h2>
         <div className="space-y-8">
           {projects.map((project, index) => (
-            <InteractiveCard key={index}>
+            <InteractiveCard key={index} className="group">
               <div className="flex flex-col space-y-4">
+                {/* Title + Year + GitHub */}
                 <div className="flex items-center justify-between flex-wrap gap-4">
                   <div>
-                    <h3 className="text-2xl font-semibold">{project.title}</h3>
-                    <p className="text-sm text-muted-foreground">{project.year}</p>
+                    <h3 className="text-2xl font-semibold transition-colors duration-200 group-hover:text-foreground">
+                      {project.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground transition-colors duration-200 group-hover:text-foreground">
+                      {project.year}
+                    </p>
                   </div>
                   {project.githubUrl && (
                     <InteractiveButton variant="ghost" size="icon" asChild>
-                      <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                        <Github className="h-5 w-5"/>
+                      <a
+                        href={project.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Github className="h-5 w-5" />
                       </a>
                     </InteractiveButton>
                   )}
                 </div>
-                <p className="text-base leading-relaxed">{project.description}</p>
+
+                {/* Description */}
+                <p className="text-base leading-relaxed">
+                  {project.description}
+                </p>
+
+                {/* Technologies */}
                 <div className="flex flex-wrap gap-2">
                   {project.technologies.map((tech, techIndex) => (
-                    <Badge key={techIndex} variant="secondary" className="text-sm px-3 py-1 hover:bg-primary hover:text-white transition-colors duration-200">{tech}</Badge>
+                    <Badge
+                      key={techIndex}
+                      variant="secondary"
+                      className="text-sm px-3 py-1 hover:bg-primary hover:text-white transition-colors duration-200"
+                    >
+                      {tech}
+                    </Badge>
                   ))}
                 </div>
               </div>
