@@ -9,8 +9,11 @@ export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [theme, setTheme] = useState<ThemeOption>("light");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isDesktopDropdownOpen, setIsDesktopDropdownOpen] = useState(false);
+  const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false);
+
+  const desktopDropdownRef = useRef<HTMLDivElement>(null);
+  const mobileDropdownRef = useRef<HTMLDivElement>(null);
 
   const themeOptions: { label: string; value: ThemeOption; icon: any }[] = [
     { label: "Light", value: "light", icon: Sun },
@@ -30,8 +33,17 @@ export default function Navigation() {
     window.addEventListener("scroll", handleScroll);
 
     const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setIsDropdownOpen(false);
+      if (
+        desktopDropdownRef.current &&
+        !desktopDropdownRef.current.contains(e.target as Node)
+      ) {
+        setIsDesktopDropdownOpen(false);
+      }
+      if (
+        mobileDropdownRef.current &&
+        !mobileDropdownRef.current.contains(e.target as Node)
+      ) {
+        setIsMobileDropdownOpen(false);
       }
     };
     document.addEventListener("click", handleClickOutside);
@@ -56,7 +68,8 @@ export default function Navigation() {
     setTheme(value);
     localStorage.setItem("theme", value);
     applyTheme(value);
-    setIsDropdownOpen(false);
+    setIsDesktopDropdownOpen(false);
+    setIsMobileDropdownOpen(false);
   };
 
   const navLinks = [
@@ -116,17 +129,18 @@ export default function Navigation() {
             </InteractiveButton>
           ))}
 
-          {/* Theme Dropdown */}
-          <div className="relative" ref={dropdownRef}>
+          {/* Theme Dropdown (Desktop) */}
+          <div className="relative" ref={desktopDropdownRef}>
             <InteractiveButton
               variant="ghost"
               size="icon"
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              onClick={() => setIsDesktopDropdownOpen(!isDesktopDropdownOpen)}
               className="flex items-center gap-1"
             >
               <CurrentIcon className="h-5 w-5" />
             </InteractiveButton>
-            {isDropdownOpen && (
+
+            {isDesktopDropdownOpen && (
               <div className="absolute right-0 mt-2 w-36 bg-card border border-border rounded-md shadow-lg z-50">
                 {themeOptions.map((option) => (
                   <button
@@ -144,18 +158,18 @@ export default function Navigation() {
         </div>
 
         {/* Mobile */}
-        <div className="md:hidden flex items-center gap-2" ref={dropdownRef}>
+        <div className="md:hidden flex items-center gap-2" ref={mobileDropdownRef}>
           {/* Mobile Theme Dropdown */}
           <div className="relative">
             <InteractiveButton
               variant="ghost"
               size="icon"
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              onClick={() => setIsMobileDropdownOpen(!isMobileDropdownOpen)}
             >
               <CurrentIcon className="h-5 w-5" />
             </InteractiveButton>
 
-            {isDropdownOpen && (
+            {isMobileDropdownOpen && (
               <div className="absolute right-0 mt-2 w-36 bg-card border border-border rounded-md shadow-lg z-50">
                 {themeOptions.map((option) => (
                   <button
