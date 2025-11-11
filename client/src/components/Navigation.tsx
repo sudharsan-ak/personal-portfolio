@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Menu, X, Moon, Sun, Eye } from "lucide-react";
+import { Menu, X, Moon, Sun, Eye, Monitor } from "lucide-react";
 import InteractiveButton from "@/components/ui/InteractiveButton";
 import headshotImage from "@/assets/generated_images/Professional_developer_headshot_96bafc1e.png";
 
@@ -16,7 +16,7 @@ export default function Navigation() {
     { label: "Light", value: "light", icon: Sun },
     { label: "Dark", value: "dark", icon: Moon },
     { label: "Night Owl", value: "nightowl", icon: Eye },
-    { label: "System", value: "system", icon: Eye },
+    { label: "System", value: "system", icon: Monitor },
   ];
 
   useEffect(() => {
@@ -144,14 +144,33 @@ export default function Navigation() {
         </div>
 
         {/* Mobile */}
-        <div className="md:hidden flex items-center gap-2">
-          <InteractiveButton
-            variant="ghost"
-            size="icon"
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          >
-            <CurrentIcon className="h-5 w-5" />
-          </InteractiveButton>
+        <div className="md:hidden flex items-center gap-2" ref={dropdownRef}>
+          {/* Mobile Theme Dropdown */}
+          <div className="relative">
+            <InteractiveButton
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            >
+              <CurrentIcon className="h-5 w-5" />
+            </InteractiveButton>
+
+            {isDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-36 bg-card border border-border rounded-md shadow-lg z-50">
+                {themeOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    className="flex items-center justify-between w-full px-4 py-2 text-sm hover:bg-primary hover:text-white transition-colors"
+                    onClick={() => handleThemeSelect(option.value)}
+                  >
+                    <span>{option.label}</span>
+                    {theme === option.value && <span>✔</span>}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
           <InteractiveButton
             variant="ghost"
             size="icon"
@@ -162,6 +181,7 @@ export default function Navigation() {
         </div>
       </div>
 
+      {/* Mobile Nav Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden bg-background/95 backdrop-blur-md border-b border-border px-4 py-4 space-y-2">
           {navLinks.map((link) => (
