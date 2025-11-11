@@ -13,7 +13,7 @@ export default function TimelineSlideout({ isOpen, setIsOpen, buttonRef }: Timel
   const [activeId, setActiveId] = useState<string | null>(null);
   const [position, setPosition] = useState({ top: 0, right: 0 });
 
-  // Position below the button
+  // Position below the floating button
   useEffect(() => {
     if (buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
@@ -21,7 +21,7 @@ export default function TimelineSlideout({ isOpen, setIsOpen, buttonRef }: Timel
     }
   }, [buttonRef, isOpen]);
 
-  // Scroll handler to highlight visible section
+  // Highlight the visible section while scrolling
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY + window.innerHeight / 3;
@@ -39,12 +39,22 @@ export default function TimelineSlideout({ isOpen, setIsOpen, buttonRef }: Timel
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // ✅ Improved navigation logic with fallback
   const handleNavigate = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      const y = el.getBoundingClientRect().top + window.scrollY - 80; // offset for navbar
+    let targetEl = document.getElementById(id);
+
+    // For internship/fortress, scroll to their card within experience
+    if (!targetEl && (id === "internship" || id === "fortress")) {
+      const expSection = document.getElementById("experience");
+      if (expSection) targetEl = expSection;
+    }
+
+    if (targetEl) {
+      const yOffset = -90; // offset for navbar or padding
+      const y = targetEl.getBoundingClientRect().top + window.scrollY + yOffset;
       window.scrollTo({ top: y, behavior: "smooth" });
     }
+
     setIsOpen(false);
   };
 
@@ -55,7 +65,7 @@ export default function TimelineSlideout({ isOpen, setIsOpen, buttonRef }: Timel
       animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : -20 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
       style={{ top: position.top, right: position.right }}
-      className={`fixed z-40 w-64 bg-background/70 dark:bg-card/70 backdrop-blur-md rounded-md p-4 shadow-lg overflow-hidden`}
+      className="fixed z-40 w-64 bg-background/70 dark:bg-card/70 backdrop-blur-md rounded-md p-4 shadow-lg overflow-hidden"
     >
       {/* Close button */}
       <button
