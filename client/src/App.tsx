@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Home from "@/pages/Home";
 import NotFound from "@/pages/not-found";
 import DynamicBackground from "@/components/DynamicBackground"; // Import the background component
+import TimelineButton from "@/components/TimelineButton"; // Import the floating timeline button
 
 function Router() {
   return (
@@ -23,6 +24,10 @@ function App() {
         <Toaster />
         <DynamicBackground>
           <Router />
+          {/* Floating Timeline Button - hidden on small screens */}
+          <div className="hidden md:block">
+            <TimelineButton />
+          </div>
         </DynamicBackground>
       </TooltipProvider>
     </QueryClientProvider>
