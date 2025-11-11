@@ -1,14 +1,24 @@
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, RefObject } from "react";
 import { timelineData } from "./timelineData";
 
 interface TimelineSlideoutProps {
   isOpen: boolean;
   setIsOpen: (val: boolean) => void;
+  buttonRef: RefObject<HTMLButtonElement>;
 }
 
-export default function TimelineSlideout({ isOpen, setIsOpen }: TimelineSlideoutProps) {
+export default function TimelineSlideout({ isOpen, setIsOpen, buttonRef }: TimelineSlideoutProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [position, setPosition] = useState({ top: 0, right: 0 });
+
+  // Position below the button
+  useEffect(() => {
+    if (buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setPosition({ top: rect.bottom + 8, right: window.innerWidth - rect.right });
+    }
+  }, [buttonRef, isOpen]);
 
   // Scroll handler to highlight visible section
   useEffect(() => {
@@ -37,24 +47,13 @@ export default function TimelineSlideout({ isOpen, setIsOpen }: TimelineSlideout
   return (
     <motion.div
       id="timeline-slideout"
-      initial={{ x: "100%" }}
-      animate={{ x: isOpen ? "0%" : "100%" }}
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : -20 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="fixed top-0 right-0 h-full z-40 w-80 bg-background dark:bg-card text-foreground dark:text-card-foreground shadow-xl p-6 flex flex-col"
+      style={{ top: position.top, right: position.right }}
+      className={`fixed z-40 w-64 bg-background/70 dark:bg-card/70 backdrop-blur-md rounded-md p-4 shadow-lg overflow-hidden`}
     >
-      {/* Header */}
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold">My Tech Journey</h2>
-        <button
-          onClick={() => setIsOpen(false)}
-          className="text-muted-foreground hover:text-destructive transition-colors"
-        >
-          ✕
-        </button>
-      </div>
-
-      {/* Timeline List */}
-      <div className="relative pl-4 overflow-y-auto">
+      <div className="relative pl-4">
         {/* Vertical line */}
         <div className="absolute left-2 top-0 bottom-0 w-1 bg-primary/40 rounded-full" />
 
@@ -62,15 +61,14 @@ export default function TimelineSlideout({ isOpen, setIsOpen }: TimelineSlideout
           const Icon = item.Icon;
           const isActive = activeId === item.id;
           return (
-            <motion.div
+            <div
               key={idx}
-              whileHover={{ scale: 1.02 }}
               className="relative mb-6 cursor-pointer flex items-start"
               onClick={() => handleNavigate(item.id)}
             >
               {/* Node */}
               <div
-                className={`absolute left-0 top-0 w-6 h-6 flex justify-center items-center rounded-full shadow-lg transition-colors
+                className={`absolute left-0 top-0 w-6 h-6 flex justify-center items-center rounded-full transition-colors
                   ${isActive ? "bg-accent text-accent-foreground" : "bg-primary text-primary-foreground"}`}
               >
                 <Icon className="w-4 h-4" />
@@ -84,7 +82,7 @@ export default function TimelineSlideout({ isOpen, setIsOpen }: TimelineSlideout
                 <p className="font-semibold">{item.label}</p>
                 <p className="text-sm text-muted-foreground">{item.date}</p>
               </div>
-            </motion.div>
+            </div>
           );
         })}
       </div>
