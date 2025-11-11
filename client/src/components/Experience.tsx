@@ -43,9 +43,9 @@ export default function Experience() {
       ],
     },
     {
-      company: "Cognizant Technology Solutions",
+      company: "Cognizant",
       companyUrl: "https://www.cognizant.com",
-      role: "Programmer Analyst Trainee",
+      role: "Programmer Analyst",
       location: "Chennai, India",
       duration: "Jan 2018 – Nov 2018",
       logo: cognizantLogo,
@@ -77,6 +77,8 @@ export default function Experience() {
                 ? "internship"
                 : exp.role === "Software Engineer"
                 ? "fortress"
+                : exp.role === "Programmer Analyst"
+                ? "cts"
                 : undefined;
 
             return (
