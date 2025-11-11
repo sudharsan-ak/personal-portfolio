@@ -9,7 +9,7 @@ export interface TimelineItem {
 
 export const timelineData: TimelineItem[] = [
   { id: "about", label: "Degree", Icon: GraduationCap },
-  { id: "cts", label: "Analyst", date: "2020–2021", Icon: Building2 },
+  { id: "cts", label: "Analyst", date: "2018", Icon: Building2 },
   { id: "internship", label: "Internship", date: "2020–2021", Icon: Briefcase },
   { id: "experience", label: "Fortress InfoSec", date: "2021–Present", Icon: Rocket },  
   { id: "projects", label: "Projects", Icon: Star },
