@@ -41,7 +41,10 @@ export default function TimelineSlideout({ isOpen, setIsOpen, buttonRef }: Timel
 
   const handleNavigate = (id: string) => {
     const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+    if (el) {
+      const y = el.getBoundingClientRect().top + window.scrollY - 80; // offset for navbar
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
     setIsOpen(false);
   };
 
