@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useEffect, useState, RefObject } from "react";
+import { X } from "lucide-react";
 import { timelineData } from "./timelineData";
 
 interface TimelineSlideoutProps {
@@ -53,7 +54,16 @@ export default function TimelineSlideout({ isOpen, setIsOpen, buttonRef }: Timel
       style={{ top: position.top, right: position.right }}
       className={`fixed z-40 w-64 bg-background/70 dark:bg-card/70 backdrop-blur-md rounded-md p-4 shadow-lg overflow-hidden`}
     >
-      <div className="relative pl-4">
+      {/* Close button */}
+      <button
+        onClick={() => setIsOpen(false)}
+        className="absolute top-2 right-2 p-1 rounded-full hover:bg-primary/20 transition"
+        aria-label="Close timeline"
+      >
+        <X className="w-4 h-4" />
+      </button>
+
+      <div className="relative pl-4 mt-2">
         {/* Vertical line */}
         <div className="absolute left-2 top-0 bottom-0 w-1 bg-primary/40 rounded-full" />
 
