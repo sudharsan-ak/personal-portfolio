@@ -8,7 +8,7 @@ export interface TimelineItem {
 }
 
 export const timelineData: TimelineItem[] = [
-  { id: "about", label: "Degree", date: "2013-2017", Icon: GraduationCap },
+  { id: "about", label: "Degree", Icon: GraduationCap },
   { id: "experience", label: "Internship", date: "Summer 2021", Icon: Briefcase },
   { id: "experience", label: "Fortress InfoSec", date: "2021-present", Icon: Rocket },
   { id: "projects", label: "Projects", Icon: Star },
