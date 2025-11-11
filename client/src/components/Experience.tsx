@@ -71,8 +71,16 @@ export default function Experience() {
             const initialAchievements = exp.achievements.slice(0, 2);
             const remainingAchievements = exp.achievements.slice(2);
 
+            // ✅ Assign unique IDs for timeline navigation
+            const cardId =
+              exp.role === "Full Stack Developer Intern"
+                ? "internship"
+                : exp.role === "Software Engineer"
+                ? "fortress"
+                : undefined;
+
             return (
-              <InteractiveCard key={index} className="group">
+              <InteractiveCard key={index} id={cardId} className="group scroll-mt-28">
                 <div className="flex flex-col md:flex-row gap-6">
                   <div className="flex-shrink-0 flex items-center justify-center md:justify-start">
                     <a href={exp.companyUrl} target="_blank" rel="noopener noreferrer">
@@ -124,7 +132,10 @@ export default function Experience() {
                     <ul className="space-y-3 text-base leading-relaxed list-none pl-0 border-l-2 border-primary/20">
                       {[...initialAchievements, ...(isExpanded ? remainingAchievements : [])].map(
                         (achievement, achIndex) => (
-                          <li key={achIndex} className="pl-4 hover:border-primary/60 transition-all duration-200">
+                          <li
+                            key={achIndex}
+                            className="pl-4 hover:border-primary/60 transition-all duration-200"
+                          >
                             {achievement}
                           </li>
                         )
