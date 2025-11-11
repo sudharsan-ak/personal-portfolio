@@ -6,7 +6,7 @@ export default function TimelineButton() {
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  // Close when clicking outside
+  // Close panel when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -32,7 +32,11 @@ export default function TimelineButton() {
         <Clock className="w-5 h-5" />
       </button>
 
-      <TimelineSlideout isOpen={isOpen} setIsOpen={setIsOpen} />
+      <TimelineSlideout
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        buttonRef={buttonRef}
+      />
     </>
   );
 }
