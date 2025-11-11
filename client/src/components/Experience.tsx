@@ -76,7 +76,7 @@ export default function Experience() {
               exp.role === "Full Stack Developer Intern"
                 ? "internship"
                 : exp.role === "Software Engineer"
-                ? "fortress"
+                ? "experience"
                 : exp.role === "Programmer Analyst"
                 ? "cts"
                 : undefined;
