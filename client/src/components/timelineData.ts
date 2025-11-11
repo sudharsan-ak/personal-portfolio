@@ -1,4 +1,4 @@
-import { GraduationCap, Briefcase, Rocket, Star, Cpu } from "lucide-react";
+import { GraduationCap, Briefcase, Rocket, Star, Cpu, Building2 } from "lucide-react";
 
 export interface TimelineItem {
   id: string;       // HTML id to scroll to
@@ -9,6 +9,7 @@ export interface TimelineItem {
 
 export const timelineData: TimelineItem[] = [
   { id: "about", label: "Degree", Icon: GraduationCap },
+  { id: "cts", label: "Analyst", date: "2020–2021", Icon: Building2 },
   { id: "internship", label: "Internship", date: "2020–2021", Icon: Briefcase },
   { id: "fortress", label: "Fortress InfoSec", date: "2021–Present", Icon: Rocket },  
   { id: "projects", label: "Projects", Icon: Star },
