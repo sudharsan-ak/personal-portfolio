@@ -1,61 +1,62 @@
-import { useState, useEffect } from "react";
-import { Menu, X, Sun, Moon, Star } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Menu, X, Moon, Sun, Eye } from "lucide-react";
 import InteractiveButton from "@/components/ui/InteractiveButton";
 import headshotImage from "@/assets/generated_images/Professional_developer_headshot_96bafc1e.png";
 
-type Theme = "light" | "dark" | "system" | "night-owl";
+type ThemeOption = "light" | "dark" | "nightowl" | "system";
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [theme, setTheme] = useState<Theme>("system");
+  const [theme, setTheme] = useState<ThemeOption>("light");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Initialize theme from localStorage or system
+  const themeOptions: { label: string; value: ThemeOption; icon: any }[] = [
+    { label: "Light", value: "light", icon: Sun },
+    { label: "Dark", value: "dark", icon: Moon },
+    { label: "Night Owl", value: "nightowl", icon: Eye },
+    { label: "System", value: "system", icon: Eye },
+  ];
+
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") as Theme | null;
+    const savedTheme = localStorage.getItem("theme") as ThemeOption | null;
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const initialTheme = savedTheme || "system";
+    const initialTheme = savedTheme || (prefersDark ? "dark" : "light");
     setTheme(initialTheme);
-    applyTheme(initialTheme, prefersDark);
-  }, []);
+    applyTheme(initialTheme);
 
-  const applyTheme = (theme: Theme, prefersDark?: boolean) => {
-    document.documentElement.classList.remove("light", "dark", "night-owl");
-
-    if (theme === "system") {
-      const isDark = prefersDark ?? window.matchMedia("(prefers-color-scheme: dark)").matches;
-      document.documentElement.classList.add(isDark ? "dark" : "light");
-    } else if (theme === "night-owl") {
-      document.documentElement.classList.add("night-owl");
-    } else {
-      document.documentElement.classList.add(theme);
-    }
-  };
-
-  const toggleTheme = () => {
-    let newTheme: Theme;
-    if (theme === "light") newTheme = "dark";
-    else if (theme === "dark") newTheme = "night-owl";
-    else if (theme === "night-owl") newTheme = "system";
-    else newTheme = "light";
-
-    setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-    applyTheme(newTheme);
-  };
-
-  useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("click", handleClickOutside);
+    };
   }, []);
 
-  const scrollToSection = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-      setIsMobileMenuOpen(false);
+  const applyTheme = (selected: ThemeOption) => {
+    document.documentElement.classList.remove("dark", "light", "nightowl");
+    if (selected === "system") {
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.classList.add(prefersDark ? "dark" : "light");
+    } else {
+      document.documentElement.classList.add(selected);
     }
+  };
+
+  const handleThemeSelect = (value: ThemeOption) => {
+    setTheme(value);
+    localStorage.setItem("theme", value);
+    applyTheme(value);
+    setIsDropdownOpen(false);
   };
 
   const navLinks = [
@@ -66,12 +67,15 @@ export default function Navigation() {
     { id: "contact", label: "Contact" },
   ];
 
-  const themeIcon = () => {
-    if (theme === "light") return <Moon className="h-5 w-5" />;
-    if (theme === "dark") return <Star className="h-5 w-5" />; // Night Owl
-    if (theme === "night-owl") return <Sun className="h-5 w-5" />;
-    return <Sun className="h-5 w-5" />;
+  const scrollToSection = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+      setIsMobileMenuOpen(false);
+    }
   };
+
+  const CurrentIcon = themeOptions.find((t) => t.value === theme)?.icon || Sun;
 
   return (
     <nav
@@ -82,7 +86,7 @@ export default function Navigation() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-        {/* Logo + Portfolio Name */}
+        {/* Logo */}
         <button
           onClick={() => scrollToSection("hero")}
           className="flex items-center gap-3 px-3 py-2 rounded-xl bg-background/80 backdrop-blur-sm border border-border shadow-sm hover:shadow-lg transition-all duration-300"
@@ -100,7 +104,7 @@ export default function Navigation() {
           </span>
         </button>
 
-        {/* Desktop Navigation */}
+        {/* Desktop */}
         <div className="hidden md:flex items-center gap-1">
           {navLinks.map((link) => (
             <InteractiveButton
@@ -111,15 +115,42 @@ export default function Navigation() {
               {link.label}
             </InteractiveButton>
           ))}
-          <InteractiveButton variant="ghost" size="icon" onClick={toggleTheme}>
-            {themeIcon()}
-          </InteractiveButton>
+
+          {/* Theme Dropdown */}
+          <div className="relative" ref={dropdownRef}>
+            <InteractiveButton
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="flex items-center gap-1"
+            >
+              <CurrentIcon className="h-5 w-5" />
+            </InteractiveButton>
+            {isDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-36 bg-card border border-border rounded-md shadow-lg z-50">
+                {themeOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    className="flex items-center justify-between w-full px-4 py-2 text-sm hover:bg-primary hover:text-white transition-colors"
+                    onClick={() => handleThemeSelect(option.value)}
+                  >
+                    <span>{option.label}</span>
+                    {theme === option.value && <span>✔</span>}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile */}
         <div className="md:hidden flex items-center gap-2">
-          <InteractiveButton variant="ghost" size="icon" onClick={toggleTheme}>
-            {themeIcon()}
+          <InteractiveButton
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          >
+            <CurrentIcon className="h-5 w-5" />
           </InteractiveButton>
           <InteractiveButton
             variant="ghost"
@@ -131,7 +162,6 @@ export default function Navigation() {
         </div>
       </div>
 
-      {/* Mobile Nav Links */}
       {isMobileMenuOpen && (
         <div className="md:hidden bg-background/95 backdrop-blur-md border-b border-border px-4 py-4 space-y-2">
           {navLinks.map((link) => (
