@@ -1,28 +1,39 @@
-// client/api/ai-assistant.ts
-import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { VercelRequest, VercelResponse } from "@vercel/node";
+import fetch from "node-fetch";
+import { JSDOM } from "jsdom";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
-    const { message, profileData } = req.body;
+    const { message } = req.body;
 
-    if (!message || !profileData) {
-      return res.status(400).json({ error: "Missing message or profileData in request body" });
+    if (!message) {
+      return res.status(400).json({ error: "No message provided" });
     }
 
-    if (!process.env.OPENAI_API_KEY) {
-      console.error("OPENAI_API_KEY is missing!");
-      return res.status(500).json({ error: "OpenAI API key not configured" });
+    // Step 1: Fetch your site HTML
+    const siteUrl = "https://sudharsansrinivasan.com"; // <-- Replace with your actual domain
+    const siteRes = await fetch(siteUrl);
+    if (!siteRes.ok) {
+      throw new Error(`Failed to fetch site HTML: ${siteRes.status}`);
     }
+    const htmlText = await siteRes.text();
 
+    // Step 2: Extract text content from HTML using JSDOM
+    const dom = new JSDOM(htmlText);
+    const bodyText = dom.window.document.body.textContent || "";
+
+    // Step 3: Build the system prompt for OpenAI
     const systemPrompt = `
 You are an AI assistant for Sudharsan Srinivasan’s portfolio website.
-Answer based on this data:
-${JSON.stringify(profileData, null, 2)}
+Use the following website text as context to answer questions:
 
-Be friendly, concise, and accurate.
-If the question isn’t about Sudharsan, politely say you only know about him.
+${bodyText}
+
+Answer the user question based only on the website content. Be concise, accurate, and friendly.
+If the question isn’t about Sudharsan, politely reply that you only know about him.
 `;
 
+    // Step 4: Send request to OpenAI API
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -30,26 +41,26 @@ If the question isn’t about Sudharsan, politely say you only know about him.
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-3.5-turbo",
+        model: process.env.OPENAI_MODEL || "gpt-4o-mini",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: message },
         ],
+        temperature: 0.2,
       }),
     });
 
     if (!openaiRes.ok) {
       const text = await openaiRes.text();
-      console.error("OpenAI API Error:", text);
-      return res.status(500).json({ error: "OpenAI API request failed" });
+      throw new Error(`OpenAI request failed: ${openaiRes.status} ${text}`);
     }
 
     const data = await openaiRes.json();
     const answer = data.choices?.[0]?.message?.content || "Sorry, I couldn't generate a response.";
-    res.status(200).json({ answer });
-  } catch (err) {
-    console.error("Serverless function error:", err);
-    res.status(500).json({ error: "Server error" });
+
+    return res.status(200).json({ answer });
+  } catch (error: any) {
+    console.error("AI Assistant Error:", error);
+    return res.status(500).json({ error: "OpenAI API request failed", details: error.message });
   }
 }
-
