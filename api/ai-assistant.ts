@@ -30,7 +30,7 @@ If the question isn’t about Sudharsan, politely say you only know about him.
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: "gpt-3.5-turbo",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: message },
@@ -52,3 +52,4 @@ If the question isn’t about Sudharsan, politely say you only know about him.
     res.status(500).json({ error: "Server error" });
   }
 }
+
