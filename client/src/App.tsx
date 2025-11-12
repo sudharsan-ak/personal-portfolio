@@ -5,8 +5,9 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Home from "@/pages/Home";
 import NotFound from "@/pages/not-found";
-import DynamicBackground from "@/components/DynamicBackground"; // Import the background component
-import TimelineButton from "@/components/TimelineButton"; // Import the floating timeline button
+import DynamicBackground from "@/components/DynamicBackground"; 
+import TimelineButton from "@/components/TimelineButton"; 
+import AIAssistantButton from "@/components/AIAssistantButton"; // ✅ Import AI Assistant Button
 
 function Router() {
   return (
@@ -24,9 +25,16 @@ function App() {
         <Toaster />
         <DynamicBackground>
           <Router />
-          {/* Floating Timeline Button - hidden on small screens */}
+
+          {/* Floating Buttons */}
+          {/* Timeline Button (Top-Right) */}
           <div className="hidden md:block">
             <TimelineButton />
+          </div>
+
+          {/* ✅ AI Assistant Button (Bottom-Right) */}
+          <div className="fixed bottom-6 right-6 z-50 hidden md:block">
+            <AIAssistantButton />
           </div>
         </DynamicBackground>
       </TooltipProvider>
