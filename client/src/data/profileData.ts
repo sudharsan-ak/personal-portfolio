@@ -7,21 +7,22 @@ export const profileData = {
   linkedin: "https://www.linkedin.com/in/sudharsan-srinivasan10/",
   github: "https://github.com/sudharsan-ak",
   portfolio: "https://sudharsansrinivasan.com",
+
   education: [
     {
       degree: "B.E. in Computer Science and Engineering",
       institution: "CEG, Anna University",
       year: 2013-2017,
       details:
-        "Graduated with Bachelor's Degree in Computer Science, GPA: 7.74/10. Focus on Data Structures, Design and Analysis of Algorithms, Software Development, Object-Oriented Analysis and Design, DBMS.",
+        "Graduated with Bachelor's Degree in Computer Science, GPA: 7.74/10. Focus on Data Structures, Algorithms, Software Development, OOP, DBMS.",
     },
     {
       degree: "Masters in Science in Computer Science and Engineering",
       institution: "University of Texas, Arlington",
       year: 2019-2021,
       details:
-        "Graduated with Master's Degree in Computer Science, GPA: 7.74/10. Focus on Web Data Management, Software Engineering, Algorithms, Advanced Database Systems, Advanced Software Testing.",
-    }
+        "Graduated with Master's Degree in Computer Science, GPA: 7.74/10. Focus on Web Data Management, Software Engineering, Algorithms, Advanced Database Systems.",
+    },
   ],
 
   about:
@@ -123,15 +124,7 @@ export const profileData = {
     },
   ],
 
-  interests: [
-    "Web Development",
-    "Open Source Contribution",
-    "UI/UX Design",
-    "Basketball",
-    "Cricket",
-    "Travel",
-    "Movies"
-  ],
+  interests: ["Web Development", "Open Source Contribution", "UI/UX Design", "Basketball", "Cricket", "Travel", "Movies"],
 
   languages: ["English (Fluent)", "Tamil (Native)", "Hindi (Intermediate)"],
 
