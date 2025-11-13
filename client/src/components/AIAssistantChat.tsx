@@ -14,13 +14,86 @@ interface Message {
   text: string;
 }
 
+// Fuzzy local "AI" logic
+const getAnswer = (question: string): string => {
+  const q = question.toLowerCase();
+
+  // Mapping fields to keywords/synonyms
+  const mappings = [
+    { field: "skills", keywords: ["skill", "skills", "technologies", "languages", "stack", "coding"] },
+    { field: "experience", keywords: ["experience", "worked", "role", "job", "employment", "career"] },
+    { field: "projects", keywords: ["project", "projects", "portfolio", "work", "applications"] },
+    { field: "education", keywords: ["education", "degree", "university", "college", "school"] },
+    { field: "certifications", keywords: ["certificate", "certification", "certifications"] },
+    { field: "awards", keywords: ["award", "honor", "recognition", "achievements"] },
+    { field: "contact", keywords: ["email", "phone", "linkedin", "github", "contact"] },
+    { field: "about", keywords: ["about", "summary", "bio", "introduction", "profile"] },
+    { field: "location", keywords: ["location", "city", "based", "live"] },
+    { field: "title", keywords: ["title", "position", "role", "designation"] },
+  ];
+
+  // Try to find a matching field
+  for (const mapping of mappings) {
+    if (mapping.keywords.some((k) => q.includes(k))) {
+      switch (mapping.field) {
+        case "skills":
+          return `Sudharsan has the following skills: ${profileData.skills.join(", ")}.`;
+        case "experience":
+          return profileData.experience.length
+            ? `Here's Sudharsan's work experience:\n${profileData.experience
+                .map((e) => `- ${e.role} at ${e.company} (${e.duration})`)
+                .join("\n")}`
+            : "No experience listed.";
+        case "projects":
+          return profileData.projects.length
+            ? `Sudharsan has worked on these projects:\n${profileData.projects
+                .map((p) => `- ${p.name}: ${p.description}`)
+                .join("\n")}`
+            : "No projects listed.";
+        case "education":
+          return profileData.education.length
+            ? `Educational background:\n${profileData.education
+                .map((e) => `- ${e.degree} from ${e.institution} (${e.year})`)
+                .join("\n")}`
+            : "No education listed.";
+        case "certifications":
+          return profileData.certifications.length
+            ? `Certifications:\n${profileData.certifications
+                .map((c) => `- ${c.title} (${c.year})`)
+                .join("\n")}`
+            : "No certifications listed.";
+        case "awards":
+          return profileData.awards.length
+            ? `Awards:\n${profileData.awards
+                .map((a) => `- ${a.title} from ${a.issuer} (${a.year})`)
+                .join("\n")}`
+            : "No awards listed.";
+        case "contact":
+          if (q.includes("email")) return `Email: ${profileData.contact.email}`;
+          if (q.includes("phone")) return `Phone: ${profileData.contact.phone}`;
+          if (q.includes("linkedin")) return `LinkedIn: ${profileData.contact.linkedin}`;
+          if (q.includes("github")) return `GitHub: ${profileData.contact.github}`;
+          return `You can contact Sudharsan via email: ${profileData.contact.email}`;
+        case "about":
+          return profileData.about;
+        case "location":
+          return `Sudharsan is based in ${profileData.location}.`;
+        case "title":
+          return `Sudharsan's current title is ${profileData.title}.`;
+      }
+    }
+  }
+
+  // Fallback answer
+  return `I'm not sure about that, but based on his skills and experience, Sudharsan is highly capable and a quick learner.`;
+};
+
 export default function AIAssistantChat({ isOpen, setIsOpen, buttonRef }: AIAssistantChatProps) {
   const [messages, setMessages] = useState<Message[]>([
     { sender: "bot", text: "👋 Hi! I'm Sudharsan’s AI Assistant. Ask me anything about his experience, skills, or projects." },
   ]);
   const [input, setInput] = useState("");
   const [position, setPosition] = useState({ bottom: 0, right: 0 });
-  const [loading, setLoading] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -35,46 +108,19 @@ export default function AIAssistantChat({ isOpen, setIsOpen, buttonRef }: AIAssi
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, loading]);
+  }, [messages]);
 
-  const handleSend = async () => {
+  const handleSend = () => {
     if (!input.trim()) return;
 
     const userMessage = { sender: "user", text: input };
     setMessages((prev) => [...prev, userMessage]);
+
+    const answer = getAnswer(input);
+    const botMessage = { sender: "bot", text: answer };
+    setMessages((prev) => [...prev, botMessage]);
+
     setInput("");
-    setLoading(true);
-
-    const res = await fetch("/api/ai-assistant", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: input, profileData }),
-    });
-
-    const reader = res.body?.getReader();
-    const decoder = new TextDecoder();
-    let botMessage = "";
-
-    if (reader) {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        botMessage += decoder.decode(value, { stream: true });
-        setMessages((prev) => {
-          const last = prev[prev.length - 1];
-          if (last?.sender === "bot-stream") {
-            return [...prev.slice(0, -1), { sender: "bot-stream", text: botMessage }];
-          }
-          return [...prev, { sender: "bot-stream", text: botMessage }];
-        });
-      }
-    }
-
-    setMessages((prev) => [
-      ...prev.filter((m) => m.sender !== "bot-stream"),
-      { sender: "bot", text: botMessage.trim() || "🤔 I couldn’t find that info right now." },
-    ]);
-    setLoading(false);
   };
 
   return (
@@ -102,7 +148,7 @@ export default function AIAssistantChat({ isOpen, setIsOpen, buttonRef }: AIAssi
           <div
             key={idx}
             className={`px-3 py-2 rounded-lg max-w-[85%] ${
-              msg.sender.startsWith("bot")
+              msg.sender === "bot"
                 ? "bg-indigo-800/50 text-indigo-100 self-start shadow-sm"
                 : "bg-indigo-500 text-white self-end ml-auto"
             }`}
@@ -110,7 +156,6 @@ export default function AIAssistantChat({ isOpen, setIsOpen, buttonRef }: AIAssi
             {msg.text}
           </div>
         ))}
-        {loading && <div className="text-indigo-300 italic animate-pulse">Thinking...</div>}
         <div ref={chatEndRef} />
       </div>
 
