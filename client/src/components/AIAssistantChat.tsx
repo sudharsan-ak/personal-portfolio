@@ -15,61 +15,6 @@ interface Message {
   text: string;
 }
 
-// Initialize Fuse.js search instances
-const fuseSkills = new Fuse(profileData.skills.map((s) => ({ skill: s })), { keys: ["skill"], threshold: 0.4 });
-const fuseExperience = new Fuse(profileData.experience, {
-  keys: ["company", "role", "summary", "technologies", "achievements"],
-  threshold: 0.4,
-});
-const fuseProjects = new Fuse(profileData.projects, { keys: ["name", "description", "technologies"], threshold: 0.4 });
-const fuseEducation = new Fuse(profileData.education, { keys: ["degree", "institution", "details"], threshold: 0.4 });
-
-// Generate intelligent response
-function generateAnswer(question: string) {
-  const lowerQ = question.toLowerCase();
-
-  // Contact info
-  if (/(email|mail)/i.test(lowerQ)) return `You can reach Sudharsan at ${profileData.contact.email}.`;
-  if (/phone|contact number/i.test(lowerQ)) return `Sudharsan's phone number is ${profileData.contact.phone}.`;
-  if (/linkedin/i.test(lowerQ)) return `LinkedIn profile: ${profileData.contact.linkedin}`;
-  if (/github/i.test(lowerQ)) return `GitHub profile: ${profileData.contact.github}`;
-
-  // Skills search
-  const skillMatches = fuseSkills.search(question);
-  if (skillMatches.length > 0) {
-    return `Yes, Sudharsan has experience with ${skillMatches.map((m) => m.item.skill).join(", ")}.`;
-  }
-
-  // Experience search
-  const expMatches = fuseExperience.search(question);
-  if (expMatches.length > 0) {
-    return expMatches
-      .map((m) => `- ${m.item.role} at ${m.item.company} (${m.item.duration})`)
-      .join("\n");
-  }
-
-  // Projects search
-  const projectMatches = fuseProjects.search(question);
-  if (projectMatches.length > 0) {
-    return projectMatches
-      .map((m) => `- ${m.item.name}: ${m.item.description}`)
-      .join("\n");
-  }
-
-  // Education search
-  const eduMatches = fuseEducation.search(question);
-  if (eduMatches.length > 0) {
-    return eduMatches
-      .map((m) => `- ${m.item.degree} from ${m.item.institution} (${m.item.year}), focus: ${m.item.details}`)
-      .join("\n");
-  }
-
-  // Reasoning for unknown skills/topics
-  return `I’m not sure about that exact skill or topic, but given Sudharsan's experience with ${profileData.skills
-    .slice(0, 5)
-    .join(", ")}, he would likely be able to learn it quickly and apply it effectively.`;
-}
-
 export default function AIAssistantChat({ isOpen, setIsOpen, buttonRef }: AIAssistantChatProps) {
   const [messages, setMessages] = useState<Message[]>([
     { sender: "bot", text: "👋 Hi! I'm Sudharsan’s AI Assistant. Ask me anything about his experience, skills, or projects." },
@@ -92,15 +37,62 @@ export default function AIAssistantChat({ isOpen, setIsOpen, buttonRef }: AIAssi
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Combine all searchable fields
+  const fuseData: { type: string; text: string }[] = [
+    ...profileData.skills.map((skill) => ({ type: "skill", text: skill })),
+    ...profileData.experience.map((exp) => ({
+      type: "experience",
+      text: `${exp.role} at ${exp.company}: ${exp.summary} ${exp.achievements.join(" ")} ${exp.technologies.join(" ")}`,
+    })),
+    ...profileData.projects.map((proj) => ({
+      type: "project",
+      text: `${proj.name}: ${proj.description} ${proj.technologies.join(" ")}`,
+    })),
+    { type: "about", text: profileData.about },
+    { type: "education", text: profileData.education.map((e) => `${e.degree} at ${e.institution}: ${e.details}`).join(" ") },
+    { type: "interests", text: profileData.interests.join(" ") },
+    { type: "languages", text: profileData.languages.join(" ") },
+    { type: "contact", text: `${profileData.contact.email} ${profileData.contact.phone}` },
+  ];
+
+  const fuse = new Fuse(fuseData, { keys: ["text"], threshold: 0.4 });
+
   const handleSend = () => {
     if (!input.trim()) return;
-
     const userMessage = { sender: "user", text: input };
     setMessages((prev) => [...prev, userMessage]);
 
-    // Generate local response intelligently
-    const botReply = generateAnswer(input);
-    setMessages((prev) => [...prev, { sender: "bot", text: botReply }]);
+    // Fuzzy search
+    const results = fuse.search(input);
+    let botResponse = "";
+
+    if (results.length > 0) {
+      const top = results[0].item;
+      if (top.type === "skill") {
+        botResponse = `Sudharsan has the following skills: ${top.text}.`;
+      } else if (top.type === "experience") {
+        botResponse = `Here's Sudharsan's work experience: ${top.text}`;
+      } else if (top.type === "project") {
+        botResponse = `One of Sudharsan's projects: ${top.text}`;
+      } else if (top.type === "education") {
+        botResponse = `Sudharsan's education details: ${top.text}`;
+      } else if (top.type === "about") {
+        botResponse = top.text;
+      } else if (top.type === "interests") {
+        botResponse = `Sudharsan is interested in: ${top.text}`;
+      } else if (top.type === "languages") {
+        botResponse = `Sudharsan speaks: ${top.text}`;
+      } else if (top.type === "contact") {
+        botResponse = `You can reach Sudharsan via: ${top.text}`;
+      } else {
+        botResponse = "🤔 I couldn’t find that info right now.";
+      }
+    } else {
+      // Intelligent fallback
+      botResponse = `I'm not sure about that exact skill or topic, but based on Sudharsan's profile, he would likely be able to handle it due to his experience and skills.`;
+    }
+
+    setMessages((prev) => [...prev, { sender: "bot", text: botResponse }]);
     setInput("");
   };
 
