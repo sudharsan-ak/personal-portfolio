@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState, RefObject } from "react";
 import { X, Send } from "lucide-react";
+import Fuse from "fuse.js";
 import { profileData } from "@/data/profileData";
 
 interface AIAssistantChatProps {
@@ -14,79 +15,60 @@ interface Message {
   text: string;
 }
 
-// Fuzzy local "AI" logic
-const getAnswer = (question: string): string => {
-  const q = question.toLowerCase();
+// Initialize Fuse.js search instances
+const fuseSkills = new Fuse(profileData.skills.map((s) => ({ skill: s })), { keys: ["skill"], threshold: 0.4 });
+const fuseExperience = new Fuse(profileData.experience, {
+  keys: ["company", "role", "summary", "technologies", "achievements"],
+  threshold: 0.4,
+});
+const fuseProjects = new Fuse(profileData.projects, { keys: ["name", "description", "technologies"], threshold: 0.4 });
+const fuseEducation = new Fuse(profileData.education, { keys: ["degree", "institution", "details"], threshold: 0.4 });
 
-  // Mapping fields to keywords/synonyms
-  const mappings = [
-    { field: "skills", keywords: ["skill", "skills", "technologies", "languages", "stack", "coding"] },
-    { field: "experience", keywords: ["experience", "worked", "role", "job", "employment", "career"] },
-    { field: "projects", keywords: ["project", "projects", "portfolio", "work", "applications"] },
-    { field: "education", keywords: ["education", "degree", "university", "college", "school"] },
-    { field: "certifications", keywords: ["certificate", "certification", "certifications"] },
-    { field: "awards", keywords: ["award", "honor", "recognition", "achievements"] },
-    { field: "contact", keywords: ["email", "phone", "linkedin", "github", "contact"] },
-    { field: "about", keywords: ["about", "summary", "bio", "introduction", "profile"] },
-    { field: "location", keywords: ["location", "city", "based", "live"] },
-    { field: "title", keywords: ["title", "position", "role", "designation"] },
-  ];
+// Generate intelligent response
+function generateAnswer(question: string) {
+  const lowerQ = question.toLowerCase();
 
-  // Try to find a matching field
-  for (const mapping of mappings) {
-    if (mapping.keywords.some((k) => q.includes(k))) {
-      switch (mapping.field) {
-        case "skills":
-          return `Sudharsan has the following skills: ${profileData.skills.join(", ")}.`;
-        case "experience":
-          return profileData.experience.length
-            ? `Here's Sudharsan's work experience:\n${profileData.experience
-                .map((e) => `- ${e.role} at ${e.company} (${e.duration})`)
-                .join("\n")}`
-            : "No experience listed.";
-        case "projects":
-          return profileData.projects.length
-            ? `Sudharsan has worked on these projects:\n${profileData.projects
-                .map((p) => `- ${p.name}: ${p.description}`)
-                .join("\n")}`
-            : "No projects listed.";
-        case "education":
-          return profileData.education.length
-            ? `Educational background:\n${profileData.education
-                .map((e) => `- ${e.degree} from ${e.institution} (${e.year})`)
-                .join("\n")}`
-            : "No education listed.";
-        case "certifications":
-          return profileData.certifications.length
-            ? `Certifications:\n${profileData.certifications
-                .map((c) => `- ${c.title} (${c.year})`)
-                .join("\n")}`
-            : "No certifications listed.";
-        case "awards":
-          return profileData.awards.length
-            ? `Awards:\n${profileData.awards
-                .map((a) => `- ${a.title} from ${a.issuer} (${a.year})`)
-                .join("\n")}`
-            : "No awards listed.";
-        case "contact":
-          if (q.includes("email")) return `Email: ${profileData.contact.email}`;
-          if (q.includes("phone")) return `Phone: ${profileData.contact.phone}`;
-          if (q.includes("linkedin")) return `LinkedIn: ${profileData.contact.linkedin}`;
-          if (q.includes("github")) return `GitHub: ${profileData.contact.github}`;
-          return `You can contact Sudharsan via email: ${profileData.contact.email}`;
-        case "about":
-          return profileData.about;
-        case "location":
-          return `Sudharsan is based in ${profileData.location}.`;
-        case "title":
-          return `Sudharsan's current title is ${profileData.title}.`;
-      }
-    }
+  // Contact info
+  if (/(email|mail)/i.test(lowerQ)) return `You can reach Sudharsan at ${profileData.contact.email}.`;
+  if (/phone|contact number/i.test(lowerQ)) return `Sudharsan's phone number is ${profileData.contact.phone}.`;
+  if (/linkedin/i.test(lowerQ)) return `LinkedIn profile: ${profileData.contact.linkedin}`;
+  if (/github/i.test(lowerQ)) return `GitHub profile: ${profileData.contact.github}`;
+
+  // Skills search
+  const skillMatches = fuseSkills.search(question);
+  if (skillMatches.length > 0) {
+    return `Yes, Sudharsan has experience with ${skillMatches.map((m) => m.item.skill).join(", ")}.`;
   }
 
-  // Fallback answer
-  return `I'm not sure about that, but based on his skills and experience, Sudharsan is highly capable and a quick learner.`;
-};
+  // Experience search
+  const expMatches = fuseExperience.search(question);
+  if (expMatches.length > 0) {
+    return expMatches
+      .map((m) => `- ${m.item.role} at ${m.item.company} (${m.item.duration})`)
+      .join("\n");
+  }
+
+  // Projects search
+  const projectMatches = fuseProjects.search(question);
+  if (projectMatches.length > 0) {
+    return projectMatches
+      .map((m) => `- ${m.item.name}: ${m.item.description}`)
+      .join("\n");
+  }
+
+  // Education search
+  const eduMatches = fuseEducation.search(question);
+  if (eduMatches.length > 0) {
+    return eduMatches
+      .map((m) => `- ${m.item.degree} from ${m.item.institution} (${m.item.year}), focus: ${m.item.details}`)
+      .join("\n");
+  }
+
+  // Reasoning for unknown skills/topics
+  return `I’m not sure about that exact skill or topic, but given Sudharsan's experience with ${profileData.skills
+    .slice(0, 5)
+    .join(", ")}, he would likely be able to learn it quickly and apply it effectively.`;
+}
 
 export default function AIAssistantChat({ isOpen, setIsOpen, buttonRef }: AIAssistantChatProps) {
   const [messages, setMessages] = useState<Message[]>([
@@ -116,10 +98,9 @@ export default function AIAssistantChat({ isOpen, setIsOpen, buttonRef }: AIAssi
     const userMessage = { sender: "user", text: input };
     setMessages((prev) => [...prev, userMessage]);
 
-    const answer = getAnswer(input);
-    const botMessage = { sender: "bot", text: answer };
-    setMessages((prev) => [...prev, botMessage]);
-
+    // Generate local response intelligently
+    const botReply = generateAnswer(input);
+    setMessages((prev) => [...prev, { sender: "bot", text: botReply }]);
     setInput("");
   };
 
