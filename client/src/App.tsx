@@ -33,10 +33,9 @@ function App() {
           </div>
 
           {/* ✅ AI Assistant Button (Bottom-Right) */}
-          {/* <div className="fixed bottom-6 right-6 z-50 hidden md:block">
+          <div className="fixed bottom-6 right-6 z-50 hidden md:block">
             <AIAssistantButton />
           </div>
-          */}
         </DynamicBackground>
       </TooltipProvider>
     </QueryClientProvider>
