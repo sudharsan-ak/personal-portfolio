@@ -15,7 +15,8 @@ export default function Resume() {
   useEffect(() => {
     const updateWidth = () => {
       const width = window.innerWidth * 0.95; // almost full width
-      setPageWidth(width > 800 ? 800 : width); // max width on desktop
+      // setPageWidth(width > 800 ? 800 : width); // max width on desktop
+      setPageWidth(width);
     };
 
     updateWidth();
@@ -40,7 +41,7 @@ export default function Resume() {
               key={`page_${index + 1}`}
               pageNumber={index + 1}
               width={pageWidth}
-              renderTextLayer={true}
+              renderTextLayer={false}
               renderAnnotationLayer={true}
             />
           ))}
