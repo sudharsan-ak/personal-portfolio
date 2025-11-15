@@ -13,6 +13,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/resume" component={Resume} /> {/* ✅ Resume route */}
       <Route component={NotFound} />
     </Switch>
   );
