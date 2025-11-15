@@ -8,6 +8,7 @@ import NotFound from "@/pages/not-found";
 import DynamicBackground from "@/components/DynamicBackground"; 
 import TimelineButton from "@/components/TimelineButton"; 
 import AIAssistantButton from "@/components/AIAssistantButton"; // ✅ Import AI Assistant Button
+import Resume from "@/pages/Resume";
 
 function Router() {
   return (
