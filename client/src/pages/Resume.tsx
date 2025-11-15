@@ -25,9 +25,9 @@ export default function Resume() {
     return () => window.removeEventListener("resize", updateWidth);
   }, []);
 
-  // Zoom functions (desktop only)
-  const zoomIn = () => setScale((prev) => Math.min(prev + 0.2, 3));
-  const zoomOut = () => setScale((prev) => Math.max(prev - 0.2, 0.5));
+  // Zoom functions
+  const zoomIn = () => setScale((prev) => Math.min(prev + 0.1, 3));
+  const zoomOut = () => setScale((prev) => Math.max(prev - 0.1, 0.5));
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-start bg-background/70 dark:bg-card/70 backdrop-blur-md p-2 md:p-6">
@@ -35,23 +35,40 @@ export default function Resume() {
         Sudharsan Srinivasan - Resume
       </h1>
 
-      {/* Zoom Controls only on desktop */}
-      {!isMobile && (
-        <div className="flex gap-2 mb-4">
+      {/* Controls */}
+      <div
+        className={`flex w-full max-w-[800px] mb-4 items-center justify-between ${
+          isMobile ? "flex-row" : "flex-row-reverse"
+        }`}
+      >
+        {/* Desktop: zoom + download on top right */}
+        {/* Mobile: zoom on left, download on right */}
+        <div className="flex items-center gap-2">
           <button
             onClick={zoomOut}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/80 transition"
+            className="px-3 py-1 bg-primary text-primary-foreground rounded-md hover:bg-primary/80 transition"
           >
             -
           </button>
+          <span className="text-foreground font-semibold">
+            {(scale * 100).toFixed(0)}%
+          </span>
           <button
             onClick={zoomIn}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/80 transition"
+            className="px-3 py-1 bg-primary text-primary-foreground rounded-md hover:bg-primary/80 transition"
           >
             +
           </button>
         </div>
-      )}
+
+        <a
+          href="/Sudharsan Srinivasan Resume 2025.pdf"
+          download="Sudharsan Srinivasan Resume 2025.pdf"
+          className="px-4 py-2 bg-primary text-primary-foreground font-semibold rounded-md hover:bg-primary/80 transition"
+        >
+          Download Resume
+        </a>
+      </div>
 
       {/* Scrollable PDF container */}
       <div
@@ -84,15 +101,6 @@ export default function Resume() {
           </Document>
         </div>
       </div>
-
-      {/* Download Button immediately below PDF on mobile */}
-      <a
-        href="/Sudharsan Srinivasan Resume 2025.pdf"
-        download="Sudharsan Srinivasan Resume 2025.pdf"
-        className="mt-4 md:mt-6 px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-md hover:bg-primary/80 transition"
-      >
-        Download Resume
-      </a>
     </div>
   );
 }
