@@ -29,12 +29,12 @@ export default function Resume() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-start bg-background/70 dark:bg-card/70 backdrop-blur-md p-4 md:p-8">
       {/* Title and Controls */}
-      <div className="w-full max-w-[900px] flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-        <h1 className="text-2xl md:text-4xl font-bold text-foreground dark:text-background">
+      <div className="w-full max-w-[900px] relative mb-6 flex justify-center items-center">
+        <h1 className="text-2xl md:text-4xl font-bold text-foreground dark:text-background text-center">
           Sudharsan Srinivasan - Resume
         </h1>
-
-        <div className="flex items-center gap-3 mt-3 md:mt-0">
+      
+        <div className="absolute right-0 flex items-center gap-3">
           <button
             onClick={zoomOut}
             className="px-3 py-1 bg-primary text-primary-foreground rounded-md hover:bg-primary/80 transition"
@@ -48,7 +48,7 @@ export default function Resume() {
           >
             +
           </button>
-
+      
           <a
             href="/Sudharsan Srinivasan Resume 2025.pdf"
             download="Sudharsan Srinivasan Resume 2025.pdf"
@@ -58,6 +58,7 @@ export default function Resume() {
           </a>
         </div>
       </div>
+
 
       {/* PDF */}
       <div className="w-full flex justify-center">
