@@ -8,7 +8,6 @@ export default function Resume() {
   const [numPages, setNumPages] = useState<number>(0);
   const [pageWidth, setPageWidth] = useState<number>(0);
   const [scale, setScale] = useState<number>(1.0);
-  const [isMobile, setIsMobile] = useState(false);
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
@@ -18,88 +17,65 @@ export default function Resume() {
     const updateWidth = () => {
       const width = window.innerWidth * 0.95;
       setPageWidth(width > 800 ? 800 : width);
-      setIsMobile(window.innerWidth < 768);
     };
     updateWidth();
     window.addEventListener("resize", updateWidth);
     return () => window.removeEventListener("resize", updateWidth);
   }, []);
 
-  // Zoom functions
   const zoomIn = () => setScale((prev) => Math.min(prev + 0.1, 3));
   const zoomOut = () => setScale((prev) => Math.max(prev - 0.1, 0.5));
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start bg-background/70 dark:bg-card/70 backdrop-blur-md p-2 md:p-6">
-      <h1 className="text-2xl md:text-4xl font-bold mb-4 text-center text-foreground dark:text-background">
-        Sudharsan Srinivasan - Resume
-      </h1>
+    <div className="min-h-screen flex flex-col items-center justify-start bg-background/70 dark:bg-card/70 backdrop-blur-md p-4 md:p-8">
+      {/* Title and Controls */}
+      <div className="w-full max-w-[900px] flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+        <h1 className="text-2xl md:text-4xl font-bold text-foreground dark:text-background">
+          Sudharsan Srinivasan - Resume
+        </h1>
 
-      {/* Controls */}
-      <div
-        className={`flex w-full max-w-[800px] mb-4 items-center justify-between ${
-          isMobile ? "flex-row" : "flex-row-reverse"
-        }`}
-      >
-        {/* Desktop: zoom + download on top right */}
-        {/* Mobile: zoom on left, download on right */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3 mt-3 md:mt-0">
           <button
             onClick={zoomOut}
             className="px-3 py-1 bg-primary text-primary-foreground rounded-md hover:bg-primary/80 transition"
           >
             -
           </button>
-          <span className="text-foreground font-semibold">
-            {(scale * 100).toFixed(0)}%
-          </span>
+          <span className="font-semibold">{(scale * 100).toFixed(0)}%</span>
           <button
             onClick={zoomIn}
             className="px-3 py-1 bg-primary text-primary-foreground rounded-md hover:bg-primary/80 transition"
           >
             +
           </button>
-        </div>
 
-        <a
-          href="/Sudharsan Srinivasan Resume 2025.pdf"
-          download="Sudharsan Srinivasan Resume 2025.pdf"
-          className="px-4 py-2 bg-primary text-primary-foreground font-semibold rounded-md hover:bg-primary/80 transition"
-        >
-          Download Resume
-        </a>
+          <a
+            href="/Sudharsan Srinivasan Resume 2025.pdf"
+            download="Sudharsan Srinivasan Resume 2025.pdf"
+            className="px-4 py-2 bg-primary text-primary-foreground font-semibold rounded-md hover:bg-primary/80 transition"
+          >
+            Download Resume
+          </a>
+        </div>
       </div>
 
-      {/* Scrollable PDF container */}
-      <div
-        className={`overflow-auto w-full max-w-[800px] border border-gray-300 rounded-md ${
-          isMobile ? "" : "h-[80vh]"
-        }`}
-        style={{ cursor: !isMobile ? "grab" : "auto" }}
-      >
-        <div
-          style={{
-            transform: `scale(${scale})`,
-            transformOrigin: "top left",
-            width: "100%",
-          }}
+      {/* PDF */}
+      <div className="w-full flex justify-center">
+        <Document
+          file="/resume.pdf"
+          onLoadSuccess={onDocumentLoadSuccess}
+          loading={<p className="text-indigo-500">Loading Resume...</p>}
         >
-          <Document
-            file="/resume.pdf"
-            onLoadSuccess={onDocumentLoadSuccess}
-            loading={<p className="text-indigo-500">Loading Resume...</p>}
-          >
-            {Array.from(new Array(numPages), (_, index) => (
-              <Page
-                key={`page_${index + 1}`}
-                pageNumber={index + 1}
-                width={pageWidth}
-                renderTextLayer={false}
-                renderAnnotationLayer={true}
-              />
-            ))}
-          </Document>
-        </div>
+          {Array.from(new Array(numPages), (_, index) => (
+            <Page
+              key={`page_${index + 1}`}
+              pageNumber={index + 1}
+              width={pageWidth * scale} // scale applied directly
+              renderTextLayer={false}
+              renderAnnotationLayer={true}
+            />
+          ))}
+        </Document>
       </div>
     </div>
   );
