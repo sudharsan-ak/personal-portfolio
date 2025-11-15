@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
-import { ZoomIn, ZoomOut, RefreshCcw, Download } from "lucide-react"; // added optional download icon
+import { ZoomIn, ZoomOut, RefreshCcw, Download } from "lucide-react";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
@@ -28,49 +28,47 @@ export default function Resume() {
   const zoomOutHandler = () => setScale((prev) => Math.max(prev - 0.1, 0.5));
   const resetZoom = () => setScale(1.0);
 
+  const Buttons = () => (
+    <div className="flex items-center gap-3 flex-wrap">
+      <button
+        onClick={zoomOutHandler}
+        className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow hover:bg-primary/80 transition"
+      >
+        <ZoomOut className="w-5 h-5" />
+      </button>
+
+      <span className="font-semibold text-lg">{(scale * 100).toFixed(0)}%</span>
+
+      <button
+        onClick={zoomInHandler}
+        className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow hover:bg-primary/80 transition"
+      >
+        <ZoomIn className="w-5 h-5" />
+      </button>
+  
+      <button
+        onClick={resetZoom}
+        className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow hover:bg-primary/80 transition"
+      >
+        <RefreshCcw className="w-5 h-5" />
+      </button>
+
+      <a
+        href="/Sudharsan Srinivasan Resume 2025.pdf"
+        download="Sudharsan Srinivasan Resume 2025.pdf"
+        className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow hover:bg-primary/80 transition"
+        title="Download Resume"
+      >
+        Download Resume
+      </a>
+    </div>
+  );
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-start bg-background/70 dark:bg-card/70 backdrop-blur-md p-4 md:p-8">
-      
-      {/* Controls - Buttons on top-right */}
-      <div className="w-full max-w-[900px] flex justify-end mb-3">
-        <div className="flex items-center gap-3">
-          {/* Zoom Out */}
-          <button
-            onClick={zoomOutHandler}
-            className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow hover:bg-primary/80 transition"
-          >
-            <ZoomOut className="w-5 h-5" />
-          </button>
-
-           {/* Zoom percentage */}
-          <span className="font-semibold text-lg">{(scale * 100).toFixed(0)}%</span>
-
-           {/* Zoom In */}
-          <button
-            onClick={zoomInHandler}
-            className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow hover:bg-primary/80 transition"
-          >
-            <ZoomIn className="w-5 h-5" />
-          </button>
-
-          {/* Reset */}
-          <button
-            onClick={resetZoom}
-            className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow hover:bg-primary/80 transition"
-          >
-            <RefreshCcw className="w-5 h-5" />
-          </button>
-
-          {/* Download Resume */}
-          <a
-            href="/Sudharsan Srinivasan Resume 2025.pdf"
-            download="Sudharsan Srinivasan Resume 2025.pdf"
-            className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow hover:bg-primary/80 transition"
-            title="Download Resume"
-          >
-            Download Resume
-          </a>
-        </div>
+      {/* Desktop Controls (top-right) */}
+      <div className="w-full max-w-[900px] flex justify-end mb-3 hidden md:flex">
+        <Buttons />
       </div>
 
       {/* Centered Title */}
@@ -95,6 +93,11 @@ export default function Resume() {
             />
           ))}
         </Document>
+      </div>
+
+      {/* Mobile Controls (below PDF) */}
+      <div className="w-full max-w-[900px] flex justify-center mt-4 md:hidden">
+        <Buttons />
       </div>
     </div>
   );
