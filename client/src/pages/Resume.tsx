@@ -32,6 +32,7 @@ export default function Resume() {
     <div className="flex items-center gap-3 flex-wrap">
       <button
         onClick={zoomOutHandler}
+        title="Zoom Out"
         className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow hover:bg-primary/80 transition"
       >
         <ZoomOut className="w-5 h-5" />
@@ -41,6 +42,7 @@ export default function Resume() {
 
       <button
         onClick={zoomInHandler}
+        title="Zoom In"
         className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow hover:bg-primary/80 transition"
       >
         <ZoomIn className="w-5 h-5" />
@@ -48,6 +50,7 @@ export default function Resume() {
   
       <button
         onClick={resetZoom}
+        title="Reset to 100%"
         className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow hover:bg-primary/80 transition"
       >
         <RefreshCcw className="w-5 h-5" />
@@ -56,8 +59,8 @@ export default function Resume() {
       <a
         href="/Sudharsan Srinivasan Resume 2025.pdf"
         download="Sudharsan Srinivasan Resume 2025.pdf"
-        className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow hover:bg-primary/80 transition"
         title="Download Resume"
+        className="px-4 py-2 bg-primary text-primary-foreground font-semibold rounded-md hover:bg-primary/80 transition"
       >
         Download Resume
       </a>
