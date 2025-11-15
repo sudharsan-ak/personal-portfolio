@@ -42,6 +42,17 @@ export default function Resume() {
             <ZoomOut className="w-5 h-5" />
           </button>
 
+           {/* Zoom percentage */}
+          <span className="font-semibold text-lg">{(scale * 100).toFixed(0)}%</span>
+
+           {/* Zoom In */}
+          <button
+            onClick={zoomInHandler}
+            className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow hover:bg-primary/80 transition"
+          >
+            <ZoomIn className="w-5 h-5" />
+          </button>
+
           {/* Reset */}
           <button
             onClick={resetZoom}
@@ -50,17 +61,6 @@ export default function Resume() {
             <RefreshCcw className="w-5 h-5" />
           </button>
 
-          {/* Zoom In */}
-          <button
-            onClick={zoomInHandler}
-            className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow hover:bg-primary/80 transition"
-          >
-            <ZoomIn className="w-5 h-5" />
-          </button>
-
-          {/* Zoom percentage */}
-          <span className="font-semibold text-lg">{(scale * 100).toFixed(0)}%</span>
-
           {/* Download Resume */}
           <a
             href="/Sudharsan Srinivasan Resume 2025.pdf"
@@ -68,7 +68,7 @@ export default function Resume() {
             className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow hover:bg-primary/80 transition"
             title="Download Resume"
           >
-            <Download className="w-5 h-5" />
+            Download Resume
           </a>
         </div>
       </div>
