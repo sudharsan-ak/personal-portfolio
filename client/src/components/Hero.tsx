@@ -85,7 +85,7 @@ export default function Hero() {
               More About Me
             </InteractiveButton>
 
-            <InteractiveButton variant="outline" size="lg" asChild>
+            {/* <InteractiveButton variant="outline" size="lg" asChild>
               <a
                 href="https://sudharsan-srinivasan-resume-2025.tiiny.site"
                 target="_blank"
@@ -94,13 +94,14 @@ export default function Hero() {
                 View Resume
               </a>
             </InteractiveButton>
+            */}
             <InteractiveButton variant="outline" size="lg" asChild>
               <a
                 href="/resume"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                View Resume 2
+                View Resume
               </a>
             </InteractiveButton>
           </div>
