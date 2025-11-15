@@ -8,23 +8,24 @@ export default function Resume() {
   const [numPages, setNumPages] = useState<number>(0);
   const [pageWidth, setPageWidth] = useState<number>(0);
   const [scale, setScale] = useState<number>(1.0);
+  const [isMobile, setIsMobile] = useState(false);
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
   };
 
-  // Responsive width based on viewport
   useEffect(() => {
     const updateWidth = () => {
       const width = window.innerWidth * 0.95;
       setPageWidth(width > 800 ? 800 : width);
+      setIsMobile(window.innerWidth < 768);
     };
     updateWidth();
     window.addEventListener("resize", updateWidth);
     return () => window.removeEventListener("resize", updateWidth);
   }, []);
 
-  // Zoom functions
+  // Zoom functions (desktop only)
   const zoomIn = () => setScale((prev) => Math.min(prev + 0.2, 3));
   const zoomOut = () => setScale((prev) => Math.max(prev - 0.2, 0.5));
 
@@ -34,32 +35,36 @@ export default function Resume() {
         Sudharsan Srinivasan - Resume
       </h1>
 
-      {/* Zoom Controls */}
-      <div className="flex gap-2 mb-4">
-        <button
-          onClick={zoomOut}
-          className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/80 transition"
-        >
-          -
-        </button>
-        <button
-          onClick={zoomIn}
-          className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/80 transition"
-        >
-          +
-        </button>
-      </div>
+      {/* Zoom Controls only on desktop */}
+      {!isMobile && (
+        <div className="flex gap-2 mb-4">
+          <button
+            onClick={zoomOut}
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/80 transition"
+          >
+            -
+          </button>
+          <button
+            onClick={zoomIn}
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/80 transition"
+          >
+            +
+          </button>
+        </div>
+      )}
 
       {/* Scrollable PDF container */}
       <div
-        className="overflow-auto w-full max-w-[800px] h-[80vh] border border-gray-300 rounded-md"
-        style={{ cursor: "grab" }}
+        className={`overflow-auto w-full max-w-[800px] border border-gray-300 rounded-md ${
+          isMobile ? "" : "h-[80vh]"
+        }`}
+        style={{ cursor: !isMobile ? "grab" : "auto" }}
       >
         <div
           style={{
             transform: `scale(${scale})`,
             transformOrigin: "top left",
-            width: "100%", // ensures PDF scales properly
+            width: "100%",
           }}
         >
           <Document
@@ -80,7 +85,7 @@ export default function Resume() {
         </div>
       </div>
 
-      {/* Download Button */}
+      {/* Download Button immediately below PDF on mobile */}
       <a
         href="/Sudharsan Srinivasan Resume 2025.pdf"
         download="Sudharsan Srinivasan Resume 2025.pdf"
