@@ -94,6 +94,15 @@ export default function Hero() {
                 View Resume
               </a>
             </InteractiveButton>
+            <InteractiveButton variant="outline" size="lg" asChild>
+              <a
+                href="https://sudharsansrinivasan.com/resume"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View Resume 2
+              </a>
+            </InteractiveButton>
           </div>
 
           {/* Social Media Icons */}
