@@ -15,8 +15,8 @@ export default function Resume() {
   useEffect(() => {
     const updateWidth = () => {
       const width = window.innerWidth * 0.95; // almost full width
-      // setPageWidth(width > 800 ? 800 : width); // max width on desktop
-      setPageWidth(width);
+      setPageWidth(width > 800 ? 800 : width); // max width on desktop
+      // setPageWidth(width);
     };
 
     updateWidth();
