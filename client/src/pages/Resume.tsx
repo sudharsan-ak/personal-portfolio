@@ -59,7 +59,6 @@ export default function Resume() {
       <a
         href="/Sudharsan Srinivasan Resume 2025.pdf"
         download="Sudharsan Srinivasan Resume 2025.pdf"
-        title="Download Resume"
         className="px-4 py-2 bg-primary text-primary-foreground font-semibold rounded-md hover:bg-primary/80 transition"
       >
         Download Resume
