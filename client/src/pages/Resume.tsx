@@ -3,15 +3,17 @@ import React from "react";
 export default function Resume() {
   return (
     <div className="min-h-screen w-full bg-background/70 dark:bg-card/70 backdrop-blur-md p-0">
-      {/* PDF Viewer full screen */}
-      <iframe
-        src="/resume.pdf"
-        title="Sudharsan Srinivasan Resume"
-        className="w-full h-screen"
-        style={{ border: "none" }}
-      />
+      {/* PDF Viewer full screen, responsive for mobile */}
+      <div className="w-full h-screen overflow-auto -webkit-overflow-scrolling-touch">
+        <iframe
+          src="/resume.pdf"
+          title="Sudharsan Srinivasan Resume"
+          className="w-full h-full"
+          style={{ border: "none" }}
+        />
+      </div>
 
-      {/* Download Button overlayed at bottom-right */}
+      {/* Download Button fixed at bottom-right */}
       <a
         href="/Sudharsan Srinivasan Resume 2025.pdf"
         download="Sudharsan Srinivasan Resume 2025.pdf"
@@ -22,3 +24,4 @@ export default function Resume() {
     </div>
   );
 }
+
