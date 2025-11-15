@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
+import { ZoomIn, ZoomOut, RefreshCcw, Download } from "lucide-react"; // added optional download icon
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
@@ -23,34 +24,51 @@ export default function Resume() {
     return () => window.removeEventListener("resize", updateWidth);
   }, []);
 
-  const zoomIn = () => setScale((prev) => Math.min(prev + 0.1, 3));
-  const zoomOut = () => setScale((prev) => Math.max(prev - 0.1, 0.5));
+  const zoomInHandler = () => setScale((prev) => Math.min(prev + 0.1, 3));
+  const zoomOutHandler = () => setScale((prev) => Math.max(prev - 0.1, 0.5));
+  const resetZoom = () => setScale(1.0);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-start bg-background/70 dark:bg-card/70 backdrop-blur-md p-4 md:p-8">
+      
       {/* Controls - Buttons on top-right */}
-      <div className="w-full max-w-[900px] flex justify-end mb-2">
+      <div className="w-full max-w-[900px] flex justify-end mb-3">
         <div className="flex items-center gap-3">
+          {/* Zoom Out */}
           <button
-            onClick={zoomOut}
-            className="px-3 py-1 bg-primary text-primary-foreground rounded-md hover:bg-primary/80 transition"
+            onClick={zoomOutHandler}
+            className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow hover:bg-primary/80 transition"
           >
-            -
-          </button>
-          <span className="font-semibold">{(scale * 100).toFixed(0)}%</span>
-          <button
-            onClick={zoomIn}
-            className="px-3 py-1 bg-primary text-primary-foreground rounded-md hover:bg-primary/80 transition"
-          >
-            +
+            <ZoomOut className="w-5 h-5" />
           </button>
 
+          {/* Reset */}
+          <button
+            onClick={resetZoom}
+            className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow hover:bg-primary/80 transition"
+          >
+            <RefreshCcw className="w-5 h-5" />
+          </button>
+
+          {/* Zoom In */}
+          <button
+            onClick={zoomInHandler}
+            className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow hover:bg-primary/80 transition"
+          >
+            <ZoomIn className="w-5 h-5" />
+          </button>
+
+          {/* Zoom percentage */}
+          <span className="font-semibold text-lg">{(scale * 100).toFixed(0)}%</span>
+
+          {/* Download Resume */}
           <a
             href="/Sudharsan Srinivasan Resume 2025.pdf"
             download="Sudharsan Srinivasan Resume 2025.pdf"
-            className="px-4 py-2 bg-primary text-primary-foreground font-semibold rounded-md hover:bg-primary/80 transition"
+            className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow hover:bg-primary/80 transition"
+            title="Download Resume"
           >
-            Download Resume
+            <Download className="w-5 h-5" />
           </a>
         </div>
       </div>
@@ -71,7 +89,7 @@ export default function Resume() {
             <Page
               key={`page_${index + 1}`}
               pageNumber={index + 1}
-              width={pageWidth * scale} // scale applied directly
+              width={pageWidth * scale}
               renderTextLayer={false}
               renderAnnotationLayer={true}
             />
