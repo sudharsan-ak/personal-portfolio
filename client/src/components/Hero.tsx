@@ -97,7 +97,7 @@ export default function Hero() {
             */}
             <InteractiveButton variant="outline" size="lg" asChild>
               <a
-                href="/Sudharsan Srinivasan Resume 2025"
+                href="/resume"
                 target="_blank"
                 rel="noopener noreferrer"
               >
