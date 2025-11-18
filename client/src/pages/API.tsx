@@ -1,15 +1,18 @@
 // client/src/pages/API.tsx
 
 import React, { useState } from "react";
+import { useToast } from "@/components/hooks/use-toast"; // adjust path if needed
 
 interface ApiEndpoint {
   title: string;
   description: string;
   path: string;
-  copyKey: string; // key to copy from response
+  copyKey: string;
 }
 
 export default function APIPage() {
+  const { toast } = useToast();
+
   const endpoints: ApiEndpoint[] = [
     {
       title: "Random Quote",
@@ -25,38 +28,27 @@ export default function APIPage() {
     },
   ];
 
-  // Store responses dynamically by path
-  const [responses, setResponses] = useState<Record<string, string>>({});
+  const [responses, setResponses] = useState<Record<string, Record<string, any>>>({});
 
-  // Fetch API data
   const fetchData = async (path: string) => {
     try {
       const res = await fetch(path);
       const data = await res.json();
-      setResponses((prev) => ({
-        ...prev,
-        [path]: JSON.stringify(data, null, 2),
-      }));
+      setResponses((prev) => ({ ...prev, [path]: data }));
     } catch (err) {
-      setResponses((prev) => ({ ...prev, [path]: "Error fetching data" }));
+      setResponses((prev) => ({ ...prev, [path]: { error: "Error fetching data" } }));
     }
   };
 
-  // Copy only relevant value from JSON
   const copyData = (path: string, key: string) => {
-    const responseStr = responses[path];
-    if (!responseStr) return;
+    const data = responses[path];
+    if (!data || !data[key]) return;
 
-    try {
-      const parsed = JSON.parse(responseStr);
-      const value = parsed[key];
-      if (!value) return;
-
-      navigator.clipboard.writeText(value);
-      alert(`Copied: ${value}`);
-    } catch {
-      alert("Error copying value");
-    }
+    navigator.clipboard.writeText(data[key]);
+    toast({
+      title: "Copied!",
+      description: `"${data[key]}" copied to clipboard.`,
+    });
   };
 
   return (
@@ -68,7 +60,6 @@ export default function APIPage() {
           <h2 className="text-2xl font-semibold mb-2">GET {endpoint.path}</h2>
           <p className="text-gray-300 mb-4">{endpoint.description}</p>
 
-          {/* Responsive Buttons */}
           <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 mb-4">
             <button
               onClick={() => fetchData(endpoint.path)}
@@ -87,10 +78,13 @@ export default function APIPage() {
             )}
           </div>
 
-          {/* Output */}
           {responses[endpoint.path] && (
             <pre className="mt-4 p-4 bg-gray-800 text-green-400 rounded overflow-x-auto break-words max-w-full shadow-lg border border-gray-700">
-              {responses[endpoint.path]}
+              {Object.entries(responses[endpoint.path]).map(([k, v]) => (
+                <div key={k}>
+                  <span className="font-semibold text-green-300">{k}:</span> {v}
+                </div>
+              ))}
             </pre>
           )}
         </section>
