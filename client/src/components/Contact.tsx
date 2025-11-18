@@ -52,57 +52,69 @@ export default function Contact() {
 
         {/* Two-column layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Left column: Contact cards (compact) */}
+          {/* Left column: Contact cards */}
           <div className="space-y-4">
-            <InteractiveCard className="group p-4">
+            <InteractiveCard className="p-4">
               <div className="flex items-center gap-3">
                 <Mail className="h-5 w-5 text-primary" />
-                <a
-                  href="mailto:sudharsanak1010@gmail.com"
-                  className="text-sm text-foreground/80 hover:text-primary transition-colors duration-200"
-                >
-                  sudharsanak1010@gmail.com
-                </a>
+                <span className="text-sm text-foreground/80">
+                  <strong>Email:</strong> 
+                  <a
+                    href="mailto:sudharsanak1010@gmail.com"
+                    className="ml-1 hover:text-primary transition-colors duration-200"
+                  >
+                    sudharsanak1010@gmail.com
+                  </a>
+                </span>
               </div>
             </InteractiveCard>
 
-            <InteractiveCard className="group p-4">
+            <InteractiveCard className="p-4">
               <div className="flex items-center gap-3">
                 <Phone className="h-5 w-5 text-primary" />
-                <a
-                  href="tel:+16822830833"
-                  className="text-sm text-foreground/80 hover:text-primary transition-colors duration-200"
-                >
-                  (682) 283-0833
-                </a>
+                <span className="text-sm text-foreground/80">
+                  <strong>Phone:</strong> 
+                  <a
+                    href="tel:+16822830833"
+                    className="ml-1 hover:text-primary transition-colors duration-200"
+                  >
+                    (682) 283-0833
+                  </a>
+                </span>
               </div>
             </InteractiveCard>
 
-            <InteractiveCard className="group p-4">
+            <InteractiveCard className="p-4">
               <div className="flex items-center gap-3">
                 <Linkedin className="h-5 w-5 text-primary" />
-                <a
-                  href="https://linkedin.com/in/sudharsan-srinivasan10"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-foreground/80 hover:text-primary transition-colors duration-200"
-                >
-                  linkedin.com/in/sudharsan-srinivasan10
-                </a>
+                <span className="text-sm text-foreground/80">
+                  <strong>LinkedIn:</strong> 
+                  <a
+                    href="https://linkedin.com/in/sudharsan-srinivasan10"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ml-1 hover:text-primary transition-colors duration-200"
+                  >
+                    linkedin.com/in/sudharsan-srinivasan10
+                  </a>
+                </span>
               </div>
             </InteractiveCard>
 
-            <InteractiveCard className="group p-4">
+            <InteractiveCard className="p-4">
               <div className="flex items-center gap-3">
                 <Github className="h-5 w-5 text-primary" />
-                <a
-                  href="https://github.com/sudharsan-ak"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-foreground/80 hover:text-primary transition-colors duration-200"
-                >
-                  github.com/sudharsan-ak
-                </a>
+                <span className="text-sm text-foreground/80">
+                  <strong>GitHub:</strong> 
+                  <a
+                    href="https://github.com/sudharsan-ak"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ml-1 hover:text-primary transition-colors duration-200"
+                  >
+                    github.com/sudharsan-ak
+                  </a>
+                </span>
               </div>
             </InteractiveCard>
           </div>
