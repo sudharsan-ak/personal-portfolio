@@ -2,113 +2,80 @@
 
 import React, { useState } from "react";
 
+interface ApiEndpoint {
+  title: string;
+  description: string;
+  path: string;
+}
+
 export default function APIPage() {
-  const [quote, setQuote] = useState("");
-  const [time, setTime] = useState("");
+  const endpoints: ApiEndpoint[] = [
+    {
+      title: "Random Quote",
+      description: "Returns a random inspirational programming quote.",
+      path: "/api/quote",
+    },
+    {
+      title: "Current Time",
+      description: "Returns the current server time in UTC.",
+      path: "/api/time",
+    },
+  ];
 
-  // Fetch random quote
-  const fetchQuote = async () => {
+  // State dynamically for each endpoint
+  const [responses, setResponses] = useState<Record<string, string>>({});
+
+  const fetchData = async (path: string) => {
     try {
-      const res = await fetch("/api/quote");
+      const res = await fetch(path);
       const data = await res.json();
-      setQuote(JSON.stringify(data, null, 2));
+      setResponses((prev) => ({ ...prev, [path]: JSON.stringify(data, null, 2) }));
     } catch (err) {
-      setQuote("Error fetching quote");
+      setResponses((prev) => ({ ...prev, [path]: "Error fetching data" }));
     }
   };
 
-  // Copy quote to clipboard
-  const copyQuote = () => {
-    if (!quote) return;
-    navigator.clipboard.writeText(quote);
-    alert("Quote copied to clipboard!");
-  };
-
-  // Fetch current time
-  const fetchTime = async () => {
-    try {
-      const res = await fetch("/api/time");
-      const data = await res.json();
-      setTime(JSON.stringify(data, null, 2));
-    } catch (err) {
-      setTime("Error fetching time");
-    }
-  };
-
-  // Copy time to clipboard
-  const copyTime = () => {
-    if (!time) return;
-    navigator.clipboard.writeText(time);
-    alert("Time copied to clipboard!");
+  const copyData = (path: string) => {
+    const value = responses[path];
+    if (!value) return;
+    navigator.clipboard.writeText(value);
+    alert("Copied to clipboard!");
   };
 
   return (
     <div className="p-8 max-w-5xl mx-auto">
       <h1 className="text-4xl font-bold mb-6 text-center">Public REST API</h1>
 
-      {/* Quote Endpoint */}
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-2">GET /api/quote</h2>
-        <p className="text-gray-300 mb-4">
-          Returns a random inspirational programming quote.
-        </p>
+      {endpoints.map((endpoint) => (
+        <section key={endpoint.path} className="mb-12">
+          <h2 className="text-2xl font-semibold mb-2">GET {endpoint.path}</h2>
+          <p className="text-gray-300 mb-4">{endpoint.description}</p>
 
-        <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 mb-4">
-          <button
-            onClick={fetchQuote}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors duration-200 w-full sm:w-auto"
-          >
-            Try It
-          </button>
-
-          {quote && (
+          <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 mb-4">
             <button
-              onClick={copyQuote}
-              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition-colors duration-200 w-full sm:w-auto"
+              onClick={() => fetchData(endpoint.path)}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors duration-200 w-full sm:w-auto"
             >
-              Copy Quote
+              Try It
             </button>
+
+            {responses[endpoint.path] && (
+              <button
+                onClick={() => copyData(endpoint.path)}
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition-colors duration-200 w-full sm:w-auto"
+              >
+                Copy
+              </button>
+            )}
+          </div>
+
+          {responses[endpoint.path] && (
+            <pre className="mt-4 p-4 bg-gray-900 text-green-400 rounded overflow-x-auto break-words max-w-full shadow-lg border border-gray-700">
+              {responses[endpoint.path]}
+            </pre>
           )}
-        </div>
-
-        {quote && (
-          <pre className="mt-4 p-4 bg-gray-900 text-green-400 rounded overflow-x-auto break-words max-w-full shadow-lg border border-gray-700">
-            {quote}
-          </pre>
-        )}
-      </section>
-
-      {/* Time Endpoint */}
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-2">GET /api/time</h2>
-        <p className="text-gray-300 mb-4">
-          Returns the current server time in UTC.
-        </p>
-
-        <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 mb-4">
-          <button
-            onClick={fetchTime}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors duration-200 w-full sm:w-auto"
-          >
-            Try It
-          </button>
-
-          {time && (
-            <button
-              onClick={copyTime}
-              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition-colors duration-200 w-full sm:w-auto"
-            >
-              Copy Time
-            </button>
-          )}
-        </div>
-
-        {time && (
-          <pre className="mt-4 p-4 bg-gray-900 text-green-400 rounded overflow-x-auto break-words max-w-full shadow-lg border border-gray-700">
-            {time}
-          </pre>
-        )}
-      </section>
+        </section>
+      ))}
     </div>
   );
 }
