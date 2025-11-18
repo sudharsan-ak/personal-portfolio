@@ -90,7 +90,7 @@ export default function Projects() {
           ))}
         </div>
         {/* New API Button */}
-        <div className="flex justify-center mb-12">
+        <div className="mt-12 flex justify-center">
           <a
             href="/api-docs"
             target="_blank"
