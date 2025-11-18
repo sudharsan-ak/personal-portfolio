@@ -9,12 +9,15 @@ import DynamicBackground from "@/components/DynamicBackground";
 import TimelineButton from "@/components/TimelineButton"; 
 import AIAssistantButton from "@/components/AIAssistantButton";
 import Resume from "@/pages/Resume";
+import APIPage from "@/pages/API";
+
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/resume" component={Resume} />
+      <Route path="/api-docs" component={APIPage} />
       <Route component={NotFound} />
     </Switch>
   );
