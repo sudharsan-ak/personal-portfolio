@@ -10,10 +10,6 @@ if (!SUPABASE_URL || !SUPABASE_KEY) {
   console.error("Missing SUPABASE_URL or SUPABASE_KEY environment variables!");
 }
 
-if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS || !EMAIL_TO) {
-  console.error("Missing SMTP email environment variables!");
-}
-
 // Create Supabase client
 const supabase = createClient(SUPABASE_URL!, SUPABASE_KEY!);
 
