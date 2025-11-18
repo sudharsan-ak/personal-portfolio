@@ -52,85 +52,57 @@ export default function Contact() {
 
         {/* Two-column layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Left column: Contact cards */}
-          <div className="space-y-6">
-            <InteractiveCard className="group">
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-primary/10 rounded-md">
-                  <Mail className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-1 group-hover:text-foreground transition-colors duration-200">
-                    Email
-                  </h3>
-                  <a
-                    href="mailto:sudharsanak1010@gmail.com"
-                    className="text-sm text-foreground/80 hover:text-primary transition-colors duration-200"
-                  >
-                    sudharsanak1010@gmail.com
-                  </a>
-                </div>
+          {/* Left column: Contact cards (compact) */}
+          <div className="space-y-4">
+            <InteractiveCard className="group p-4">
+              <div className="flex items-center gap-3">
+                <Mail className="h-5 w-5 text-primary" />
+                <a
+                  href="mailto:sudharsanak1010@gmail.com"
+                  className="text-sm text-foreground/80 hover:text-primary transition-colors duration-200"
+                >
+                  sudharsanak1010@gmail.com
+                </a>
               </div>
             </InteractiveCard>
 
-            <InteractiveCard className="group">
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-primary/10 rounded-md">
-                  <Phone className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-1 group-hover:text-foreground transition-colors duration-200">
-                    Phone
-                  </h3>
-                  <a
-                    href="tel:+16822830833"
-                    className="text-sm text-foreground/80 hover:text-primary transition-colors duration-200"
-                  >
-                    (682) 283-0833
-                  </a>
-                </div>
+            <InteractiveCard className="group p-4">
+              <div className="flex items-center gap-3">
+                <Phone className="h-5 w-5 text-primary" />
+                <a
+                  href="tel:+16822830833"
+                  className="text-sm text-foreground/80 hover:text-primary transition-colors duration-200"
+                >
+                  (682) 283-0833
+                </a>
               </div>
             </InteractiveCard>
 
-            <InteractiveCard className="group">
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-primary/10 rounded-md">
-                  <Linkedin className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-1 group-hover:text-foreground transition-colors duration-200">
-                    LinkedIn
-                  </h3>
-                  <a
-                    href="https://linkedin.com/in/sudharsan-srinivasan10"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-foreground/80 hover:text-primary transition-colors duration-200"
-                  >
-                    linkedin.com/in/sudharsan-srinivasan10
-                  </a>
-                </div>
+            <InteractiveCard className="group p-4">
+              <div className="flex items-center gap-3">
+                <Linkedin className="h-5 w-5 text-primary" />
+                <a
+                  href="https://linkedin.com/in/sudharsan-srinivasan10"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-foreground/80 hover:text-primary transition-colors duration-200"
+                >
+                  linkedin.com/in/sudharsan-srinivasan10
+                </a>
               </div>
             </InteractiveCard>
 
-            <InteractiveCard className="group">
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-primary/10 rounded-md">
-                  <Github className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-1 group-hover:text-foreground transition-colors duration-200">
-                    GitHub
-                  </h3>
-                  <a
-                    href="https://github.com/sudharsan-ak"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-foreground/80 hover:text-primary transition-colors duration-200"
-                  >
-                    github.com/sudharsan-ak
-                  </a>
-                </div>
+            <InteractiveCard className="group p-4">
+              <div className="flex items-center gap-3">
+                <Github className="h-5 w-5 text-primary" />
+                <a
+                  href="https://github.com/sudharsan-ak"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-foreground/80 hover:text-primary transition-colors duration-200"
+                >
+                  github.com/sudharsan-ak
+                </a>
               </div>
             </InteractiveCard>
           </div>
