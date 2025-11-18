@@ -62,7 +62,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Insert into Supabase
     const { data, error } = await supabase
       .from("contacts")
-      .insert([{ name, email, message, created_at: new Date() }]);
+      .insert([{ name, email, message, ip, user_agent: userAgent, created_at: new Date() }]);
 
     if (error) {
       console.error("Supabase insert error:", error);
