@@ -2,11 +2,20 @@
 
 import { createClient } from "@supabase/supabase-js";
 
-// Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_ANON_KEY!
-);
+// Ensure environment variables exist
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_KEY;
+
+if (!SUPABASE_URL || !SUPABASE_KEY) {
+  console.error("Missing SUPABASE_URL or SUPABASE_KEY environment variables!");
+}
+
+if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS || !EMAIL_TO) {
+  console.error("Missing SMTP email environment variables!");
+}
+
+// Create Supabase client
+const supabase = createClient(SUPABASE_URL!, SUPABASE_KEY!);
 
 export default async function handler(req, res) {
   try {
