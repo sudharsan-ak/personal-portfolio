@@ -89,18 +89,16 @@ export default function Projects() {
             </InteractiveCard>
           ))}
         </div>
-        <br>
-          {/* New API Button */}
-          <div className="flex justify-center mb-12">
-            <a
-              href="/api-docs"
-              target="_blank"
-              className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition-colors duration-200"
-            >
-              Explore My Public APIs
-            </a>
-          </div>
-        </br>
+        {/* New API Button */}
+        <div className="flex justify-center mb-12">
+          <a
+            href="/api-docs"
+            target="_blank"
+            className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition-colors duration-200"
+          >
+            Explore My Public APIs
+          </a>
+        </div>
       </div>
     </section>
   );
