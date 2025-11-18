@@ -26,7 +26,7 @@ function Router() {
 function App() {
   const [location] = useLocation();
 
-  const hideFloatingButtons = location === "/resume";
+  const hideFloatingButtons = location === "/resume" || location === "/api-docs";
 
   return (
     <QueryClientProvider client={queryClient}>
