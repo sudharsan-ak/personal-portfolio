@@ -41,15 +41,6 @@ export default function Projects() {
         <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">
           Projects
         </h2>
-        {/* New API Button */}
-        <div className="flex justify-center mb-12">
-          <a
-            href="/api-docs"
-            className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition-colors duration-200"
-          >
-            Explore My Public APIs
-          </a>
-        </div>
         <div className="space-y-8">
           {projects.map((project, index) => (
             <InteractiveCard key={index} className="group">
@@ -97,6 +88,16 @@ export default function Projects() {
               </div>
             </InteractiveCard>
           ))}
+        </div>
+        {/* New API Button */}
+        <div className="flex justify-center mb-12">
+          <a
+            href="/api-docs"
+            target="_blank"
+            className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition-colors duration-200"
+          >
+            Explore My Public APIs
+          </a>
         </div>
       </div>
     </section>
