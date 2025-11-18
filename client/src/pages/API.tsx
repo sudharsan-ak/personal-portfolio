@@ -21,6 +21,12 @@ export default function APIPage() {
       path: "/api/time",
       copyKey: "currentTime",
     },
+    {
+      title: "API Visitor Counter",
+      description: "Returns the number of times this API has been visited.",
+      path: "/api/visits",
+      copyKey: "visits",
+    }
   ];
 
   const [responses, setResponses] = useState<Record<string, Record<string, any>>>({});
