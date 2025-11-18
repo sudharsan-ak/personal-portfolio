@@ -1,8 +1,47 @@
 import { Mail, Linkedin, Github, Phone } from "lucide-react";
 import InteractiveCard from "@/components/ui/InteractiveCard";
 import InteractiveButton from "@/components/ui/InteractiveButton";
+import { useState } from "react";
 
 export default function Contact() {
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setSuccess(null);
+    setError(null);
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setSuccess(data.message);
+        setForm({ name: "", email: "", message: "" });
+      } else {
+        setError(data.message || "Something went wrong");
+      }
+    } catch (err) {
+      setError("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section
       id="contact"
@@ -12,6 +51,52 @@ export default function Contact() {
         <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">
           Connect With Me
         </h2>
+
+        {/* Contact Form */}
+        <form
+          onSubmit={handleSubmit}
+          className="max-w-xl mx-auto mb-12 space-y-4"
+        >
+          {success && (
+            <p className="text-green-600 text-center">{success}</p>
+          )}
+          {error && <p className="text-red-600 text-center">{error}</p>}
+
+          <input
+            type="text"
+            name="name"
+            placeholder="Your Name"
+            value={form.name}
+            onChange={handleChange}
+            className="w-full p-2 border rounded"
+            required
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Your Email"
+            value={form.email}
+            onChange={handleChange}
+            className="w-full p-2 border rounded"
+            required
+          />
+          <textarea
+            name="message"
+            placeholder="Your Message"
+            value={form.message}
+            onChange={handleChange}
+            className="w-full p-2 border rounded"
+            rows={5}
+            required
+          />
+          <button
+            type="submit"
+            disabled={loading}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            {loading ? "Sending..." : "Send Message"}
+          </button>
+        </form>
 
         {/* Intro & Email Button */}
         <div className="text-center mb-12">
