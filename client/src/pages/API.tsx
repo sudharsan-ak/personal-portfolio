@@ -1,7 +1,4 @@
-// client/src/pages/API.tsx
-
 import React, { useState } from "react";
-import { useToast } from "@/components/hooks/use-toast"; // adjust path if needed
 
 interface ApiEndpoint {
   title: string;
@@ -11,8 +8,6 @@ interface ApiEndpoint {
 }
 
 export default function APIPage() {
-  const { toast } = useToast();
-
   const endpoints: ApiEndpoint[] = [
     {
       title: "Random Quote",
@@ -29,13 +24,14 @@ export default function APIPage() {
   ];
 
   const [responses, setResponses] = useState<Record<string, Record<string, any>>>({});
+  const [toast, setToast] = useState<string | null>(null);
 
   const fetchData = async (path: string) => {
     try {
       const res = await fetch(path);
       const data = await res.json();
       setResponses((prev) => ({ ...prev, [path]: data }));
-    } catch (err) {
+    } catch {
       setResponses((prev) => ({ ...prev, [path]: { error: "Error fetching data" } }));
     }
   };
@@ -45,14 +41,14 @@ export default function APIPage() {
     if (!data || !data[key]) return;
 
     navigator.clipboard.writeText(data[key]);
-    toast({
-      title: "Copied!",
-      description: `"${data[key]}" copied to clipboard.`,
-    });
+    setToast(`Copied: "${data[key]}"`);
+
+    // Hide toast after 2 seconds
+    setTimeout(() => setToast(null), 2000);
   };
 
   return (
-    <div className="p-8 max-w-5xl mx-auto">
+    <div className="p-8 max-w-5xl mx-auto relative">
       <h1 className="text-4xl font-bold mb-6 text-center">Public REST API</h1>
 
       {endpoints.map((endpoint) => (
@@ -89,6 +85,26 @@ export default function APIPage() {
           )}
         </section>
       ))}
+
+      {/* Toast Notification */}
+      {toast && (
+        <div className="fixed bottom-6 right-6 bg-gray-900 text-white px-4 py-2 rounded shadow-lg animate-fade-in">
+          {toast}
+        </div>
+      )}
+
+      {/* Tailwind animation */}
+      <style>
+        {`
+          @keyframes fade-in {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+          }
+          .animate-fade-in {
+            animation: fade-in 0.3s ease-out;
+          }
+        `}
+      </style>
     </div>
   );
 }
