@@ -55,6 +55,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     await contactSchema.validate({ name, email, message });
     console.log("Validation passed");
 
+    // Get user IP and User-Agent
+    const ip = (req.headers["x-forwarded-for"] as string) || req.socket.remoteAddress;
+    const userAgent = req.headers["user-agent"] || "Unknown";
+
     // Insert into Supabase
     const { data, error } = await supabase
       .from("contacts")
@@ -76,6 +80,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         <p><strong>Name:</strong> ${name}</p>
         <p><strong>Email:</strong> ${email}</p>
         <p><strong>Message:</strong><br/>${message}</p>
+        <hr/>
+        <p><strong>IP:</strong> ${ip}</p>
+        <p><strong>User-Agent:</strong> ${userAgent}</p>
       `,
     });
 
