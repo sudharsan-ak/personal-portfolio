@@ -2,12 +2,12 @@ import { Mail, Linkedin, Github, Phone } from "lucide-react";
 import InteractiveCard from "@/components/ui/InteractiveCard";
 import InteractiveButton from "@/components/ui/InteractiveButton";
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast"; // assuming you have a toast hook
 
 export default function Contact() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast(); // use your existing toast system
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -18,8 +18,6 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setSuccess(null);
-    setError(null);
 
     try {
       const res = await fetch("/api/contact", {
@@ -30,13 +28,13 @@ export default function Contact() {
 
       const data = await res.json();
       if (res.ok) {
-        setSuccess(data.message);
+        toast({ title: "Success", description: data.message });
         setForm({ name: "", email: "", message: "" });
       } else {
-        setError(data.message || "Something went wrong");
+        toast({ title: "Error", description: data.message, variant: "destructive" });
       }
     } catch (err) {
-      setError("Something went wrong");
+      toast({ title: "Error", description: "Something went wrong", variant: "destructive" });
     } finally {
       setLoading(false);
     }
@@ -52,51 +50,41 @@ export default function Contact() {
           Connect With Me
         </h2>
 
-        {/* Contact Form */}
-        <form
-          onSubmit={handleSubmit}
-          className="max-w-xl mx-auto mb-12 space-y-4"
-        >
-          {success && (
-            <p className="text-green-600 text-center">{success}</p>
-          )}
-          {error && <p className="text-red-600 text-center">{error}</p>}
-
-          <input
-            type="text"
-            name="name"
-            placeholder="Your Name"
-            value={form.name}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Your Email"
-            value={form.email}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          />
-          <textarea
-            name="message"
-            placeholder="Your Message"
-            value={form.message}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            rows={5}
-            required
-          />
-          <button
-            type="submit"
-            disabled={loading}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
-            {loading ? "Sending..." : "Send Message"}
-          </button>
-        </form>
+        {/* Contact Form with Card-style Inputs */}
+        <InteractiveCard className="max-w-xl mx-auto mb-12 p-6 space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <input
+              type="text"
+              name="name"
+              placeholder="Your Name"
+              value={form.name}
+              onChange={handleChange}
+              className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary transition"
+              required
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Your Email"
+              value={form.email}
+              onChange={handleChange}
+              className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary transition"
+              required
+            />
+            <textarea
+              name="message"
+              placeholder="Your Message"
+              value={form.message}
+              onChange={handleChange}
+              className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary transition"
+              rows={5}
+              required
+            />
+            <InteractiveButton size="lg" type="submit" disabled={loading} className="w-full">
+              {loading ? "Sending..." : "Send Message"}
+            </InteractiveButton>
+          </form>
+        </InteractiveCard>
 
         {/* Intro & Email Button */}
         <div className="text-center mb-12">
