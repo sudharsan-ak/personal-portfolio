@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from "@vercel/node";
-import { profileData } from "../data/profileData"; // adjust path if needed
+import { profileData } from "../data/profileData.ts"; // adjust path if needed
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
@@ -83,3 +83,4 @@ If the question isn’t about Sudharsan, politely reply that you only know about
     return res.status(500).json({ error: "Server error", details: error.message });
   }
 }
+
