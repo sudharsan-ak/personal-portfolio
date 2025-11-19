@@ -63,7 +63,7 @@ export default function APIPage() {
         return (
           <section key={endpoint.path} className="mb-12">
             <h2 className="text-2xl font-semibold mb-2">GET {endpoint.path}</h2>
-            <p className="text-gray-300 mb-4">{endpoint.description}</p>
+            <p className="mb-4">{endpoint.description}</p>
 
             <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 mb-4">
               <button
