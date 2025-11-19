@@ -190,7 +190,7 @@ If the question isn’t about Sudharsan, politely reply that you only know about
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: process.env.OPENAI_MODEL || "gpt-4o-mini",
+        model: process.env.OPENAI_MODEL || "gpt-3.5-turbo",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: message },
@@ -213,4 +213,5 @@ If the question isn’t about Sudharsan, politely reply that you only know about
     return res.status(500).json({ error: "OpenAI API request failed", details: error.message });
   }
 }
+
 
