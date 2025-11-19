@@ -60,14 +60,14 @@ export default function APIPage() {
     {
       title: "Word Counter",
       description: "Counts the number of words in the text you provide.",
-      path: "/api/word-count",
+      path: "/api/wordcount",
       copyKey: "words",
       type: "input",
     },
     {
       title: "Character Counter",
       description: "Counts the number of characters in the text you provide.",
-      path: "/api/char-count",
+      path: "/api/charcount",
       copyKey: "characters",
       type: "input",
     },
