@@ -62,7 +62,11 @@ export default function APIPage() {
         const response = responses[endpoint.path];
         return (
           <section key={endpoint.path} className="mb-12">
-            <h2 className="text-2xl font-semibold mb-2">GET {endpoint.path}</h2>
+            <h2 className="text-2xl font-semibold mb-2">
+              GET {endpoint.path}
+            </h2>
+
+            {/* FIXED color */}
             <p className="mb-4">{endpoint.description}</p>
 
             <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 mb-4">
@@ -73,7 +77,6 @@ export default function APIPage() {
                 Try It
               </button>
 
-              {/* Copy button only if copyKey exists */}
               {endpoint.copyKey && response && (
                 <button
                   onClick={() =>
@@ -86,7 +89,6 @@ export default function APIPage() {
               )}
             </div>
 
-            {/* Always show full JSON response */}
             {response && (
               <pre className="mt-4 p-4 bg-gray-800 text-green-400 rounded overflow-x-auto break-words max-w-full shadow-lg border border-gray-700">
                 {JSON.stringify(response, null, 2)}
@@ -96,14 +98,12 @@ export default function APIPage() {
         );
       })}
 
-      {/* Toast Notification */}
       {toast && (
         <div className="fixed bottom-6 right-6 bg-gray-900 text-white px-4 py-2 rounded shadow-lg animate-fade-in">
           {toast}
         </div>
       )}
 
-      {/* Tailwind animation */}
       <style>
         {`
           @keyframes fade-in {
