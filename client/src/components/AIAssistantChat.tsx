@@ -88,12 +88,12 @@ export default function AIAssistantChat({ isOpen, setIsOpen, buttonRef }: AIAssi
       animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : 20 }}
       transition={{ type: "spring", stiffness: 260, damping: 30 }}
       style={{ bottom: position.bottom, right: position.right }}
-      className={`fixed z-50 w-[90vw] max-w-[400px] h-[70vh] max-h-[600px] sm:w-[350px] sm:h-[500px] 
-                 bg-gray-900/90 backdrop-blur-md border border-indigo-500/30 rounded-2xl shadow-2xl overflow-hidden
+      className={`fixed z-50 w-[90vw] max-w-[420px] h-[75vh] max-h-[650px] sm:w-[380px] sm:h-[550px] 
+                 bg-transparent rounded-2xl shadow-2xl overflow-hidden
                  ${isOpen ? "pointer-events-auto" : "pointer-events-none"}`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-indigo-400/20">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-indigo-400/20 bg-indigo-900/90">
         <h4 className="font-semibold text-white text-lg">AI Assistant</h4>
         <button
           onClick={() => setIsOpen(false)}
@@ -104,14 +104,14 @@ export default function AIAssistantChat({ isOpen, setIsOpen, buttonRef }: AIAssi
       </div>
 
       {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto px-3 py-3 space-y-3 text-sm">
+      <div className="flex flex-col flex-1 overflow-y-auto px-3 py-3 space-y-3 text-sm bg-transparent">
         {messages.map((msg, idx) => (
           <div
             key={idx}
             className={`px-3 py-2 rounded-lg max-w-[85%] break-words ${
               msg.sender === "bot"
                 ? "bg-indigo-800/50 text-indigo-100 self-start shadow-sm"
-                : "bg-gray-200 text-gray-900 self-end ml-auto"
+                : "bg-indigo-500 text-white self-end ml-auto"
             }`}
           >
             {msg.text}
@@ -121,14 +121,14 @@ export default function AIAssistantChat({ isOpen, setIsOpen, buttonRef }: AIAssi
       </div>
 
       {/* Input */}
-      <div className="flex items-center gap-2 p-3 border-t border-indigo-500/20 bg-gray-900/70">
+      <div className="flex items-center gap-2 p-3 border-t border-indigo-500/20 bg-transparent">
         <input
           type="text"
           placeholder="Ask something..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSend()}
-          className="flex-1 bg-transparent text-white border border-indigo-400/30 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none placeholder-gray-400"
+          className="flex-1 bg-transparent text-white border border-indigo-400/30 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none placeholder-indigo-400"
         />
         <button
           onClick={handleSend}
