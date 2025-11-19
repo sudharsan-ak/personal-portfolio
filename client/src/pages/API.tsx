@@ -88,7 +88,6 @@ export default function APIPage() {
     try {
       let res;
 
-      // FIXED — Always send valid text field
       if (type === "input") {
         const text = (inputs[path] ?? "").trim();
         res = await fetch(path, {
@@ -96,9 +95,7 @@ export default function APIPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ text }),
         });
-      }
-
-      else if (type === "timezone") {
+      } else if (type === "timezone") {
         const tzInput = inputs[path] || {};
 
         res = await fetch(path, {
@@ -112,13 +109,32 @@ export default function APIPage() {
             ampm: tzInput.ampm || "AM",
           }),
         });
-      }
-
-      else {
+      } else {
         res = await fetch(path);
       }
 
       const data = await res.json();
+
+      // Compute time difference for timezone API
+      if (type === "timezone" && data.originalTime && data.convertedTime) {
+        const [oHourStr, oMinStr] = data.originalTime.split(/[: ]/);
+        const [cHourStr, cMinStr] = data.convertedTime.split(/[: ]/);
+        let oHour = Number(oHourStr);
+        const oMin = Number(oMinStr);
+        let cHour = Number(cHourStr);
+        const cMin = Number(cMinStr);
+        if (data.originalTime.includes("PM") && oHour < 12) oHour += 12;
+        if (data.originalTime.includes("AM") && oHour === 12) oHour = 0;
+        if (data.convertedTime.includes("PM") && cHour < 12) cHour += 12;
+        if (data.convertedTime.includes("AM") && cHour === 12) cHour = 0;
+
+        let diffMinutes = (cHour * 60 + cMin) - (oHour * 60 + oMin);
+        if (diffMinutes < 0) diffMinutes += 24 * 60; // handle negative diff
+        const diffH = Math.floor(diffMinutes / 60);
+        const diffM = diffMinutes % 60;
+        data.timeDifference = `${diffH}h ${diffM}m`;
+      }
+
       setResponses((prev) => ({ ...prev, [path]: data }));
     } catch {
       setResponses((prev) => ({
@@ -131,7 +147,6 @@ export default function APIPage() {
   const copyData = (path: string, key: string) => {
     const data = responses[path];
     if (!data || data[key] === undefined) return;
-
     navigator.clipboard.writeText(data[key].toString());
     setToast(`Copied: "${data[key]}"`);
     setTimeout(() => setToast(null), 2000);
@@ -147,7 +162,6 @@ export default function APIPage() {
       }
       return { ...prev, [path]: !prev[path] };
     });
-
     setResponses((prev) => ({ ...prev, [path]: undefined }));
   };
 
@@ -193,7 +207,6 @@ export default function APIPage() {
 
                 {endpoint.type === "timezone" && (
                   <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 mb-4 items-center">
-
                     <div className="flex flex-col">
                       <label className="mb-1">From Timezone</label>
                       <select
@@ -201,10 +214,7 @@ export default function APIPage() {
                         onChange={(e) =>
                           setInputs((prev) => ({
                             ...prev,
-                            [endpoint.path]: {
-                              ...prev[endpoint.path],
-                              fromTimezone: e.target.value,
-                            },
+                            [endpoint.path]: { ...prev[endpoint.path], fromTimezone: e.target.value },
                           }))
                         }
                         className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700"
@@ -224,10 +234,7 @@ export default function APIPage() {
                         placeholder="Hour"
                         value={inputs[endpoint.path]?.hour ?? ""}
                         onChange={(e) =>
-                          setInputs((prev) => ({
-                            ...prev,
-                            [endpoint.path]: { ...prev[endpoint.path], hour: e.target.value },
-                          }))
+                          setInputs((prev) => ({ ...prev, [endpoint.path]: { ...prev[endpoint.path], hour: e.target.value } }))
                         }
                         className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700 w-20"
                       />
@@ -242,10 +249,7 @@ export default function APIPage() {
                         placeholder="Minute"
                         value={inputs[endpoint.path]?.minute ?? ""}
                         onChange={(e) =>
-                          setInputs((prev) => ({
-                            ...prev,
-                            [endpoint.path]: { ...prev[endpoint.path], minute: e.target.value },
-                          }))
+                          setInputs((prev) => ({ ...prev, [endpoint.path]: { ...prev[endpoint.path], minute: e.target.value } }))
                         }
                         className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700 w-20"
                       />
@@ -256,10 +260,7 @@ export default function APIPage() {
                       <select
                         value={inputs[endpoint.path]?.ampm || "AM"}
                         onChange={(e) =>
-                          setInputs((prev) => ({
-                            ...prev,
-                            [endpoint.path]: { ...prev[endpoint.path], ampm: e.target.value },
-                          }))
+                          setInputs((prev) => ({ ...prev, [endpoint.path]: { ...prev[endpoint.path], ampm: e.target.value } }))
                         }
                         className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700"
                       >
@@ -273,10 +274,7 @@ export default function APIPage() {
                       <select
                         value={inputs[endpoint.path]?.toTimezone || "UTC"}
                         onChange={(e) =>
-                          setInputs((prev) => ({
-                            ...prev,
-                            [endpoint.path]: { ...prev[endpoint.path], toTimezone: e.target.value },
-                          }))
+                          setInputs((prev) => ({ ...prev, [endpoint.path]: { ...prev[endpoint.path], toTimezone: e.target.value } }))
                         }
                         className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700"
                       >
@@ -307,9 +305,16 @@ export default function APIPage() {
                 </div>
 
                 {response && (
-                  <pre className="mt-4 p-4 bg-gray-700 text-green-400 rounded overflow-x-auto break-words max-w-full shadow-lg border border-gray-600">
-                    {JSON.stringify(response, null, 2)}
-                  </pre>
+                  <div>
+                    <pre className="mt-4 p-4 bg-gray-700 text-green-400 rounded overflow-x-auto break-words max-w-full shadow-lg border border-gray-600">
+                      {JSON.stringify(response, null, 2)}
+                    </pre>
+                    {response.timeDifference && (
+                      <div className="mt-2 p-2 bg-gray-600 text-white rounded">
+                        Time Difference: {response.timeDifference}
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
             )}
