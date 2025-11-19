@@ -6,128 +6,90 @@ import stringSimilarity from "string-similarity";
 // -------------------------------
 const profileData = {
   name: "Sudharsan Srinivasan",
-  title: "Software Engineer",
-  about:
-    "Software Engineer passionate about building scalable, user-focused web applications. Skilled in React, TypeScript, Meteor, MongoDB, Node.js, and UI/UX design. Experienced across full SDLC with a focus on performance, security, and accessibility. Strong problem-solving abilities and quick learner.",
-  skills: ["Javascript", "HTML", "CSS", "Lodash", "React", "TypeScript", "Meteor", "MongoDB", "Node.js", "WordPress", "UI/UX Design", "Framer Motion", "Vite", "REST APIs", "Agile Methodologies", "Jira", "Git/GitHub", "Testing & Debugging", "CI/CD", "SEO Optimization"],
+  skills: ["Javascript", "HTML", "CSS", "React", "TypeScript", "Meteor", "MongoDB", "Node.js", "WordPress", "UI/UX Design"],
   experience: [
     {
       company: "Fortress Information Security",
       role: "Software Engineer",
-      summary:
-        "Develops tools for Cyber Supply Chain and Asset Vulnerability Management using Meteor, MongoDB, and Lodash. Optimizes internal tools and ensures secure and performant web platforms.",
-      technologies: ["Meteor", "MongoDB", "Lodash", "JavaScript", "Node.js"],
+      summary: "Develops tools using Meteor, MongoDB, Lodash, React. Optimizes internal tools."
     },
     {
       company: "Merch",
       role: "Full Stack Developer Intern",
-      summary:
-        "Built front-end pages integrated with WordPress CMS, optimized SEO, and improved load times for e-commerce platform.",
-      technologies: ["HTML", "CSS", "JavaScript", "TypeScript", "WordPress CMS"],
-    },
+      summary: "Built front-end pages with WordPress CMS and React. Improved load times and SEO."
+    }
   ],
   projects: [
     {
       name: "Portfolio Website",
-      description:
-        "Interactive personal portfolio built with React, TypeScript, and Framer Motion. Showcases projects, skills, and experience dynamically.",
+      description: "Interactive personal portfolio built with React, TypeScript, and Framer Motion."
     },
     {
       name: "Internal Tool Suite",
-      description:
-        "Developed data management tools for Fortress Information Security’s platform, enabling faster insights into asset vulnerabilities and supply chain data.",
-    },
-  ],
-  education: [
-    { degree: "B.E. in Computer Science and Engineering", institution: "CEG, Anna University" },
-    { degree: "Masters in Science in Computer Science and Engineering", institution: "University of Texas, Arlington" },
-  ],
-  languages: ["English (Fluent)", "Tamil (Native)", "Hindi (Intermediate)"],
-  interests: ["Web Development", "Open Source Contribution", "UI/UX Design", "Basketball", "Cricket", "Travel", "Movies"],
-  contact: { email: "sudharsanak1010@gmail.com", phone: "+1 (682) 283-0833" },
+      description: "Data management tools for Fortress Information Security platform using Meteor and React."
+    }
+  ]
 };
 
 // -------------------------------
-// Helper: Local embedding approximation using term frequency
+// Helper functions
 // -------------------------------
-function textVector(text: string) {
-  const words = text.toLowerCase().split(/\W+/).filter(Boolean);
-  const freq: Record<string, number> = {};
-  words.forEach(w => (freq[w] = (freq[w] || 0) + 1));
-  return freq;
+
+function findRelevantSkills(query: string) {
+  return profileData.skills.filter(skill =>
+    stringSimilarity.compareTwoStrings(query.toLowerCase(), skill.toLowerCase()) > 0.3 || query.toLowerCase().includes(skill.toLowerCase())
+  );
 }
 
-function cosineSim(vecA: Record<string, number>, vecB: Record<string, number>) {
-  let dot = 0,
-    normA = 0,
-    normB = 0;
-  const keys = new Set([...Object.keys(vecA), ...Object.keys(vecB)]);
-  keys.forEach(k => {
-    const a = vecA[k] || 0;
-    const b = vecB[k] || 0;
-    dot += a * b;
-    normA += a * a;
-    normB += b * b;
-  });
-  return normA && normB ? dot / (Math.sqrt(normA) * Math.sqrt(normB)) : 0;
-}
-
-// -------------------------------
-// Generate answer
-// -------------------------------
-function generateAnswer(query: string) {
-  const sections = [
-    { title: "About", text: profileData.about },
-    { title: "Skills", text: profileData.skills.join(", ") },
-    { title: "Experience", text: profileData.experience.map(e => `${e.role} at ${e.company}: ${e.summary}`).join("\n") },
-    { title: "Projects", text: profileData.projects.map(p => `${p.name}: ${p.description}`).join("\n") },
-    { title: "Education", text: profileData.education.map(e => `${e.degree} at ${e.institution}`).join("\n") },
-    { title: "Languages", text: profileData.languages.join(", ") },
-    { title: "Interests", text: profileData.interests.join(", ") },
-    { title: "Contact", text: `${profileData.contact.email}, ${profileData.contact.phone}` },
-  ];
-
-  const queryVec = textVector(query);
-
-  // Step 1: Score each section using cosine similarity (local embedding)
-  const scoredSections = sections.map(s => ({ ...s, score: cosineSim(queryVec, textVector(s.text)) }));
-
-  // Step 2: Also include fuzzy title match
-  const titleMatches = stringSimilarity.findBestMatch(query.toLowerCase(), sections.map(s => s.title.toLowerCase())).ratings;
-  titleMatches.forEach(tm => {
-    if (tm.rating > 0.3) {
-      const sec = sections.find(s => s.title.toLowerCase() === tm.target.toLowerCase());
-      if (sec) scoredSections.find(s => s.title === sec.title)!.score += tm.rating;
+function findRelevantProjects(skills: string[]) {
+  const projects: string[] = [];
+  profileData.projects.forEach(p => {
+    if (skills.some(skill => p.description.toLowerCase().includes(skill.toLowerCase()))) {
+      projects.push(p.name);
     }
   });
+  return projects;
+}
 
-  // Step 3: Sort by score descending
-  scoredSections.sort((a, b) => b.score - a.score);
-
-  // Step 4: Take top 2-3 sections for multi-part answers
-  const topSections = scoredSections.filter(s => s.score > 0).slice(0, 3);
-
-  // Step 5: Fallback for irrelevant questions
-  if (topSections.length === 0) {
-    return "I’m an assistant specifically for Sudharsan Srinivasan’s profile, so I only know about him.";
-  }
-
-  // Step 6: Combine answer
-  return topSections.map(s => `${s.title}: ${s.text}`).join("\n\n");
+function findRelevantExperience(skills: string[]) {
+  const exp: string[] = [];
+  profileData.experience.forEach(e => {
+    if (skills.some(skill => e.summary.toLowerCase().includes(skill.toLowerCase()))) {
+      exp.push(`${e.role} at ${e.company}: ${e.summary}`);
+    }
+  });
+  return exp;
 }
 
 // -------------------------------
-// API Handler
+// Main handler
 // -------------------------------
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const { message } = req.body;
     if (!message) return res.status(400).json({ error: "No message provided" });
 
-    const answer = generateAnswer(message);
+    const relevantSkills = findRelevantSkills(message);
+
+    if (relevantSkills.length === 0) {
+      return res.status(200).json({ answer: "I only have information about Sudharsan’s professional profile." });
+    }
+
+    const relevantProjects = findRelevantProjects(relevantSkills);
+    const relevantExperience = findRelevantExperience(relevantSkills);
+
+    // Compose human-like answer
+    let answer = `Yes, Sudharsan has experience with ${relevantSkills.join(", ")}.`;
+    if (relevantProjects.length) {
+      answer += ` He has worked on projects like ${relevantProjects.join(", ")}.`;
+    }
+    if (relevantExperience.length) {
+      answer += ` In his work experience, he actively works with ${relevantSkills.join(", ")}.`;
+    }
+
     return res.status(200).json({ answer });
   } catch (error: any) {
-    console.error("Local AI Assistant Error:", error);
-    return res.status(500).json({ error: "Local AI processing failed", details: error.message });
+    console.error("AI Assistant Error:", error);
+    return res.status(500).json({ error: "Internal Server Error", details: error.message });
   }
 }
