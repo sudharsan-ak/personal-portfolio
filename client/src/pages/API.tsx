@@ -5,8 +5,8 @@ interface ApiEndpoint {
   title: string;
   description: string;
   path: string;
-  copyKey?: string; // Key to copy from the JSON
-  type?: "input"; // indicates this API uses user input
+  copyKey?: string;
+  type?: "input"; // indicates API requires user input
 }
 
 export default function APIPage() {
@@ -35,6 +35,13 @@ export default function APIPage() {
       copyKey: "hash",
       type: "input",
     },
+    {
+      title: "Word Counter",
+      description: "Send text and receive the number of words in it.",
+      path: "/api/wordcount",
+      copyKey: "wordCount",
+      type: "input",
+    },
   ];
 
   const [responses, setResponses] = useState<Record<string, any>>({});
@@ -45,6 +52,7 @@ export default function APIPage() {
   const toggleExpand = (path: string) => {
     setExpanded((prev) => {
       const isExpanded = !prev[path];
+      // Reset input & response when collapsed
       if (!isExpanded && endpoints.find((e) => e.path === path)?.type === "input") {
         setInputs((inp) => ({ ...inp, [path]: "" }));
         setResponses((resp) => ({ ...resp, [path]: undefined }));
