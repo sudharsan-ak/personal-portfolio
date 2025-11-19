@@ -5,8 +5,8 @@ interface ApiEndpoint {
   title: string;
   description: string;
   path: string;
-  copyKey?: string; 
-  type?: "input"; 
+  copyKey?: string; // Key to copy from the JSON
+  type?: "input"; // indicates this API uses user input
 }
 
 export default function APIPage() {
@@ -40,10 +40,17 @@ export default function APIPage() {
   const [responses, setResponses] = useState<Record<string, any>>({});
   const [inputs, setInputs] = useState<Record<string, string>>({});
   const [toast, setToast] = useState<string | null>(null);
-  const [open, setOpen] = useState<Record<string, boolean>>({});
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
-  const toggleSection = (path: string) => {
-    setOpen((prev) => ({ ...prev, [path]: !prev[path] }));
+  const toggleExpand = (path: string) => {
+    setExpanded((prev) => {
+      const isExpanded = !prev[path];
+      if (!isExpanded && endpoints.find((e) => e.path === path)?.type === "input") {
+        setInputs((inp) => ({ ...inp, [path]: "" }));
+        setResponses((resp) => ({ ...resp, [path]: undefined }));
+      }
+      return { ...prev, [path]: isExpanded };
+    });
   };
 
   const fetchData = async (path: string, type?: string) => {
@@ -60,10 +67,7 @@ export default function APIPage() {
       const data = await res.json();
       setResponses((prev) => ({ ...prev, [path]: data }));
     } catch {
-      setResponses((prev) => ({
-        ...prev,
-        [path]: { error: "Error fetching data" },
-      }));
+      setResponses((prev) => ({ ...prev, [path]: { error: "Error fetching data" } }));
     }
   };
 
@@ -82,33 +86,33 @@ export default function APIPage() {
 
       {endpoints.map((endpoint) => {
         const response = responses[endpoint.path];
-        const isOpen = open[endpoint.path];
+        const isOpen = expanded[endpoint.path] || false;
 
         return (
-          <section key={endpoint.path} className="mb-6 border-b border-gray-700 pb-4">
-            
-            {/* Collapsible Header */}
-            <button
-              onClick={() => toggleSection(endpoint.path)}
-              className="w-full flex justify-between items-center py-3 text-left"
+          <section key={endpoint.path} className="mb-6 border border-gray-700 rounded">
+            {/* Header */}
+            <div
+              className={`flex justify-between items-center cursor-pointer p-4 rounded transition-colors duration-200
+                ${isOpen ? "bg-gray-700" : "bg-gray-900 hover:bg-gray-800"}`}
+              onClick={() => toggleExpand(endpoint.path)}
             >
-              <h2 className="text-2xl font-semibold">
-                GET {endpoint.path}
-              </h2>
-
-              <span
-                className={`transition-transform duration-300 ${
+              <h2 className="text-2xl font-semibold text-white">{endpoint.title}</h2>
+              <svg
+                className={`w-5 h-5 transform transition-transform duration-300 ${
                   isOpen ? "rotate-90" : ""
                 }`}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
               >
-                ▶
-              </span>
-            </button>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
 
-            {/* Collapsible Content */}
             {isOpen && (
-              <div className="mt-2 animate-fade-in">
-                <p className="mb-4">{endpoint.description}</p>
+              <div className="p-4 bg-gray-800">
+                <p className="mb-4 text-gray-300">{endpoint.description}</p>
 
                 {endpoint.type === "input" && (
                   <input
@@ -116,10 +120,7 @@ export default function APIPage() {
                     placeholder="Enter text..."
                     value={inputs[endpoint.path] || ""}
                     onChange={(e) =>
-                      setInputs((prev) => ({
-                        ...prev,
-                        [endpoint.path]: e.target.value,
-                      }))
+                      setInputs((prev) => ({ ...prev, [endpoint.path]: e.target.value }))
                     }
                     className="w-full sm:w-auto px-4 py-2 rounded bg-gray-900 text-white border border-gray-700 mb-4"
                   />
@@ -135,9 +136,7 @@ export default function APIPage() {
 
                   {endpoint.copyKey && response && (
                     <button
-                      onClick={() =>
-                        copyData(endpoint.path, endpoint.copyKey!)
-                      }
+                      onClick={() => copyData(endpoint.path, endpoint.copyKey!)}
                       className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition-colors duration-200 w-full sm:w-auto"
                     >
                       Copy {endpoint.copyKey}
@@ -146,7 +145,7 @@ export default function APIPage() {
                 </div>
 
                 {response && (
-                  <pre className="mt-4 p-4 bg-gray-800 text-green-400 rounded overflow-x-auto break-words max-w-full shadow-lg border border-gray-700">
+                  <pre className="mt-4 p-4 bg-gray-700 text-green-400 rounded overflow-x-auto break-words max-w-full shadow-lg border border-gray-600">
                     {JSON.stringify(response, null, 2)}
                   </pre>
                 )}
