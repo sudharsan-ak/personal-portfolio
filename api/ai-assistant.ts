@@ -1,6 +1,5 @@
 import { VercelRequest, VercelResponse } from "@vercel/node";
-import fetch from "node-fetch";
-import { JSDOM } from "jsdom";
+import { profileData } from "../data/profileData"; // <-- use relative path to your profileData
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
@@ -10,30 +9,30 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: "No message provided" });
     }
 
-    // Step 1: Fetch your site HTML
-    const siteUrl = "https://sudharsansrinivasan.com"; // <-- Replace with your actual domain
-    const siteRes = await fetch(siteUrl);
-    if (!siteRes.ok) {
-      throw new Error(`Failed to fetch site HTML: ${siteRes.status}`);
-    }
-    const htmlText = await siteRes.text();
+    // Step 1: Serialize profileData as context
+    const bodyText = `
+About: ${profileData.about}
+Skills: ${profileData.skills.join(", ")}
+Experience: ${profileData.experience.map(e => `${e.role} at ${e.company}: ${e.summary}`).join("\n")}
+Projects: ${profileData.projects.map(p => `${p.name}: ${p.description}`).join("\n")}
+Education: ${profileData.education.map(e => `${e.degree} at ${e.institution}`).join("\n")}
+Languages: ${profileData.languages.join(", ")}
+Interests: ${profileData.interests.join(", ")}
+Contact: ${profileData.contact.email}, ${profileData.contact.phone}
+`;
 
-    // Step 2: Extract text content from HTML using JSDOM
-    const dom = new JSDOM(htmlText);
-    const bodyText = dom.window.document.body.textContent || "";
-
-    // Step 3: Build the system prompt for OpenAI
+    // Step 2: Build the system prompt for OpenAI
     const systemPrompt = `
-You are an AI assistant for Sudharsan Srinivasan’s portfolio website.
-Use the following website text as context to answer questions:
+You are an AI assistant for Sudharsan Srinivasan’s portfolio.
+Use the following profile information as context to answer questions:
 
 ${bodyText}
 
-Answer the user question based only on the website content. Be concise, accurate, and friendly.
+Answer the user question based only on this profile data. Be concise, accurate, and friendly.
 If the question isn’t about Sudharsan, politely reply that you only know about him.
 `;
 
-    // Step 4: Send request to OpenAI API
+    // Step 3: Send request to OpenAI API
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
