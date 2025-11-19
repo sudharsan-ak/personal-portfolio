@@ -5,9 +5,20 @@ interface ApiEndpoint {
   title: string;
   description: string;
   path: string;
-  copyKey?: string;
-  type?: "input"; // indicates API requires user input
+  copyKey?: string; // Key to copy from the JSON
+  type?: "input" | "timezone"; // indicates input-based or timezone API
 }
+
+const timezones = [
+  "UTC",
+  "America/New_York",
+  "America/Los_Angeles",
+  "Europe/London",
+  "Europe/Berlin",
+  "Asia/Kolkata",
+  "Asia/Tokyo",
+  "Australia/Sydney",
+];
 
 export default function APIPage() {
   const endpoints: ApiEndpoint[] = [
@@ -37,51 +48,57 @@ export default function APIPage() {
     },
     {
       title: "Word Counter",
-      description: "Send text and receive the number of words in it.",
-      path: "/api/wordcount",
-      copyKey: "wordCount",
+      description: "Counts the number of words in the text you provide.",
+      path: "/api/word-count",
+      copyKey: "words",
       type: "input",
     },
     {
       title: "Character Counter",
-      description: "Send text and receive the number of characters in it.",
-      path: "/api/charcount",
-      copyKey: "charCount",
+      description: "Counts the number of characters in the text you provide.",
+      path: "/api/char-count",
+      copyKey: "characters",
       type: "input",
+    },
+    {
+      title: "Timezone Converter",
+      description: "Convert a given time from one timezone to another.",
+      path: "/api/timezone",
+      type: "timezone",
     },
   ];
 
   const [responses, setResponses] = useState<Record<string, any>>({});
-  const [inputs, setInputs] = useState<Record<string, string>>({});
+  const [inputs, setInputs] = useState<Record<string, any>>({});
   const [toast, setToast] = useState<string | null>(null);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
-  const toggleExpand = (path: string) => {
-    setExpanded((prev) => {
-      const isExpanded = !prev[path];
-      if (!isExpanded && endpoints.find((e) => e.path === path)?.type === "input") {
-        setInputs((inp) => ({ ...inp, [path]: "" }));
-        setResponses((resp) => ({ ...resp, [path]: undefined }));
-      }
-      return { ...prev, [path]: isExpanded };
-    });
-  };
-
   const fetchData = async (path: string, type?: string) => {
     try {
-      const res =
-        type === "input"
-          ? await fetch(path, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ text: inputs[path] || "" }),
-            })
-          : await fetch(path);
+      let res;
+      if (type === "input") {
+        res = await fetch(path, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: inputs[path] || "" }),
+        });
+      } else if (type === "timezone") {
+        res = await fetch(path, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(inputs[path]),
+        });
+      } else {
+        res = await fetch(path);
+      }
 
       const data = await res.json();
       setResponses((prev) => ({ ...prev, [path]: data }));
     } catch {
-      setResponses((prev) => ({ ...prev, [path]: { error: "Error fetching data" } }));
+      setResponses((prev) => ({
+        ...prev,
+        [path]: { error: "Error fetching data" },
+      }));
     }
   };
 
@@ -94,40 +111,50 @@ export default function APIPage() {
     setTimeout(() => setToast(null), 2000);
   };
 
+  const toggleExpand = (path: string) => {
+    setExpanded((prev) => {
+      const isExpanded = !prev[path];
+      // Reset inputs if collapsing
+      if (!isExpanded && inputs[path]) {
+        const resetInputs = { ...inputs };
+        delete resetInputs[path];
+        setInputs(resetInputs);
+      }
+      return { ...prev, [path]: !prev[path] };
+    });
+    // Clear previous response
+    setResponses((prev) => ({ ...prev, [path]: undefined }));
+  };
+
   return (
     <div className="p-8 max-w-5xl mx-auto relative">
       <h1 className="text-4xl font-bold mb-6 text-center">Public REST API</h1>
 
       {endpoints.map((endpoint) => {
         const response = responses[endpoint.path];
-        const isOpen = expanded[endpoint.path] || false;
+        const isExpanded = expanded[endpoint.path];
 
         return (
           <section key={endpoint.path} className="mb-6 border border-gray-700 rounded">
-            {/* Header */}
             <div
-              className={`flex justify-between items-center cursor-pointer p-4 rounded transition-colors duration-200
-                ${isOpen ? "bg-gray-700" : "bg-gray-900 hover:bg-gray-800"}`}
+              className="flex justify-between items-center p-4 cursor-pointer bg-gray-900 hover:bg-gray-800 transition-colors duration-200"
               onClick={() => toggleExpand(endpoint.path)}
             >
-              <h2 className="text-2xl font-semibold text-white">{endpoint.title}</h2>
-              <svg
-                className={`w-5 h-5 transform transition-transform duration-300 ${
-                  isOpen ? "rotate-90" : ""
+              <h2 className="text-2xl font-semibold">{endpoint.title}</h2>
+              <span
+                className={`transform transition-transform duration-300 ${
+                  isExpanded ? "rotate-90" : "rotate-0"
                 }`}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                viewBox="0 0 24 24"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
+                ➤
+              </span>
             </div>
 
-            {isOpen && (
-              <div className="p-4 bg-gray-800">
-                <p className="mb-4 text-gray-300">{endpoint.description}</p>
+            {isExpanded && (
+              <div className="p-4 bg-gray-800 text-gray-200">
+                <p className="mb-4">{endpoint.description}</p>
 
+                {/* Input for text-based APIs */}
                 {endpoint.type === "input" && (
                   <input
                     type="text"
@@ -138,6 +165,89 @@ export default function APIPage() {
                     }
                     className="w-full sm:w-auto px-4 py-2 rounded bg-gray-900 text-white border border-gray-700 mb-4"
                   />
+                )}
+
+                {/* Timezone converter inputs */}
+                {endpoint.type === "timezone" && (
+                  <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 mb-4 items-center">
+                    <select
+                      value={inputs[endpoint.path]?.fromTimezone || "UTC"}
+                      onChange={(e) =>
+                        setInputs((prev) => ({
+                          ...prev,
+                          [endpoint.path]: { ...prev[endpoint.path], fromTimezone: e.target.value },
+                        }))
+                      }
+                      className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700"
+                    >
+                      {timezones.map((tz) => (
+                        <option key={tz} value={tz}>
+                          {tz}
+                        </option>
+                      ))}
+                    </select>
+
+                    <input
+                      type="number"
+                      min={1}
+                      max={12}
+                      placeholder="Hour"
+                      value={inputs[endpoint.path]?.hour || ""}
+                      onChange={(e) =>
+                        setInputs((prev) => ({
+                          ...prev,
+                          [endpoint.path]: { ...prev[endpoint.path], hour: e.target.value },
+                        }))
+                      }
+                      className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700 w-20"
+                    />
+
+                    <input
+                      type="number"
+                      min={0}
+                      max={59}
+                      placeholder="Minute"
+                      value={inputs[endpoint.path]?.minute || ""}
+                      onChange={(e) =>
+                        setInputs((prev) => ({
+                          ...prev,
+                          [endpoint.path]: { ...prev[endpoint.path], minute: e.target.value },
+                        }))
+                      }
+                      className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700 w-20"
+                    />
+
+                    <select
+                      value={inputs[endpoint.path]?.ampm || "AM"}
+                      onChange={(e) =>
+                        setInputs((prev) => ({
+                          ...prev,
+                          [endpoint.path]: { ...prev[endpoint.path], ampm: e.target.value },
+                        }))
+                      }
+                      className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700"
+                    >
+                      <option value="AM">AM</option>
+                      <option value="PM">PM</option>
+                    </select>
+
+                    <select
+                      value={inputs[endpoint.path]?.toTimezone || "UTC"}
+                      onChange={(e) =>
+                        setInputs((prev) => ({
+                          ...prev,
+                          [endpoint.path]: { ...prev[endpoint.path], toTimezone: e.target.value },
+                        }))
+                      }
+                      className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700"
+                    >
+                      {timezones.map((tz) => (
+                        <option key={tz} value={tz}>
+                          {tz}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 )}
 
                 <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 mb-4">
