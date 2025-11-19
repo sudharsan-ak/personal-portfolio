@@ -42,6 +42,13 @@ export default function APIPage() {
       copyKey: "wordCount",
       type: "input",
     },
+    {
+      title: "Character Counter",
+      description: "Send text and receive the number of characters in it.",
+      path: "/api/charcount",
+      copyKey: "charCount",
+      type: "input",
+    },
   ];
 
   const [responses, setResponses] = useState<Record<string, any>>({});
@@ -52,7 +59,6 @@ export default function APIPage() {
   const toggleExpand = (path: string) => {
     setExpanded((prev) => {
       const isExpanded = !prev[path];
-      // Reset input & response when collapsed
       if (!isExpanded && endpoints.find((e) => e.path === path)?.type === "input") {
         setInputs((inp) => ({ ...inp, [path]: "" }));
         setResponses((resp) => ({ ...resp, [path]: undefined }));
