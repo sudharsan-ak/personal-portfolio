@@ -10,14 +10,13 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     const { text } = req.body;
 
     if (typeof text !== "string") {
-      return res.status(400).json({ error: "Invalid text input" });
+      return res.status(400).json({ error: "Text must be a string" });
     }
 
-    // Count characters excluding spaces if desired
-    const charCount = text.length;
+    const characters = text.length;
 
-    res.status(200).json({ charCount });
+    return res.status(200).json({ characters });
   } catch (err: any) {
-    res.status(500).json({ error: err.message || "Server error" });
+    return res.status(500).json({ error: err.message || "Server error" });
   }
 }
