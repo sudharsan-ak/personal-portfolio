@@ -57,8 +57,7 @@ export default function APIPage() {
       copyKey: "hash",
       type: "input",
     },
-    {/*
-    {
+    /* {
       title: "Word Counter",
       description: "Counts the number of words in the text you provide.",
       path: "/api/word-count",
@@ -72,7 +71,7 @@ export default function APIPage() {
       copyKey: "characters",
       type: "input",
     },
-    */}
+    */
     {
       title: "Timezone Converter",
       description: "Convert a given time from one timezone to another.",
