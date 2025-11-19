@@ -5,8 +5,8 @@ interface ApiEndpoint {
   title: string;
   description: string;
   path: string;
-  copyKey?: string; // Key to copy from the JSON
-  type?: "input"; // indicates this API uses user input
+  copyKey?: string; 
+  type?: "input"; 
 }
 
 export default function APIPage() {
@@ -40,6 +40,11 @@ export default function APIPage() {
   const [responses, setResponses] = useState<Record<string, any>>({});
   const [inputs, setInputs] = useState<Record<string, string>>({});
   const [toast, setToast] = useState<string | null>(null);
+  const [open, setOpen] = useState<Record<string, boolean>>({});
+
+  const toggleSection = (path: string) => {
+    setOpen((prev) => ({ ...prev, [path]: !prev[path] }));
+  };
 
   const fetchData = async (path: string, type?: string) => {
     try {
@@ -77,53 +82,75 @@ export default function APIPage() {
 
       {endpoints.map((endpoint) => {
         const response = responses[endpoint.path];
+        const isOpen = open[endpoint.path];
 
         return (
-          <section key={endpoint.path} className="mb-12">
-            <h2 className="text-2xl font-semibold mb-2">
-              GET {endpoint.path}
-            </h2>
+          <section key={endpoint.path} className="mb-6 border-b border-gray-700 pb-4">
+            
+            {/* Collapsible Header */}
+            <button
+              onClick={() => toggleSection(endpoint.path)}
+              className="w-full flex justify-between items-center py-3 text-left"
+            >
+              <h2 className="text-2xl font-semibold">
+                GET {endpoint.path}
+              </h2>
 
-            <p className="mb-4">{endpoint.description}</p>
-
-            {/* Input field for APIs requiring text */}
-            {endpoint.type === "input" && (
-              <input
-                type="text"
-                placeholder="Enter text..."
-                value={inputs[endpoint.path] || ""}
-                onChange={(e) =>
-                  setInputs((prev) => ({
-                    ...prev,
-                    [endpoint.path]: e.target.value,
-                  }))
-                }
-                className="w-full sm:w-auto px-4 py-2 rounded bg-gray-900 text-white border border-gray-700 mb-4"
-              />
-            )}
-
-            <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 mb-4">
-              <button
-                onClick={() => fetchData(endpoint.path, endpoint.type)}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors duration-200 w-full sm:w-auto"
+              <span
+                className={`transition-transform duration-300 ${
+                  isOpen ? "rotate-90" : ""
+                }`}
               >
-                Try It
-              </button>
+                ▶
+              </span>
+            </button>
 
-              {endpoint.copyKey && response && (
-                <button
-                  onClick={() => copyData(endpoint.path, endpoint.copyKey!)}
-                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition-colors duration-200 w-full sm:w-auto"
-                >
-                  Copy {endpoint.copyKey}
-                </button>
-              )}
-            </div>
+            {/* Collapsible Content */}
+            {isOpen && (
+              <div className="mt-2 animate-fade-in">
+                <p className="mb-4">{endpoint.description}</p>
 
-            {response && (
-              <pre className="mt-4 p-4 bg-gray-800 text-green-400 rounded overflow-x-auto break-words max-w-full shadow-lg border border-gray-700">
-                {JSON.stringify(response, null, 2)}
-              </pre>
+                {endpoint.type === "input" && (
+                  <input
+                    type="text"
+                    placeholder="Enter text..."
+                    value={inputs[endpoint.path] || ""}
+                    onChange={(e) =>
+                      setInputs((prev) => ({
+                        ...prev,
+                        [endpoint.path]: e.target.value,
+                      }))
+                    }
+                    className="w-full sm:w-auto px-4 py-2 rounded bg-gray-900 text-white border border-gray-700 mb-4"
+                  />
+                )}
+
+                <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 mb-4">
+                  <button
+                    onClick={() => fetchData(endpoint.path, endpoint.type)}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors duration-200 w-full sm:w-auto"
+                  >
+                    Try It
+                  </button>
+
+                  {endpoint.copyKey && response && (
+                    <button
+                      onClick={() =>
+                        copyData(endpoint.path, endpoint.copyKey!)
+                      }
+                      className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition-colors duration-200 w-full sm:w-auto"
+                    >
+                      Copy {endpoint.copyKey}
+                    </button>
+                  )}
+                </div>
+
+                {response && (
+                  <pre className="mt-4 p-4 bg-gray-800 text-green-400 rounded overflow-x-auto break-words max-w-full shadow-lg border border-gray-700">
+                    {JSON.stringify(response, null, 2)}
+                  </pre>
+                )}
+              </div>
             )}
           </section>
         );
