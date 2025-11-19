@@ -5,7 +5,8 @@ interface ApiEndpoint {
   title: string;
   description: string;
   path: string;
-  copyKey?: string; // optional for endpoints without copy
+  copyKey?: string; // Key to copy from the JSON
+  type?: "input"; // indicates this API uses user input
 }
 
 export default function APIPage() {
@@ -27,14 +28,30 @@ export default function APIPage() {
       description: "Returns the number of times this API has been visited.",
       path: "/api/visits",
     },
+    {
+      title: "SHA256 Hash Generator",
+      description: "Send text and receive its SHA256 hash.",
+      path: "/api/hash",
+      copyKey: "hash",
+      type: "input",
+    },
   ];
 
   const [responses, setResponses] = useState<Record<string, any>>({});
+  const [inputs, setInputs] = useState<Record<string, string>>({});
   const [toast, setToast] = useState<string | null>(null);
 
-  const fetchData = async (path: string) => {
+  const fetchData = async (path: string, type?: string) => {
     try {
-      const res = await fetch(path);
+      const res =
+        type === "input"
+          ? await fetch(path, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ text: inputs[path] || "" }),
+            })
+          : await fetch(path);
+
       const data = await res.json();
       setResponses((prev) => ({ ...prev, [path]: data }));
     } catch {
@@ -60,18 +77,34 @@ export default function APIPage() {
 
       {endpoints.map((endpoint) => {
         const response = responses[endpoint.path];
+
         return (
           <section key={endpoint.path} className="mb-12">
             <h2 className="text-2xl font-semibold mb-2">
               GET {endpoint.path}
             </h2>
 
-            {/* FIXED color */}
             <p className="mb-4">{endpoint.description}</p>
+
+            {/* Input field for APIs requiring text */}
+            {endpoint.type === "input" && (
+              <input
+                type="text"
+                placeholder="Enter text..."
+                value={inputs[endpoint.path] || ""}
+                onChange={(e) =>
+                  setInputs((prev) => ({
+                    ...prev,
+                    [endpoint.path]: e.target.value,
+                  }))
+                }
+                className="w-full sm:w-auto px-4 py-2 rounded bg-gray-900 text-white border border-gray-700 mb-4"
+              />
+            )}
 
             <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 mb-4">
               <button
-                onClick={() => fetchData(endpoint.path)}
+                onClick={() => fetchData(endpoint.path, endpoint.type)}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors duration-200 w-full sm:w-auto"
               >
                 Try It
@@ -79,9 +112,7 @@ export default function APIPage() {
 
               {endpoint.copyKey && response && (
                 <button
-                  onClick={() =>
-                    copyData(endpoint.path, endpoint.copyKey!)
-                  }
+                  onClick={() => copyData(endpoint.path, endpoint.copyKey!)}
                   className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition-colors duration-200 w-full sm:w-auto"
                 >
                   Copy {endpoint.copyKey}
