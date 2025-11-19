@@ -10,15 +10,16 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     const { text } = req.body;
 
     if (typeof text !== "string") {
-      return res.status(400).json({ error: "Invalid text input" });
+      return res.status(400).json({ error: "Text must be a string" });
     }
 
-    // Count words
-    const wordsArray = text.trim().split(/\s+/).filter(Boolean);
-    const wordCount = wordsArray.length;
+    // Empty = 0 words
+    const trimmed = text.trim();
+    const words =
+      trimmed.length === 0 ? 0 : trimmed.split(/\s+/).filter(Boolean).length;
 
-    res.status(200).json({ wordCount });
+    return res.status(200).json({ words });
   } catch (err: any) {
-    res.status(500).json({ error: err.message || "Server error" });
+    return res.status(500).json({ error: err.message || "Server error" });
   }
 }
