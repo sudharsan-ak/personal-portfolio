@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useEffect, useRef, useState, RefObject } from "react";
 import { X, Send } from "lucide-react";
 import Fuse from "fuse.js";
-import { profileData } from "@/data/profileData";
+import { profileData } from "../data/profileData";
 
 interface AIAssistantChatProps {
   isOpen: boolean;
