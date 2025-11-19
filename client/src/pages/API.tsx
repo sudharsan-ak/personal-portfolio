@@ -94,10 +94,17 @@ export default function APIPage() {
           body: JSON.stringify({ text: inputs[path] || "" }),
         });
       } else if (type === "timezone") {
+        const tzInput = inputs[path] || {};
         res = await fetch(path, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(inputs[path]),
+          body: JSON.stringify({
+            fromTimezone: tzInput.fromTimezone || "UTC",
+            toTimezone: tzInput.toTimezone || "UTC",
+            hour: Number(tzInput.hour || 0),
+            minute: Number(tzInput.minute || 0),
+            ampm: tzInput.ampm || "AM",
+          }),
         });
       } else {
         res = await fetch(path);
@@ -178,20 +185,17 @@ export default function APIPage() {
                   />
                 )}
 
-                {/* Timezone converter inputs with responsive labels */}
+                {/* Timezone converter inputs */}
                 {endpoint.type === "timezone" && (
-                  <div className="grid grid-cols-2 sm:grid-cols-6 gap-4 mb-4">
+                  <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 mb-4 items-center">
                     <div className="flex flex-col">
-                      <label className="mb-1 text-gray-300">From Timezone</label>
+                      <label className="mb-1">From Timezone</label>
                       <select
                         value={inputs[endpoint.path]?.fromTimezone || "UTC"}
                         onChange={(e) =>
                           setInputs((prev) => ({
                             ...prev,
-                            [endpoint.path]: {
-                              ...prev[endpoint.path],
-                              fromTimezone: e.target.value,
-                            },
+                            [endpoint.path]: { ...prev[endpoint.path], fromTimezone: e.target.value },
                           }))
                         }
                         className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700"
@@ -205,28 +209,25 @@ export default function APIPage() {
                     </div>
 
                     <div className="flex flex-col">
-                      <label className="mb-1 text-gray-300">Hour</label>
+                      <label className="mb-1">Hour</label>
                       <input
                         type="number"
-                        min={1}
+                        min={0}
                         max={12}
                         placeholder="Hour"
                         value={inputs[endpoint.path]?.hour || ""}
                         onChange={(e) =>
                           setInputs((prev) => ({
                             ...prev,
-                            [endpoint.path]: {
-                              ...prev[endpoint.path],
-                              hour: e.target.value,
-                            },
+                            [endpoint.path]: { ...prev[endpoint.path], hour: e.target.value },
                           }))
                         }
-                        className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700 w-full"
+                        className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700 w-20"
                       />
                     </div>
 
                     <div className="flex flex-col">
-                      <label className="mb-1 text-gray-300">Minute</label>
+                      <label className="mb-1">Minute</label>
                       <input
                         type="number"
                         min={0}
@@ -236,18 +237,15 @@ export default function APIPage() {
                         onChange={(e) =>
                           setInputs((prev) => ({
                             ...prev,
-                            [endpoint.path]: {
-                              ...prev[endpoint.path],
-                              minute: e.target.value,
-                            },
+                            [endpoint.path]: { ...prev[endpoint.path], minute: e.target.value },
                           }))
                         }
-                        className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700 w-full"
+                        className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700 w-20"
                       />
                     </div>
 
                     <div className="flex flex-col">
-                      <label className="mb-1 text-gray-300">AM/PM</label>
+                      <label className="mb-1">AM/PM</label>
                       <select
                         value={inputs[endpoint.path]?.ampm || "AM"}
                         onChange={(e) =>
@@ -256,7 +254,7 @@ export default function APIPage() {
                             [endpoint.path]: { ...prev[endpoint.path], ampm: e.target.value },
                           }))
                         }
-                        className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700 w-full"
+                        className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700"
                       >
                         <option value="AM">AM</option>
                         <option value="PM">PM</option>
@@ -264,7 +262,7 @@ export default function APIPage() {
                     </div>
 
                     <div className="flex flex-col">
-                      <label className="mb-1 text-gray-300">To Timezone</label>
+                      <label className="mb-1">To Timezone</label>
                       <select
                         value={inputs[endpoint.path]?.toTimezone || "UTC"}
                         onChange={(e) =>
@@ -273,7 +271,7 @@ export default function APIPage() {
                             [endpoint.path]: { ...prev[endpoint.path], toTimezone: e.target.value },
                           }))
                         }
-                        className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700 w-full"
+                        className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700"
                       >
                         {timezones.map((tz) => (
                           <option key={tz} value={tz}>
