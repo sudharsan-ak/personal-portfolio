@@ -14,15 +14,18 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    // Convert hour based on AM/PM
+    // Convert to 24h
     let hour24 = Number(hour);
     if (ampm === "PM" && hour24 < 12) hour24 += 12;
     if (ampm === "AM" && hour24 === 12) hour24 = 0;
 
-    // Use today’s date with given time in fromTimezone
     const now = DateTime.now().setZone(fromTimezone);
-    const dt = DateTime.fromObject(
-      { year: now.year, month: now.month, day: now.day, hour: hour24, minute: Number(minute) },
+
+    // FIXED: Use ISO construction so Luxon respects timezone
+    const dt = DateTime.fromISO(
+      `${now.toISODate()}T${hour24.toString().padStart(2, "0")}:${minute
+        .toString()
+        .padStart(2, "0")}`,
       { zone: fromTimezone }
     );
 
