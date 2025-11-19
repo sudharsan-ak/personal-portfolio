@@ -13,6 +13,7 @@ interface AIAssistantChatProps {
 interface Message {
   sender: "user" | "bot";
   text: string;
+  isLoading?: boolean;
 }
 
 export default function AIAssistantChat({ isOpen, setIsOpen, buttonRef }: AIAssistantChatProps) {
@@ -37,7 +38,7 @@ export default function AIAssistantChat({ isOpen, setIsOpen, buttonRef }: AIAssi
     }
   }, [buttonRef, isOpen]);
 
-  // Scroll to bottom when new message
+  // Scroll to bottom on new message
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -49,6 +50,10 @@ export default function AIAssistantChat({ isOpen, setIsOpen, buttonRef }: AIAssi
     const userMessage: Message = { sender: "user", text: input };
     setMessages((prev) => [...prev, userMessage]);
 
+    // Add temporary loading message
+    const loadingMessage: Message = { sender: "bot", text: "Typing...", isLoading: true };
+    setMessages((prev) => [...prev, loadingMessage]);
+
     try {
       const res = await fetch("/api/ai-assistant", {
         method: "POST",
@@ -57,18 +62,18 @@ export default function AIAssistantChat({ isOpen, setIsOpen, buttonRef }: AIAssi
       });
 
       const data = await res.json();
-      const botMessage: Message = {
-        sender: "bot",
-        text: data.answer || "Sorry, I couldn't generate a response.",
-      };
 
-      setMessages((prev) => [...prev, botMessage]);
+      // Replace loading message with real answer
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.isLoading ? { sender: "bot", text: data.answer || "Sorry, I couldn't generate a response." } : msg
+        )
+      );
     } catch (err) {
       console.error("AI Assistant Error:", err);
-      setMessages((prev) => [
-        ...prev,
-        { sender: "bot", text: "Oops! Something went wrong. Please try again." },
-      ]);
+      setMessages((prev) =>
+        prev.map((msg) => (msg.isLoading ? { sender: "bot", text: "Oops! Something went wrong. Please try again." } : msg))
+      );
     }
 
     setInput("");
@@ -98,7 +103,7 @@ export default function AIAssistantChat({ isOpen, setIsOpen, buttonRef }: AIAssi
         {messages.map((msg, idx) => (
           <div
             key={idx}
-            className={`px-3 py-2 rounded-lg max-w-[85%] ${
+            className={`px-3 py-2 rounded-lg max-w-[85%] break-words ${
               msg.sender === "bot"
                 ? "bg-indigo-800/50 text-indigo-100 self-start shadow-sm"
                 : "bg-indigo-500 text-white self-end ml-auto"
