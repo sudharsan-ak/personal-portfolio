@@ -49,6 +49,7 @@ If the question isn’t about Sudharsan, politely reply that you only know about
       }),
     });
 
+    console.log("openaiRes- ", openaiRes);
     if (!openaiRes.ok) {
       const text = await openaiRes.text();
       throw new Error(`OpenAI request failed: ${openaiRes.status} ${text}`);
@@ -63,3 +64,4 @@ If the question isn’t about Sudharsan, politely reply that you only know about
     return res.status(500).json({ error: "OpenAI API request failed", details: error.message });
   }
 }
+
