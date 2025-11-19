@@ -11,14 +11,26 @@ interface ApiEndpoint {
 
 const timezones = [
   "UTC",
+  "Africa/Johannesburg",
   "America/New_York",
+  "America/Chicago",
+  "America/Denver",
   "America/Los_Angeles",
-  "Europe/London",
-  "Europe/Berlin",
+  "America/Sao_Paulo",
+  "America/Toronto",
   "Asia/Kolkata",
   "Asia/Tokyo",
+  "Asia/Shanghai",
+  "Asia/Singapore",
   "Australia/Sydney",
+  "Australia/Melbourne",
+  "Europe/London",
+  "Europe/Berlin",
+  "Europe/Paris",
+  "Europe/Moscow",
+  "Pacific/Auckland"
 ];
+
 
 export default function APIPage() {
   const endpoints: ApiEndpoint[] = [
@@ -140,7 +152,7 @@ export default function APIPage() {
               className="flex justify-between items-center p-4 cursor-pointer bg-gray-900 hover:bg-gray-800 transition-colors duration-200"
               onClick={() => toggleExpand(endpoint.path)}
             >
-              <h2 className="text-2xl font-semibold">{endpoint.title}</h2>
+              <h2 className="text-2xl font-semibold text-white">{endpoint.title}</h2>
               <span
                 className={`transform transition-transform duration-300 ${
                   isExpanded ? "rotate-90" : "rotate-0"
