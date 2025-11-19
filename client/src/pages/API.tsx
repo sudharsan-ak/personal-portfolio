@@ -5,8 +5,8 @@ interface ApiEndpoint {
   title: string;
   description: string;
   path: string;
-  copyKey?: string; // Key to copy from the JSON
-  type?: "input" | "timezone"; // indicates input-based or timezone API
+  copyKey?: string;
+  type?: "input" | "timezone";
 }
 
 const timezones = [
@@ -87,26 +87,34 @@ export default function APIPage() {
   const fetchData = async (path: string, type?: string) => {
     try {
       let res;
+
+      // FIXED — Always send valid text field
       if (type === "input") {
+        const text = (inputs[path] ?? "").trim();
         res = await fetch(path, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: inputs[path] || "" }),
+          body: JSON.stringify({ text }),
         });
-      } else if (type === "timezone") {
+      }
+
+      else if (type === "timezone") {
         const tzInput = inputs[path] || {};
+
         res = await fetch(path, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             fromTimezone: tzInput.fromTimezone || "UTC",
             toTimezone: tzInput.toTimezone || "UTC",
-            hour: Number(tzInput.hour || 0),
-            minute: Number(tzInput.minute || 0),
+            hour: Number(tzInput.hour ?? 0),
+            minute: Number(tzInput.minute ?? 0),
             ampm: tzInput.ampm || "AM",
           }),
         });
-      } else {
+      }
+
+      else {
         res = await fetch(path);
       }
 
@@ -132,7 +140,6 @@ export default function APIPage() {
   const toggleExpand = (path: string) => {
     setExpanded((prev) => {
       const isExpanded = !prev[path];
-      // Reset inputs if collapsing
       if (!isExpanded && inputs[path]) {
         const resetInputs = { ...inputs };
         delete resetInputs[path];
@@ -140,7 +147,7 @@ export default function APIPage() {
       }
       return { ...prev, [path]: !prev[path] };
     });
-    // Clear previous response
+
     setResponses((prev) => ({ ...prev, [path]: undefined }));
   };
 
@@ -172,12 +179,11 @@ export default function APIPage() {
               <div className="p-4 bg-gray-800 text-gray-200">
                 <p className="mb-4">{endpoint.description}</p>
 
-                {/* Input for text-based APIs */}
                 {endpoint.type === "input" && (
                   <input
                     type="text"
                     placeholder="Enter text..."
-                    value={inputs[endpoint.path] || ""}
+                    value={inputs[endpoint.path] ?? ""}
                     onChange={(e) =>
                       setInputs((prev) => ({ ...prev, [endpoint.path]: e.target.value }))
                     }
@@ -185,9 +191,9 @@ export default function APIPage() {
                   />
                 )}
 
-                {/* Timezone converter inputs */}
                 {endpoint.type === "timezone" && (
                   <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 mb-4 items-center">
+
                     <div className="flex flex-col">
                       <label className="mb-1">From Timezone</label>
                       <select
@@ -195,15 +201,16 @@ export default function APIPage() {
                         onChange={(e) =>
                           setInputs((prev) => ({
                             ...prev,
-                            [endpoint.path]: { ...prev[endpoint.path], fromTimezone: e.target.value },
+                            [endpoint.path]: {
+                              ...prev[endpoint.path],
+                              fromTimezone: e.target.value,
+                            },
                           }))
                         }
                         className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700"
                       >
                         {timezones.map((tz) => (
-                          <option key={tz} value={tz}>
-                            {tz}
-                          </option>
+                          <option key={tz} value={tz}>{tz}</option>
                         ))}
                       </select>
                     </div>
@@ -215,7 +222,7 @@ export default function APIPage() {
                         min={0}
                         max={12}
                         placeholder="Hour"
-                        value={inputs[endpoint.path]?.hour || ""}
+                        value={inputs[endpoint.path]?.hour ?? ""}
                         onChange={(e) =>
                           setInputs((prev) => ({
                             ...prev,
@@ -233,7 +240,7 @@ export default function APIPage() {
                         min={0}
                         max={59}
                         placeholder="Minute"
-                        value={inputs[endpoint.path]?.minute || ""}
+                        value={inputs[endpoint.path]?.minute ?? ""}
                         onChange={(e) =>
                           setInputs((prev) => ({
                             ...prev,
@@ -274,9 +281,7 @@ export default function APIPage() {
                         className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700"
                       >
                         {timezones.map((tz) => (
-                          <option key={tz} value={tz}>
-                            {tz}
-                          </option>
+                          <option key={tz} value={tz}>{tz}</option>
                         ))}
                       </select>
                     </div>
