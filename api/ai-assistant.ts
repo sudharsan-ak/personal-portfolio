@@ -107,17 +107,19 @@ const profileData = {
   interests: ["Web Development", "Open Source Contribution", "UI/UX Design", "Basketball", "Cricket", "Travel", "Movies"],
 };
 
-// Keywords for detecting section intent
+// Section keywords
 const SECTION_KEYWORDS: { [key: string]: string[] } = {
   skills: ["skill", "skills", "technologies", "tech stack"],
   projects: ["project", "projects", "portfolio"],
   experience: ["experience", "work", "job", "career", "role", "roles"],
   education: ["education", "degree", "university", "school"],
   about: ["about", "bio", "background", "summary"],
-  contact: ["contact", "email", "phone", "linkedin", "github", "portfolio"],
+  contact: ["contact", "email", "phone", "linkedin", "github", "portfolio", "full name", "name"],
   languages: ["language", "languages", "spoken"],
   interests: ["interest", "hobby", "hobbies", "passion"],
 };
+
+const PROGRAMMING_LANGUAGES = ["Javascript", "TypeScript", "HTML", "CSS", "Node.js", "MongoDB", "Meteor"];
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
@@ -125,110 +127,84 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!message || !message.trim()) return res.status(400).json({ error: "No message provided" });
 
     const query = message.trim().toLowerCase();
+    let answer = "";
 
-    // Detect section intent
+    // Programming language queries
+    const progLangKeywords = ["programming language", "languages he codes", "languages he programs", "coding language", "code in", "program in", "develop in"];
+    if (progLangKeywords.some(kw => query.includes(kw))) {
+      answer = `Programming languages:\n${profileData.skills.filter(skill => PROGRAMMING_LANGUAGES.includes(skill)).join(", ")}`;
+      return res.status(200).json({ answer });
+    }
+
+    // Multi-skill detection
+    const matchedSkills = profileData.skills.filter(skill => query.includes(skill.toLowerCase()));
+    if (matchedSkills.length > 0) {
+      const skillResponses = matchedSkills.map(skill => {
+        const relevantExperiences = profileData.experience.filter(e =>
+          e.technologies.map(t => t.toLowerCase()).includes(skill.toLowerCase())
+        );
+        const relevantProjects = profileData.projects.filter(p =>
+          p.technologies.map(t => t.toLowerCase()).includes(skill.toLowerCase())
+        );
+
+        const expText = relevantExperiences.map(e => `${e.role} at ${e.company} (${e.duration})`).join("; ");
+        const projText = relevantProjects.map(p => p.name).join(", ");
+
+        let resp = `Skill: ${skill}.\n`;
+        if (expText) resp += `Roles: ${expText}.\n`;
+        if (projText) resp += `Projects: ${projText}.\n`;
+        return resp;
+      });
+
+      answer = skillResponses.join("\n");
+      return res.status(200).json({ answer });
+    }
+
+    // Detect section
     let targetSection: string | null = null;
     for (const section in SECTION_KEYWORDS) {
-      if (SECTION_KEYWORDS[section].some((kw) => query.includes(kw))) {
+      if (SECTION_KEYWORDS[section].some(kw => query.includes(kw))) {
         targetSection = section;
         break;
       }
     }
 
-    // Detect skill mentioned
-    const skillMatched = profileData.skills.find((skill) =>
-      query.includes(skill.toLowerCase())
-    );
-
-    let answer = "";
-
-    // Combined skill + experience query
-    if (skillMatched && targetSection === "experience") {
-      const relevantExperiences = profileData.experience.filter((e) =>
-        e.technologies.map((t) => t.toLowerCase()).includes(skillMatched.toLowerCase())
-      );
-      const relevantProjects = profileData.projects.filter((p) =>
-        p.technologies.map((t) => t.toLowerCase()).includes(skillMatched.toLowerCase())
-      );
-
-      if (relevantExperiences.length === 0 && relevantProjects.length === 0) {
-        answer = `Sudharsan has experience with ${skillMatched}, but I couldn't find specific roles or projects.`;
-      } else {
-        const expText = relevantExperiences
-          .map((e) => `${e.role} at ${e.company} (${e.duration})`)
-          .join(", ");
-        const projText = relevantProjects.map((p) => p.name).join(", ");
-        answer = `Sudharsan has used ${skillMatched} in roles such as ${expText}.`;
-        if (projText) answer += ` He also applied ${skillMatched} in projects like ${projText}.`;
-      }
-
-    // Skill-only query
-    } else if (skillMatched) {
-      const relevantExperiences = profileData.experience.filter((e) =>
-        e.technologies.map((t) => t.toLowerCase()).includes(skillMatched.toLowerCase())
-      );
-      const relevantProjects = profileData.projects.filter((p) =>
-        p.technologies.map((t) => t.toLowerCase()).includes(skillMatched.toLowerCase())
-      );
-
-      const expText = relevantExperiences.map((e) => `${e.role} at ${e.company}`).join("; ");
-      const projText = relevantProjects.map((p) => p.name).join(", ");
-
-      answer = `Yes, Sudharsan has experience with ${skillMatched}.`;
-      if (expText) answer += ` Roles: ${expText}.`;
-      if (projText) answer += ` Projects: ${projText}.`;
-
-    // Section-only query
-    } else if (targetSection) {
+    if (targetSection) {
       switch (targetSection) {
         case "skills":
-          const topSkills = profileData.skills.slice(0, 10).join(", ");
-          answer = `Sudharsan's key skills include: ${topSkills}, among others.`;
+          answer = `Skills:\n${profileData.skills.join(", ")}`;
           break;
         case "projects":
-          answer = profileData.projects
-            .map((p) => `${p.name}: ${p.description}`)
-            .join(" | ");
+          answer = profileData.projects.map(p => `${p.name}: ${p.description}`).join("\n");
           break;
         case "experience":
-          answer = profileData.experience
-            .map((e) => `${e.role} at ${e.company} (${e.duration})`)
-            .join(" | ");
+          answer = profileData.experience.map(e => `${e.role} at ${e.company} (${e.duration})`).join("\n");
           break;
         case "education":
-          answer = profileData.education
-            .map((e) => `${e.degree} at ${e.institution} (${e.year})`)
-            .join(" | ");
+          answer = profileData.education.map(e => `${e.degree} at ${e.institution} (${e.year})`).join("\n");
           break;
         case "about":
           answer = profileData.about;
           break;
         case "contact":
-          if (query.includes("email")) {
-            answer = `Email: ${profileData.contact.email}`;
-          } else if (query.includes("phone")) {
-            answer = `Phone: ${profileData.contact.phone}`;
-          } else if (query.includes("linkedin")) {
-            answer = `LinkedIn: ${profileData.contact.linkedin}`;
-          } else if (query.includes("github")) {
-            answer = `GitHub: ${profileData.contact.github}`;
-          } else if (query.includes("portfolio")) {
-            answer = `Portfolio: ${profileData.contact.portfolio}`;
-          } else {
-            answer = `Email: ${profileData.contact.email}, Phone: ${profileData.contact.phone}, LinkedIn: ${profileData.contact.linkedin}, GitHub: ${profileData.contact.github}, Portfolio: ${profileData.contact.portfolio}`;
-          }
+          if (query.includes("email")) answer = `Email: ${profileData.contact.email}`;
+          else if (query.includes("phone")) answer = `Phone: ${profileData.contact.phone}`;
+          else if (query.includes("linkedin")) answer = `LinkedIn: ${profileData.contact.linkedin}`;
+          else if (query.includes("github")) answer = `GitHub: ${profileData.contact.github}`;
+          else if (query.includes("portfolio")) answer = `Portfolio: ${profileData.contact.portfolio}`;
+          else if (query.includes("full name") || query.includes("name")) answer = `Full name: ${profileData.name}`;
+          else
+            answer = `Email: ${profileData.contact.email}\nPhone: ${profileData.contact.phone}\nLinkedIn: ${profileData.contact.linkedin}\nGitHub: ${profileData.contact.github}\nPortfolio: ${profileData.contact.portfolio}`;
           break;
         case "languages":
-          answer = `Languages: ${profileData.languages.join(", ")}`;
+          answer = `Languages:\n${profileData.languages.join(", ")}`;
           break;
         case "interests":
-          answer = `Interests include: ${profileData.interests.join(", ")}`;
+          answer = `Interests:\n${profileData.interests.join(", ")}`;
           break;
         default:
           answer = "I only have information about Sudharsan’s professional profile.";
       }
-
-    // Fallback
     } else {
       answer = "I only have information about Sudharsan’s professional profile.";
     }
