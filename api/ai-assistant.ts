@@ -54,9 +54,7 @@ function firstSentence(text?: string) {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const { message } = req.body;
-    if (!message?.trim()) {
-      return res.status(400).json({ error: "No message provided" });
-    }
+    if (!message?.trim()) return res.status(400).json({ error: "No message provided" });
 
     const q = message.toLowerCase().trim();
 
@@ -64,24 +62,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const jsonPath = path.join(process.cwd(), "api", "portfolio.json");
     const raw = await fs.readFile(jsonPath, "utf-8");
     const data: Portfolio = JSON.parse(raw);
-
     const personal = data.personal ?? {};
 
     // Flatten tech keywords for matching
-    const techList = (data.skills ?? []).flatMap((c) =>
-      (c.skills ?? []).map((s) => s.toLowerCase())
-    );
+    const techList = (data.skills ?? []).flatMap((c) => (c.skills ?? []).map((s) => s.toLowerCase()));
 
     // --- DIRECT PERSONAL INFO ---
-    if (q.includes("full name") || q === "name") {
-      return res.status(200).json({ answer: personal.fullName ?? "Name not available." });
-    }
-    if (q.includes("first name")) {
-      return res.status(200).json({ answer: personal.firstName ?? "First name not available." });
-    }
-    if (q.includes("last name")) {
-      return res.status(200).json({ answer: personal.lastName ?? "Last name not available." });
-    }
+    if (q.includes("full name") || q === "name") return res.json({ answer: personal.fullName ?? "Name not available." });
+    if (q.includes("first name")) return res.json({ answer: personal.firstName ?? "First name not available." });
+    if (q.includes("last name")) return res.json({ answer: personal.lastName ?? "Last name not available." });
     if (q.includes("email")) return res.json({ answer: personal.email ?? "Email not listed." });
     if (q.includes("phone")) return res.json({ answer: personal.phone ?? "Phone not listed." });
     if (q.includes("linkedin")) return res.json({ answer: personal.linkedin ?? "LinkedIn not listed." });
@@ -98,28 +87,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
     }
 
-    // Identify specific tech mentioned
+    // Identify mentioned tech
     const techMention = techList.find((t) => q.includes(t));
 
-    // --- If user explicitly asks about a tech (e.g., "react experience") ---
     if (techMention) {
       const tech = techMention;
 
+      // --- EXPERIENCE MATCH ---
       const exp = (data.experience ?? []).filter((e) =>
-        (e.technologies ?? []).some((t) => t.toLowerCase() === tech)
+        (e.technologies ?? []).some((t) => t.toLowerCase().includes(tech))
       );
 
+      // --- PROJECTS MATCH ---
       const proj = (data.projects ?? []).filter((p) =>
-        (p.technologies ?? []).some((t) => t.toLowerCase() === tech)
+        (p.technologies ?? []).some((t) => t.toLowerCase().includes(tech))
       );
 
       if (exp.length > 0) {
         const concise = exp
-          .map(
-            (e) =>
-              `${e.role} at ${e.company}${e.duration ? ` (${e.duration})` : ""}. ${
-                (e.achievements ?? [])[0] ?? ""
-              }`
+          .map((e) =>
+            `${e.role} at ${e.company}${e.duration ? ` (${e.duration})` : ""}. ${
+              (e.achievements ?? []).slice(0, 2).map(a => `• ${a}`).join(" ")
+            }`
           )
           .join(" | ");
         return res.json({ answer: concise });
@@ -139,62 +128,60 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // --- FALLBACKS & SECTIONS ---
     switch (target) {
-      case "skills": {
-        const out = (data.skills ?? [])
-          .map((c) => `${c.category}: ${c.skills.join(", ")}`)
-          .join(" | ");
-        return res.json({ answer: out || "No skills listed." });
-      }
+      case "skills":
+        return res.json({
+          answer: (data.skills ?? [])
+            .map((c) => `${c.category}: ${c.skills.join(", ")}`)
+            .join(" | ") || "No skills listed.",
+        });
 
-      case "projects": {
-        const out = (data.projects ?? [])
-          .map((p) => `${p.title}: ${firstSentence(p.description)}`)
-          .join(" | ");
-        return res.json({ answer: out || "No projects listed." });
-      }
+      case "projects":
+        return res.json({
+          answer: (data.projects ?? [])
+            .map((p) => `${p.title}: ${firstSentence(p.description)}`)
+            .join(" | ") || "No projects listed.",
+        });
 
-      case "experience": {
-        const out = (data.experience ?? [])
-          .map(
-            (e) =>
+      case "experience":
+        return res.json({
+          answer: (data.experience ?? [])
+            .map((e) =>
               `${e.role} at ${e.company}${e.duration ? ` (${e.duration})` : ""}. ${
-                (e.achievements ?? [])[0] ?? ""
+                (e.achievements ?? []).slice(0, 2).map(a => `• ${a}`).join(" ")
               }`
-          )
-          .join(" | ");
-        return res.json({ answer: out || "No experience listed." });
-      }
+            )
+            .join(" | ") || "No experience listed.",
+        });
 
-      case "education": {
-        const out = (data.education ?? [])
-          .map((e) => `${e.degree} at ${e.school} (${e.duration ?? ""})`)
-          .join(" | ");
-        return res.json({ answer: out || "No education listed." });
-      }
+      case "education":
+        return res.json({
+          answer: (data.education ?? [])
+            .map((e) => `${e.degree} at ${e.school} (${e.duration ?? ""})`)
+            .join(" | ") || "No education listed.",
+        });
 
-      case "about": {
+      case "about":
         let out = (data.about ?? []).map((a) => a.content).join(" ");
         if (out.length > 400) out = out.split(".").slice(0, 2).join(".") + ".";
         return res.json({ answer: out || "No about info available." });
-      }
 
-      case "contact": {
-        const out = [
-          personal.email && `Email: ${personal.email}`,
-          personal.phone && `Phone: ${personal.phone}`,
-          personal.linkedin && `LinkedIn: ${personal.linkedin}`,
-          personal.github && `GitHub: ${personal.github}`,
-        ]
-          .filter(Boolean)
-          .join(" | ");
-        return res.json({ answer: out || "No contact info listed." });
-      }
+      case "contact":
+        return res.json({
+          answer: [
+            personal.email && `Email: ${personal.email}`,
+            personal.phone && `Phone: ${personal.phone}`,
+            personal.linkedin && `LinkedIn: ${personal.linkedin}`,
+            personal.github && `GitHub: ${personal.github}`,
+          ]
+            .filter(Boolean)
+            .join(" | ") || "No contact info listed.",
+        });
     }
 
     // --- FINAL FALLBACK ---
     return res.json({
       answer:
-        "I can help with skills, projects, experience, education, or contact info. Try: “Tell me his React experience” or “List his projects.”",
+        "I can only help with answering questios related to Sudharsan's skills, projects, experience, education, or contact info. Try: “Tell me his React experience” or “List his projects.”",
     });
   } catch (err: any) {
     console.error("AI Assistant Error:", err);
