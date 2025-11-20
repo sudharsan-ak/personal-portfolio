@@ -90,6 +90,7 @@ export default function AIAssistantChat({ isOpen, setIsOpen, buttonRef }: AIAssi
       style={{ bottom: position.bottom, right: position.right }}
       className={`fixed z-50 w-[90vw] max-w-[420px] h-[75vh] max-h-[650px] sm:w-[380px] sm:h-[550px]
                  bg-white rounded-2xl shadow-xl overflow-hidden
+                 flex flex-col
                  ${isOpen ? "pointer-events-auto" : "pointer-events-none"}`}
     >
       {/* Header */}
@@ -104,7 +105,7 @@ export default function AIAssistantChat({ isOpen, setIsOpen, buttonRef }: AIAssi
       </div>
 
       {/* Chat Messages */}
-      <div className="flex flex-col flex-1 overflow-y-auto px-3 py-3 space-y-3 text-sm bg-white">
+      <div className="flex-1 overflow-y-auto px-3 py-3 space-y-3 text-sm bg-white">
         {messages.map((msg, idx) => (
           <div
             key={idx}
