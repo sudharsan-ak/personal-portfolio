@@ -27,7 +27,7 @@ async function getResumeText(): Promise<string> {
 // Call Hugging Face inference API
 async function queryHuggingFace(prompt: string): Promise<string> {
   try {
-    const res = await fetch(`https://api-inference.huggingface.co/models/${HUGGINGFACE_MODEL}`, {
+    const res = await fetch(`https://router.huggingface.co/models/${HUGGINGFACE_MODEL}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${HUGGINGFACE_API_KEY}`,
