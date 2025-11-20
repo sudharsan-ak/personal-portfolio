@@ -129,9 +129,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     let answer = "";
 
     // Programming language queries
-    const progLangKeywords = ["programming language", "languages he codes", "languages he programs", "coding language", "code in", "program in", "develop in"];
+    const progLangKeywords = [
+      "programming language",
+      "languages he codes",
+      "languages he programs",
+      "coding language",
+      "code in",
+      "program in",
+      "develop in",
+    ];
     if (progLangKeywords.some(kw => query.includes(kw))) {
-      answer = `Programming languages:\n${profileData.skills.filter(skill => PROGRAMMING_LANGUAGES.includes(skill)).join(", ")}`;
+      answer = `Programming languages:\n${profileData.skills
+        .filter(skill => PROGRAMMING_LANGUAGES.includes(skill))
+        .join(", ")}`;
       return res.status(200).json({ answer });
     }
 
@@ -155,7 +165,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return resp;
       });
 
-      answer = skillResponses.join("\n");
+      answer = skillResponses.join("\n\n"); // double line break between skills
       return res.status(200).json({ answer });
     }
 
@@ -174,16 +184,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           answer = `Skills:\n${profileData.skills.join(", ")}`;
           break;
         case "projects":
-          answer = profileData.projects.map(p => `${p.name}: ${p.description}`).join("\n");
+          answer = profileData.projects
+            .map(p => `${p.name}: ${p.description}`)
+            .join("\n\n"); // line-separated projects
           break;
         case "experience":
-          answer = profileData.experience.map(e => `${e.role} at ${e.company} (${e.duration})`).join("\n");
+          answer = profileData.experience
+            .map(e => `${e.role} at ${e.company} (${e.duration})`)
+            .join("\n");
           break;
         case "education":
-          answer = profileData.education.map(e => `${e.degree} at ${e.institution} (${e.year})`).join("\n");
+          answer = profileData.education
+            .map(e => `${e.degree} at ${e.institution} (${e.year})`)
+            .join("\n\n");
           break;
         case "about":
-          answer = profileData.about;
+          answer = profileData.about; // only shows if explicitly asked
           break;
         case "contact":
           if (query.includes("email")) answer = `Email: ${profileData.contact.email}`;
@@ -202,7 +218,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           answer = `Interests:\n${profileData.interests.join(", ")}`;
           break;
         default:
-          answer = "I only have information about Sudharsan’s professional profile.";
+          answer = "Sorry, I only have information about Sudharsan’s professional profile.";
       }
     } else {
       // Strict profile-only response for unrelated queries
