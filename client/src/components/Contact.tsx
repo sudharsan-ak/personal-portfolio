@@ -128,7 +128,7 @@ export default function Contact() {
                 placeholder="Your Name"
                 value={form.name}
                 onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary transition"
+                className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary transition text-black dark:text-black"
                 required
               />
               <input
@@ -137,7 +137,7 @@ export default function Contact() {
                 placeholder="Your Email"
                 value={form.email}
                 onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary transition"
+                className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary transition text-black dark:text-black"
                 required
               />
               <textarea
@@ -145,7 +145,7 @@ export default function Contact() {
                 placeholder="Your Message"
                 value={form.message}
                 onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary transition"
+                className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary transition text-black dark:text-black"
                 rows={5}
                 required
               />
