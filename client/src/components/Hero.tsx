@@ -11,15 +11,19 @@ export default function Hero() {
 
   useEffect(() => {
     const hour = new Date().getHours();
+  
     if (hour >= 5 && hour < 12) {
       setGreeting("Good morning,");
       setGreetingIcon("🌅");
     } else if (hour >= 12 && hour < 18) {
       setGreeting("Good afternoon,");
       setGreetingIcon("🌇");
-    } else if (hour >= 18 && hour < 24) {
+    } else if (hour >= 18 && hour < 21) {
       setGreeting("Good evening,");
       setGreetingIcon("🌆");
+    } else if (hour >= 21 && hour < 24) {
+      setGreeting("Good night,");
+      setGreetingIcon("🌙");
     } else {
       setGreeting("Working late?");
       setGreetingIcon("☕");
