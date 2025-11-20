@@ -8,6 +8,7 @@ import NotFound from "@/pages/not-found";
 import DynamicBackground from "@/components/DynamicBackground"; 
 import TimelineButton from "@/components/TimelineButton"; 
 import AIAssistantButton from "@/components/AIAssistantButton";
+import SmartAIAssistantButton from "@/components/SmartAIAssistantButton";
 import Resume from "@/pages/Resume";
 import APIPage from "@/pages/API";
 
@@ -46,6 +47,10 @@ function App() {
               {/* AI Assistant Button */}
               <div className="fixed bottom-6 right-6 z-50 hidden md:block">
                 <AIAssistantButton />
+              </div>
+               {/* AI Assistant Button */}
+              <div className="fixed bottom-6 right-6 z-50 hidden md:block">
+                <SmartAIAssistantButton />
               </div>
             </>
           )}
