@@ -12,7 +12,7 @@ const profileData = {
   },
   location: "Lewisville, TX",
   about:
-    "Software Engineer passionate about building scalable, user-focused web applications. Skilled in React, TypeScript, Meteor, MongoDB, Node.js, and UI/UX design. Experienced across full SDLC with a focus on performance, security, and accessibility. Strong problem-solving abilities and quick learner.",
+    "Software Engineer passionate about building scalable, user-focused web applications. Skilled in React, TypeScript, Meteor, MongoDB, Node.js, and UI/UX design.",
   skills: [
     "Javascript",
     "HTML",
@@ -107,7 +107,6 @@ const profileData = {
   interests: ["Web Development", "Open Source Contribution", "UI/UX Design", "Basketball", "Cricket", "Travel", "Movies"],
 };
 
-// Section keywords
 const SECTION_KEYWORDS: { [key: string]: string[] } = {
   skills: ["skill", "skills", "technologies", "tech stack"],
   projects: ["project", "projects", "portfolio"],
@@ -206,7 +205,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           answer = "I only have information about Sudharsan’s professional profile.";
       }
     } else {
-      answer = "I only have information about Sudharsan’s professional profile.";
+      // Strict profile-only response for unrelated queries
+      answer = "Sorry, I only have information about Sudharsan’s professional profile.";
     }
 
     return res.status(200).json({ answer });
