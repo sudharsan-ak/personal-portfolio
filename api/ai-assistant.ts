@@ -7,7 +7,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Cache the JSON to avoid reading every request
+// Cache JSON
 let cachedProfileData: any = null;
 function getProfileData() {
   if (!cachedProfileData) {
@@ -53,23 +53,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       "develop in",
     ];
     if (progLangKeywords.some(kw => query.includes(kw))) {
-      answer = `Programming languages:\n${profileData.skills
-        .filter((skill: string) => PROGRAMMING_LANGUAGES.includes(skill))
-        .join(", ")}`;
+      const langSkills = profileData.skills
+        .filter((skill: any) => typeof skill === "string" && PROGRAMMING_LANGUAGES.includes(skill));
+      answer = `Programming languages:\n${langSkills.join(", ")}`;
       return res.status(200).json({ answer });
     }
 
     // Multi-skill detection
-    const matchedSkills = profileData.skills.filter((skill: string) =>
-      query.includes(skill.toLowerCase())
-    );
+    const matchedSkills = profileData.skills
+      .filter((skill: any) => typeof skill === "string" && query.includes(skill.toLowerCase()));
+
     if (matchedSkills.length > 0) {
       const skillResponses = matchedSkills.map((skill: string) => {
         const relevantExperiences = profileData.experience.filter((e: any) =>
-          e.technologies.map((t: string) => t.toLowerCase()).includes(skill.toLowerCase())
+          e.technologies.some((t: any) => typeof t === "string" && t.toLowerCase() === skill.toLowerCase())
         );
         const relevantProjects = profileData.projects.filter((p: any) =>
-          p.technologies.map((t: string) => t.toLowerCase()).includes(skill.toLowerCase())
+          p.technologies.some((t: any) => typeof t === "string" && t.toLowerCase() === skill.toLowerCase())
         );
 
         const expText = relevantExperiences
@@ -83,7 +83,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return resp;
       });
 
-      answer = skillResponses.join("\n\n"); // double line break between skills
+      answer = skillResponses.join("\n\n");
       return res.status(200).json({ answer });
     }
 
@@ -99,7 +99,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (targetSection) {
       switch (targetSection) {
         case "skills":
-          answer = `Skills:\n${profileData.skills.join(", ")}`;
+          answer = `Skills:\n${profileData.skills.filter((s: any) => typeof s === "string").join(", ")}`;
           break;
         case "projects":
           answer = profileData.projects
