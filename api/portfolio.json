@@ -69,11 +69,11 @@
       ],
       "achievements": [
         "Optimized internal tools for Cyber Supply Chain and Asset Vulnerability Management, reducing data processing time by ~15%.",
-        "Refactored frontend JavaScript code modules using Meteor and Lodash, led updates to a Meteor-based vendor/client portal with Jade and MongoDB integration, reducing load times by ~30%.",
-        "Delivered solutions through full SDLC, collaborating with 5+ cross-functional team members to ship high-quality releases on time.",
-        "Integrated frontend with backend APIs and MongoDB workflows, handling high-volume data across the platform/portal.",
-        "Implemented RBAC access control for the company's platform, conducted code reviews, mentored junior engineers.",
-        "Contributed to SBOM and HBOM initiatives, enhancing software transparency and improving security and compliance."
+        "Refactored frontend JavaScript modules using Meteor and Lodash; improved load times by ~30%.",
+        "Collaborated with cross-functional teams to deliver full SDLC releases.",
+        "Integrated frontend with backend APIs and large-scale MongoDB data.",
+        "Implemented RBAC access control; conducted code reviews and mentored junior engineers.",
+        "Contributed to SBOM/HBOM security initiatives to improve transparency and compliance."
       ]
     },
     {
@@ -91,10 +91,10 @@
         "WordPress CMS"
       ],
       "achievements": [
-        "Designed and deployed dynamic front-end pages integrated with WordPress CMS.",
-        "Reduced average page load time to <5 seconds, improving user retention and SEO.",
-        "Increased organic traffic by 20% over 3 months through SEO optimization.",
-        "Integrated APIs for standalone applications and enabled customized storefronts."
+        "Created dynamic WordPress-integrated front-end pages.",
+        "Reduced page load times to under 5 seconds, boosting SEO and retention.",
+        "Increased organic traffic by 20% in 3 months.",
+        "Integrated APIs to deploy customized storefronts for partner brands."
       ]
     },
     {
@@ -105,9 +105,9 @@
       "duration": "Jan 2018 – Nov 2018",
       "technologies": ["Mainframes", "COBOL", "Jira", "Kanban"],
       "achievements": [
-        "Developed and optimized backend jobs for Policy Management Systems (PMSC).",
-        "Automated daily jobs, reducing manual intervention and improving execution times by 10%.",
-        "Implemented and deployed code changes on IBM Mainframe production servers."
+        "Built and optimized backend jobs for insurance policy systems (PMSC).",
+        "Automated daily jobs, improving execution speed by 10%.",
+        "Deployed COBOL jobs on IBM Mainframe production environments."
       ]
     }
   ],
@@ -123,7 +123,7 @@
     {
       "id": "proj_event_mgmt",
       "title": "Event Management System",
-      "description": "Web app for event booking/cancellation using Java Servlets and JSP. Achieved 100% statement and PIT coverage through automated Selenium tests.",
+      "description": "Web app for event booking/cancellation using Java Servlets and JSP. Achieved 100% statement and PIT coverage with Selenium test automation.",
       "technologies": [
         "Java",
         "MySQL Workbench",
@@ -137,7 +137,7 @@
     {
       "id": "proj_software_testing",
       "title": "Software Testing Using Java",
-      "description": "Implemented MCDC-based basis path testing with JaCoCo and Pitclipse to demonstrate advanced QA methodologies.",
+      "description": "Implemented MCDC-based basis path testing using JaCoCo and Pitclipse to demonstrate advanced QA methodologies.",
       "technologies": ["Java", "JUnit", "JaCoCo", "Pitclipse"],
       "year": "2019",
       "githubUrl": ""
