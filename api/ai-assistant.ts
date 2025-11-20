@@ -204,7 +204,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           answer = profileData.about;
           break;
         case "contact":
-          answer = `Email: ${profileData.contact.email}, Phone: ${profileData.contact.phone}, LinkedIn: ${profileData.contact.linkedin}, GitHub: ${profileData.contact.github}, Portfolio: ${profileData.contact.portfolio}`;
+          if (query.includes("email")) {
+            answer = `Email: ${profileData.contact.email}`;
+          } else if (query.includes("phone")) {
+            answer = `Phone: ${profileData.contact.phone}`;
+          } else if (query.includes("linkedin")) {
+            answer = `LinkedIn: ${profileData.contact.linkedin}`;
+          } else if (query.includes("github")) {
+            answer = `GitHub: ${profileData.contact.github}`;
+          } else if (query.includes("portfolio")) {
+            answer = `Portfolio: ${profileData.contact.portfolio}`;
+          } else {
+            answer = `Email: ${profileData.contact.email}, Phone: ${profileData.contact.phone}, LinkedIn: ${profileData.contact.linkedin}, GitHub: ${profileData.contact.github}, Portfolio: ${profileData.contact.portfolio}`;
+          }
           break;
         case "languages":
           answer = `Languages: ${profileData.languages.join(", ")}`;
