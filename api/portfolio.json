@@ -2,7 +2,13 @@
   "personal": {
     "firstName": "Sudharsan",
     "lastName": "Srinivasan",
-    "fullName": "Sudharsan Srinivasan"
+    "fullName": "Sudharsan Srinivasan",
+    "email": "sudharsanak1010@gmail.com",
+    "phone": "+1 (682) 283-0833",
+    "linkedin": "https://linkedin.com/in/sudharsan-srinivasan10",
+    "github": "https://github.com/sudharsan-ak",
+    "location": "Dallas, TX",
+    "title": "Software Engineer"
   },
   "about": [
     {
