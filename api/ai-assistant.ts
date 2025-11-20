@@ -36,7 +36,7 @@ type Portfolio = {
   skills?: { category: string; skills: string[] }[];
 };
 
-// Keywords to detect sections
+// Section keywords
 const SECTION_KEYWORDS: Record<string, string[]> = {
   skills: ["skill", "skills", "technologies", "tech stack", "expertise"],
   projects: ["project", "projects", "portfolio", "side project"],
@@ -46,16 +46,17 @@ const SECTION_KEYWORDS: Record<string, string[]> = {
   contact: ["contact", "email", "phone", "linkedin", "github", "location", "title"],
 };
 
-// Related tech map
+// Related technologies mapping
 const RELATED_TECH: Record<string, string[]> = {
-  html: ["html5", "css", "css3", "jquery", "jade", "xml", "wordpress", "bootstrap", "sass"],
-  css: ["css3", "sass", "less", "bootstrap", "tailwind", "material-ui"],
+  html: ["html5", "css3", "jquery", "jade", "xml", "wordpress"],
+  css: ["css3", "bootstrap", "tailwind"],
   react: ["angular", "vue.js", "meteor", "node.js"],
   node: ["express", "nestjs", "meteor"],
-  javascript: ["typescript", "node.js", "react", "angular", "vue.js", "jquery", "lodash", "php"],
-  java: ["kotlin", "scala", "spring", "jsp", "servlets"],
-  python: ["django", "flask", "pandas", "numpy"],
-  databases: ["mongodb", "mysql", "sql server", "postgresql"],
+  js: ["typescript", "javascript", "node.js", "react", "angular", "vue.js"],
+  java: ["spring", "hibernate"],
+  python: ["django", "flask", "data science"],
+  databases: ["mysql", "mongodb", "sql server", "postgresql"],
+  ai: ["chatgpt", "claude", "gemini", "github copilot", "grok"],
 };
 
 function firstSentence(text?: string) {
@@ -64,20 +65,12 @@ function firstSentence(text?: string) {
   return idx === -1 ? text : text.slice(0, idx + 1);
 }
 
-function formatExperience(exp: any[], tech?: string) {
-  if (!exp.length) return "";
-  return exp.map((e) => `• ${e.role} – ${e.company}${e.duration ? ` (${e.duration})` : ""}`).join("\n");
-}
-
-function formatProjects(proj: any[], tech?: string) {
-  if (!proj.length) return "";
-  return proj.map((p) => `• ${p.title}`).join("\n");
-}
-
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const { message } = req.body;
-    if (!message?.trim()) return res.status(400).json({ error: "No message provided" });
+    if (!message?.trim()) {
+      return res.status(400).json({ error: "No message provided" });
+    }
 
     const query = message.toLowerCase().trim();
 
@@ -87,63 +80,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const data: Portfolio = JSON.parse(raw);
     const personal = data.personal ?? {};
 
-    // --- Personal info handling ---
+    // --- Personal info ---
     if (/\b(full name|name)\b/.test(query)) {
-      if (/\bfirst name\b/.test(query)) return res.json({ answer: personal.firstName ?? "First name not listed." });
-      if (/\blast name\b/.test(query)) return res.json({ answer: personal.lastName ?? "Last name not listed." });
+      if (/\bfirst name\b/.test(query))
+        return res.json({ answer: personal.firstName ?? "First name not listed." });
+      if (/\blast name\b/.test(query))
+        return res.json({ answer: personal.lastName ?? "Last name not listed." });
       return res.json({ answer: personal.fullName ?? "Full name not listed." });
     }
     if (/\bemail\b/.test(query)) return res.json({ answer: personal.email ?? "Email not listed." });
     if (/\bphone\b/.test(query)) return res.json({ answer: personal.phone ?? "Phone not listed." });
-    if (/\blinkedin\b/.test(query)) return res.json({ answer: personal.linkedin ?? "LinkedIn not listed." });
+    if (/\blinkedin\b/.test(query))
+      return res.json({ answer: personal.linkedin ?? "LinkedIn not listed." });
     if (/\bgithub\b/.test(query)) return res.json({ answer: personal.github ?? "GitHub not listed." });
     if (/\blocation\b/.test(query)) return res.json({ answer: personal.location ?? "Location not listed." });
     if (/\btitle\b/.test(query)) return res.json({ answer: personal.title ?? "Title not listed." });
 
-    // Flatten all known technologies (skills + projects + experience)
-    const allTechs = [
-      ...(data.skills?.flatMap((c) => c.skills.map((s) => s.toLowerCase())) ?? []),
-      ...(data.projects?.flatMap((p) => p.technologies.map((t) => t.toLowerCase())) ?? []),
-      ...(data.experience?.flatMap((e) => e.technologies.map((t) => t.toLowerCase())) ?? []),
-    ];
+    // --- Flatten skills for matching ---
+    const techList = (data.skills ?? []).flatMap((c) => (c.skills ?? []).map((s) => s.toLowerCase()));
 
-    // Detect all techs mentioned in query
-    const mentionedTechs = allTechs.filter((t) => query.includes(t));
-
-    if (mentionedTechs.length > 0) {
-      let answers: string[] = [];
-
-      for (const tech of mentionedTechs) {
-        const expMatches = (data.experience ?? []).filter((e) =>
-          (e.technologies ?? []).map((x) => x.toLowerCase()).includes(tech)
-        );
-        const projMatches = (data.projects ?? []).filter((p) =>
-          (p.technologies ?? []).map((x) => x.toLowerCase()).includes(tech)
-        );
-
-        let answer = "";
-
-        if (expMatches.length > 0) {
-          answer += `Sudharsan has work experience in ${tech.toUpperCase()} at:\n`;
-          answer += formatExperience(expMatches) + "\n\n";
-        } else if ((data.skills ?? []).flatMap((c) => c.skills.map((s) => s.toLowerCase())).includes(tech)) {
-          answer += `Sudharsan has ${tech.toUpperCase()} listed under his skills but no explicit work experience or projects.\n\n`;
-        } else if (RELATED_TECH[tech]) {
-          answer += `I do not see explicit experience with ${tech.toUpperCase()}, but based on related technologies and his background, he should be able to pick it up quickly.\n\n`;
-        }
-
-        if (projMatches.length > 0) {
-          answer += `He has also used ${tech.toUpperCase()} in his project(s):\n`;
-          answer += formatProjects(projMatches) + "\n\n";
-        }
-
-        answers.push(answer.trim());
-      }
-
-      return res.json({ answer: answers.join("\n") });
-    }
-
-    // --- If no explicit or related tech found, fallback
+    // --- Detect target section ---
     let target: string | null = null;
     for (const key in SECTION_KEYWORDS) {
       if (SECTION_KEYWORDS[key].some((kw) => query.includes(kw))) {
@@ -152,6 +108,59 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
     }
 
+    // --- Detect mentioned techs ---
+    const mentionedTechs: string[] = [];
+    techList.forEach((tech) => {
+      if (query.includes(tech)) mentionedTechs.push(tech);
+    });
+
+    // For multiple techs in one query
+    if (mentionedTechs.length > 0) {
+      const answers: string[] = [];
+      for (const tech of mentionedTechs) {
+        const expMatches = (data.experience ?? []).filter((e) =>
+          (e.technologies ?? []).some((t) => t.toLowerCase() === tech)
+        );
+        const projMatches = (data.projects ?? []).filter((p) =>
+          (p.technologies ?? []).some((t) => t.toLowerCase() === tech)
+        );
+
+        let answer = "";
+
+        if (expMatches.length > 0) {
+          answer += `Sudharsan has work experience in ${tech.toUpperCase()} at:\n`;
+          answer += expMatches
+            .map((e) => `• ${e.role} – ${e.company}${e.duration ? ` (${e.duration})` : ""}`)
+            .join("\n");
+          answer += "\n\n";
+        } else if (techList.includes(tech)) {
+          answer += `Sudharsan has no explicit work experience or projects with ${tech.toUpperCase()}, but it is listed in his skills.\n\n`;
+        }
+
+        if (projMatches.length > 0) {
+          answer += `He has also used ${tech.toUpperCase()} in his project(s):\n`;
+          answer += projMatches.map((p) => `• ${p.title}`).join("\n");
+          answer += "\n\n";
+        }
+
+        // Check related tech map
+        const isRelated = Object.values(RELATED_TECH).some((arr) => arr.includes(tech));
+        if (!answer && isRelated) {
+          answer += `I do not see explicit experience with ${tech.toUpperCase()}, but based on his related skills and expertise, he should be able to learn and adapt quickly.\n\n`;
+        }
+
+        // Completely unknown
+        if (!answer) {
+          answer += `I do not see explicit work experience/projects related to ${tech.toUpperCase()}.\n\n`;
+        }
+
+        answers.push(answer.trim());
+      }
+
+      return res.json({ answer: answers.join("\n\n") });
+    }
+
+    // --- Handle sections ---
     switch (target) {
       case "skills": {
         const out = (data.skills ?? [])
@@ -159,37 +168,43 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           .join("\n");
         return res.json({ answer: out || "No skills listed." });
       }
+
       case "projects": {
         const out = (data.projects ?? [])
           .map((p) => `${p.title}: ${firstSentence(p.description)}`)
           .join("\n");
         return res.json({ answer: out || "No projects listed." });
       }
+
       case "experience": {
         const out = (data.experience ?? [])
           .map((e) => `${e.role} at ${e.company}${e.duration ? ` (${e.duration})` : ""}`)
           .join("\n");
         return res.json({ answer: out || "No experience listed." });
       }
+
       case "education": {
-        const out = (data.education ?? [])
-          .map((e) => `${e.degree} at ${e.school} (${e.duration ?? ""})`)
-          .join("\n");
+        const out = (data.education ?? []).map((e) => `${e.degree} at ${e.school} (${e.duration ?? ""})`).join("\n");
         return res.json({ answer: out || "No education listed." });
       }
+
       case "about": {
         const out = (data.about ?? []).map((a) => a.content).join(" ");
         return res.json({ answer: out || "No about info available." });
       }
+
       case "contact": {
         const out = [
           personal.email && `Email: ${personal.email}`,
           personal.phone && `Phone: ${personal.phone}`,
           personal.linkedin && `LinkedIn: ${personal.linkedin}`,
           personal.github && `GitHub: ${personal.github}`,
-        ].filter(Boolean).join("\n");
+        ]
+          .filter(Boolean)
+          .join("\n");
         return res.json({ answer: out || "No contact info listed." });
       }
+
       default:
         return res.json({
           answer:
