@@ -1,21 +1,36 @@
 import { VercelRequest, VercelResponse } from "@vercel/node";
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
 
-// Fix __dirname for ESM in Vercel
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Cache JSON
-let cachedProfileData: any = null;
-function getProfileData() {
-  if (!cachedProfileData) {
-    const jsonPath = path.join(__dirname, "portfolio.json");
-    const fileContents = fs.readFileSync(jsonPath, "utf-8");
-    cachedProfileData = JSON.parse(fileContents);
-  }
-  return cachedProfileData;
+interface PortfolioData {
+  about: { id: string; category: string; content: string }[];
+  education: {
+    id: string;
+    school: string;
+    degree: string;
+    gpa: string;
+    duration: string;
+    coursework: string[];
+  }[];
+  experience: {
+    id: string;
+    company: string;
+    role: string;
+    location: string;
+    duration: string;
+    technologies: string[];
+    achievements: string[];
+  }[];
+  projects: {
+    id: string;
+    title: string;
+    description: string;
+    technologies: string[];
+    year: string;
+    githubUrl: string;
+  }[];
+  skills: { category: string; skills: string[] }[];
+  contact: { type: string; value: string }[];
 }
 
 const SECTION_KEYWORDS: { [key: string]: string[] } = {
@@ -25,69 +40,21 @@ const SECTION_KEYWORDS: { [key: string]: string[] } = {
   education: ["education", "degree", "university", "school"],
   about: ["about", "bio", "background", "summary"],
   contact: ["contact", "email", "phone", "linkedin", "github", "portfolio", "full name", "name"],
-  languages: ["language", "languages", "spoken"],
-  interests: ["interest", "hobby", "hobbies", "passion"],
 };
-
-const PROGRAMMING_LANGUAGES = ["Javascript", "TypeScript", "HTML", "CSS", "Node.js", "MongoDB", "Meteor"];
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
-    const profileData = getProfileData();
-    const { message } = req.body;
+    const filePath = path.join(process.cwd(), "api", "portfolio.json");
+    const rawData = fs.readFileSync(filePath, "utf-8");
+    const portfolioData: PortfolioData = JSON.parse(rawData);
 
-    if (!message || !message.trim())
-      return res.status(400).json({ error: "No message provided" });
+    const { message } = req.body;
+    if (!message || !message.trim()) return res.status(400).json({ error: "No message provided" });
 
     const query = message.trim().toLowerCase();
     let answer = "";
 
-    // Programming language queries
-    const progLangKeywords = [
-      "programming language",
-      "languages he codes",
-      "languages he programs",
-      "coding language",
-      "code in",
-      "program in",
-      "develop in",
-    ];
-    if (progLangKeywords.some(kw => query.includes(kw))) {
-      const langSkills = profileData.skills
-        .filter((skill: any) => typeof skill === "string" && PROGRAMMING_LANGUAGES.includes(skill));
-      answer = `Programming languages:\n${langSkills.join(", ")}`;
-      return res.status(200).json({ answer });
-    }
-
-    // Multi-skill detection
-    const matchedSkills = profileData.skills
-      .filter((skill: any) => typeof skill === "string" && query.includes(skill.toLowerCase()));
-
-    if (matchedSkills.length > 0) {
-      const skillResponses = matchedSkills.map((skill: string) => {
-        const relevantExperiences = profileData.experience.filter((e: any) =>
-          e.technologies.some((t: any) => typeof t === "string" && t.toLowerCase() === skill.toLowerCase())
-        );
-        const relevantProjects = profileData.projects.filter((p: any) =>
-          p.technologies.some((t: any) => typeof t === "string" && t.toLowerCase() === skill.toLowerCase())
-        );
-
-        const expText = relevantExperiences
-          .map((e: any) => `${e.role} at ${e.company} (${e.duration})`)
-          .join("; ");
-        const projText = relevantProjects.map((p: any) => p.name).join(", ");
-
-        let resp = `Skill: ${skill}.\n`;
-        if (expText) resp += `Roles: ${expText}.\n`;
-        if (projText) resp += `Projects: ${projText}.\n`;
-        return resp;
-      });
-
-      answer = skillResponses.join("\n\n");
-      return res.status(200).json({ answer });
-    }
-
-    // Detect section
+    // Detect section based on keywords
     let targetSection: string | null = null;
     for (const section in SECTION_KEYWORDS) {
       if (SECTION_KEYWORDS[section].some(kw => query.includes(kw))) {
@@ -96,50 +63,57 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
     }
 
+    // Respond based on detected section
     if (targetSection) {
       switch (targetSection) {
         case "skills":
-          answer = `Skills:\n${profileData.skills.filter((s: any) => typeof s === "string").join(", ")}`;
-          break;
-        case "projects":
-          answer = profileData.projects
-            .map((p: any) => `${p.name}: ${p.description}`)
-            .join("\n\n");
-          break;
-        case "experience":
-          answer = profileData.experience
-            .map((e: any) => `${e.role} at ${e.company} (${e.duration})`)
+          answer = portfolioData.skills
+            .map(cat => `${cat.category}: ${cat.skills.join(", ")}`)
             .join("\n");
           break;
-        case "education":
-          answer = profileData.education
-            .map((e: any) => `${e.degree} at ${e.institution} (${e.year})`)
+
+        case "projects":
+          answer = portfolioData.projects
+            .filter(p => p && p.title && p.description)
+            .map(p => {
+              let text = `${p.title}: ${p.description}`;
+              if (p.githubUrl) text += `\nGitHub: ${p.githubUrl}`;
+              return text;
+            })
             .join("\n\n");
           break;
+
+        case "experience":
+          answer = portfolioData.experience
+            .filter(e => e && e.role && e.company)
+            .map(e => {
+              return `${e.role} at ${e.company} (${e.duration})\nTechnologies: ${e.technologies.join(", ")}\nAchievements:\n- ${e.achievements.join("\n- ")}`;
+            })
+            .join("\n\n");
+          break;
+
+        case "education":
+          answer = portfolioData.education
+            .map(e => {
+              return `${e.degree} at ${e.school} (${e.duration}, GPA: ${e.gpa})\nCoursework: ${e.coursework.join(", ")}`;
+            })
+            .join("\n\n");
+          break;
+
         case "about":
-          answer = profileData.about;
+          answer = portfolioData.about.map(a => a.content).join("\n\n");
           break;
+
         case "contact":
-          if (query.includes("email")) answer = `Email: ${profileData.contact.email}`;
-          else if (query.includes("phone")) answer = `Phone: ${profileData.contact.phone}`;
-          else if (query.includes("linkedin")) answer = `LinkedIn: ${profileData.contact.linkedin}`;
-          else if (query.includes("github")) answer = `GitHub: ${profileData.contact.github}`;
-          else if (query.includes("portfolio")) answer = `Portfolio: ${profileData.contact.portfolio}`;
-          else if (query.includes("full name") || query.includes("name")) answer = `Full name: ${profileData.name}`;
-          else
-            answer = `Email: ${profileData.contact.email}\nPhone: ${profileData.contact.phone}\nLinkedIn: ${profileData.contact.linkedin}\nGitHub: ${profileData.contact.github}\nPortfolio: ${profileData.contact.portfolio}`;
+          answer = portfolioData.contact.map(c => `${c.type}: ${c.value}`).join("\n");
           break;
-        case "languages":
-          answer = `Languages:\n${profileData.languages.join(", ")}`;
-          break;
-        case "interests":
-          answer = `Interests:\n${profileData.interests.join(", ")}`;
-          break;
+
         default:
           answer = "Sorry, I only have information about Sudharsan’s professional profile.";
       }
     } else {
-      answer = "Sorry, I only have information about Sudharsan’s professional profile.";
+      // Default response for unrelated queries
+      answer = "Hi! I'm Sudharsan’s AI Assistant. Ask me anything about his skills, projects, experience, education, or contact info.";
     }
 
     return res.status(200).json({ answer });
