@@ -114,6 +114,7 @@ export default function AIAssistantChat({ isOpen, setIsOpen, buttonRef }: AIAssi
                 ? "bg-gray-100 text-gray-800 self-start"
                 : "bg-indigo-600 text-white self-end ml-auto"
             }`}
+            style={{ whiteSpace: "pre-wrap" }}
           >
             {msg.text}
           </div>
