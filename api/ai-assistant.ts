@@ -58,12 +58,6 @@ const RELATED_TECH: Record<string, string[]> = {
   databases: ["mongodb", "mysql", "sql server", "postgresql"],
 };
 
-function firstSentence(text?: string) {
-  if (!text) return "";
-  const idx = text.indexOf(".");
-  return idx === -1 ? text : text.slice(0, idx + 1);
-}
-
 function formatExperience(exp: any[]) {
   if (!exp.length) return "";
   return exp.map((e) => `• ${e.role} – ${e.company}${e.duration ? ` (${e.duration})` : ""}`).join("\n");
@@ -81,7 +75,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const query = message.toLowerCase().trim();
 
-    // Load JSON
+    // Load portfolio JSON
     const jsonPath = path.join(process.cwd(), "api", "portfolio.json");
     const raw = await fs.readFile(jsonPath, "utf-8");
     const data: Portfolio = JSON.parse(raw);
@@ -100,48 +94,54 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (/\blocation\b/.test(query)) return res.json({ answer: personal.location ?? "Location not listed." });
     if (/\btitle\b/.test(query)) return res.json({ answer: personal.title ?? "Title not listed." });
 
-    // Flatten all technologies
-    const allTechs = [
+    // Flatten all explicit techs
+    const explicitTechs = [
       ...(data.skills?.flatMap((c) => c.skills.map((s) => s.toLowerCase())) ?? []),
       ...(data.projects?.flatMap((p) => p.technologies.map((t) => t.toLowerCase())) ?? []),
       ...(data.experience?.flatMap((e) => e.technologies.map((t) => t.toLowerCase())) ?? []),
     ];
 
-    // Detect techs in query (unique only)
-    const mentionedTechs = [...new Set(allTechs.filter((t) => query.includes(t)))];
+    // Combine explicit + related techs
+    const allTechs = [...new Set([...explicitTechs, ...Object.keys(RELATED_TECH)])];
+
+    // Detect mentioned tech in query
+    const mentionedTechs = allTechs.filter((tech) => query.includes(tech.toLowerCase()));
 
     if (mentionedTechs.length > 0) {
-      const tech = mentionedTechs[0]; // Use ONLY first match (prevents repetition)
+      let answers: string[] = [];
 
-      const expMatches = (data.experience ?? []).filter((e) =>
-        (e.technologies ?? []).map((x) => x.toLowerCase()).includes(tech)
-      );
-      const projMatches = (data.projects ?? []).filter((p) =>
-        (p.technologies ?? []).map((x) => x.toLowerCase()).includes(tech)
-      );
+      for (const tech of mentionedTechs) {
+        const expMatches = (data.experience ?? []).filter((e) =>
+          (e.technologies ?? []).map((x) => x.toLowerCase()).includes(tech)
+        );
 
-      let answer = "";
+        const projMatches = (data.projects ?? []).filter((p) =>
+          (p.technologies ?? []).map((x) => x.toLowerCase()).includes(tech)
+        );
 
-      if (expMatches.length > 0) {
-        answer += `Sudharsan has work experience in ${tech.toUpperCase()} at:\n`;
-        answer += `${formatExperience(expMatches)
-          .split("\n")
-          .map((line) => `\n${line}`)
-          .join("")}\n`;
+        let answer = "";
+
+        if (expMatches.length > 0) {
+          answer += `Sudharsan has work experience in ${tech.toUpperCase()} at:\n${formatExperience(expMatches)}\n\n`;
+        } else if ((data.skills ?? []).flatMap((c) => c.skills.map((s) => s.toLowerCase())).includes(tech)) {
+          answer += `Sudharsan has ${tech.toUpperCase()} listed under his skills but no explicit work experience or projects.\n\n`;
+        } else if (RELATED_TECH[tech]) {
+          answer += `I do not see explicit experience with ${tech.toUpperCase()}, but based on related technologies and his background, he should be able to pick it up quickly.\n\n`;
+        } else {
+          answer += `I do not see explicit work experience/projects related to ${tech.toUpperCase()}.\n\n`;
+        }
+
+        if (projMatches.length > 0) {
+          answer += `He has also used ${tech.toUpperCase()} in his project(s):\n${formatProjects(projMatches)}\n\n`;
+        }
+
+        answers.push(answer.trim());
       }
 
-      if (projMatches.length > 0) {
-        answer += `\nHe has also used ${tech.toUpperCase()} in his project(s):\n`;
-        answer += `${formatProjects(projMatches)
-          .split("\n")
-          .map((line) => `\n${line}`)
-          .join("")}\n`;
-      }
-
-      return res.json({ answer: answer.trim() });
+      return res.json({ answer: answers.join("\n") });
     }
 
-    // Section-level detection
+    // --- Section-level detection fallback ---
     let target: string | null = null;
     for (const key in SECTION_KEYWORDS) {
       if (SECTION_KEYWORDS[key].some((kw) => query.includes(kw))) {
@@ -151,45 +151,51 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     switch (target) {
-      case "skills": {
-        const out = (data.skills ?? [])
-          .map((c) => `${c.category}: ${c.skills.join(", ")}`)
-          .join("\n");
-        return res.json({ answer: out || "No skills listed." });
-      }
-      case "projects": {
-        const out = (data.projects ?? [])
-          .map((p) => `${p.title}: ${firstSentence(p.description)}`)
-          .join("\n");
-        return res.json({ answer: out || "No projects listed." });
-      }
-      case "experience": {
-        const out = (data.experience ?? [])
-          .map((e) => `${e.role} at ${e.company}${e.duration ? ` (${e.duration})` : ""}`)
-          .join("\n");
-        return res.json({ answer: out || "No experience listed." });
-      }
-      case "education": {
-        const out = (data.education ?? [])
-          .map((e) => `${e.degree} at ${e.school} (${e.duration ?? ""})`)
-          .join("\n");
-        return res.json({ answer: out || "No education listed." });
-      }
-      case "about": {
-        const out = (data.about ?? []).map((a) => a.content).join(" ");
-        return res.json({ answer: out || "No about info available." });
-      }
-      case "contact": {
-        const out = [
-          personal.email && `Email: ${personal.email}`,
-          personal.phone && `Phone: ${personal.phone}`,
-          personal.linkedin && `LinkedIn: ${personal.linkedin}`,
-          personal.github && `GitHub: ${personal.github}`,
-        ]
-          .filter(Boolean)
-          .join("\n");
-        return res.json({ answer: out || "No contact info listed." });
-      }
+      case "skills":
+        return res.json({
+          answer: (data.skills ?? [])
+            .map((c) => `${c.category}: ${c.skills.join(", ")}`)
+            .join("\n") || "No skills listed.",
+        });
+
+      case "projects":
+        return res.json({
+          answer: (data.projects ?? [])
+            .map((p) => `• ${p.title}: ${p.description}`)
+            .join("\n") || "No projects listed.",
+        });
+
+      case "experience":
+        return res.json({
+          answer: (data.experience ?? [])
+            .map((e) => `• ${e.role} at ${e.company}${e.duration ? ` (${e.duration})` : ""}`)
+            .join("\n") || "No experience listed.",
+        });
+
+      case "education":
+        return res.json({
+          answer: (data.education ?? [])
+            .map((e) => `• ${e.degree} at ${e.school} (${e.duration ?? ""})`)
+            .join("\n") || "No education listed.",
+        });
+
+      case "about":
+        return res.json({
+          answer: (data.about ?? []).map((a) => a.content).join(" ") || "No about info available.",
+        });
+
+      case "contact":
+        return res.json({
+          answer: [
+            personal.email && `Email: ${personal.email}`,
+            personal.phone && `Phone: ${personal.phone}`,
+            personal.linkedin && `LinkedIn: ${personal.linkedin}`,
+            personal.github && `GitHub: ${personal.github}`,
+          ]
+            .filter(Boolean)
+            .join("\n") || "No contact info listed.",
+        });
+
       default:
         return res.json({
           answer:
@@ -201,4 +207,3 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({ error: "Server error", details: err.message });
   }
 }
-
