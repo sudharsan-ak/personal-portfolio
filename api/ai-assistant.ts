@@ -124,12 +124,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       if (expMatches.length > 0) {
         answer += `Sudharsan has work experience in ${tech.toUpperCase()} at:\n`;
-        answer += `${formatExperience(expMatches)}\n\n`;
+        answer += `${formatExperience(expMatches)
+          .split("\n")
+          .map((line) => `\n${line}`)
+          .join("")}\n`;
       }
 
       if (projMatches.length > 0) {
-        answer += `He has also used ${tech.toUpperCase()} in his project(s):\n`;
-        answer += `${formatProjects(projMatches)}\n\n`;
+        answer += `\nHe has also used ${tech.toUpperCase()} in his project(s):\n`;
+        answer += `${formatProjects(projMatches)
+          .split("\n")
+          .map((line) => `\n${line}`)
+          .join("")}\n`;
       }
 
       return res.json({ answer: answer.trim() });
@@ -195,3 +201,4 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({ error: "Server error", details: err.message });
   }
 }
+
