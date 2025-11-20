@@ -147,7 +147,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const randomWord = query.split(/\s+/).find((w) => !allTechWords.includes(w));
     if (randomWord) {
       return res.json({
-        answer: `I'm still a work in progress and could not find any experience, project, or skill matching "${randomWord}". Given Sudharsan's background, he will be able to learn it quickly if needed.`,
+        answer: `I'm still a work in progress and could not find any experience, project, or skill matching your query`,
       });
     }
 
@@ -212,3 +212,4 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({ error: "Server error", details: err.message });
   }
 }
+
