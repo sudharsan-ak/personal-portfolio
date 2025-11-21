@@ -129,6 +129,16 @@ export default function Navigation() {
             </InteractiveButton>
           ))}
 
+          {/* Explore APIs Button */}
+          <InteractiveButton
+            variant="ghost"
+            onClick={() =>
+              window.open("https://sudharsansrinivasan.com/api-docs", "_blank")
+            }
+          >
+            Explore APIs
+          </InteractiveButton>
+
           {/* Theme Dropdown (Desktop) */}
           <div className="relative" ref={desktopDropdownRef}>
             <InteractiveButton
@@ -208,6 +218,17 @@ export default function Navigation() {
               {link.label}
             </InteractiveButton>
           ))}
+
+          {/* Explore APIs Button */}
+          <InteractiveButton
+            variant="ghost"
+            className="w-full justify-start"
+            onClick={() =>
+              window.open("https://sudharsansrinivasan.com/api-docs", "_blank")
+            }
+          >
+            Explore APIs
+          </InteractiveButton>
         </div>
       )}
     </nav>
