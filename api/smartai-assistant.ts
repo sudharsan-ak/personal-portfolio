@@ -1,33 +1,54 @@
+// api/smartai-assistant.ts
 import { VercelRequest, VercelResponse } from "@vercel/node";
 import fs from "fs/promises";
 import path from "path";
 import pdf from "pdf-parse";
-import OpenAI from "openai";
 
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+type ResumeChunk = {
+  text: string;
+  section: string;
+  embedding: number[];
+};
 
-if (!OPENAI_API_KEY) {
-  console.warn("OPENAI_API_KEY is not set. Add it in Vercel Environment Variables.");
+// Small helper: cosine similarity
+function cosineSim(a: number[], b: number[]) {
+  const dot = a.reduce((sum, val, i) => sum + val * b[i], 0);
+  const magA = Math.sqrt(a.reduce((sum, val) => sum + val ** 2, 0));
+  const magB = Math.sqrt(b.reduce((sum, val) => sum + val ** 2, 0));
+  return dot / (magA * magB);
 }
 
-const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
+// Dummy embedding function (replace with a proper one, or simple TF-IDF vectors)
+function embed(text: string): number[] {
+  // For demo: convert chars to numbers
+  return text
+    .split("")
+    .map((c) => c.charCodeAt(0) / 255)
+    .slice(0, 128); // fixed length
+}
 
-// --- Cache resume text to avoid parsing every request ---
-let cachedResumeText: string | null = null;
+let chunks: ResumeChunk[] | null = null;
 
-async function getResumeText(): Promise<string> {
-  if (cachedResumeText) return cachedResumeText;
+// Parse resume once at cold start
+async function parseResume() {
+  if (chunks) return chunks;
 
-  try {
-    const pdfPath = path.join(process.cwd(), "client", "public", "resume.pdf");
-    const buffer = await fs.readFile(pdfPath);
-    const data = await pdf(buffer);
-    cachedResumeText = data.text;
-    return cachedResumeText;
-  } catch (err) {
-    console.error("Error reading PDF:", err);
-    return "";
-  }
+  const pdfPath = path.join(process.cwd(), "client", "public", "resume.pdf");
+  const buffer = await fs.readFile(pdfPath);
+  const data = await pdf(buffer);
+
+  const text = data.text;
+
+  // Split into sections by double newline
+  const sections = text.split("\n\n").map((s) => s.trim()).filter(Boolean);
+
+  chunks = sections.map((sec) => ({
+    text: sec,
+    section: sec.slice(0, 20), // first few chars as "section" label
+    embedding: embed(sec),
+  }));
+
+  return chunks;
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -35,36 +56,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const { message } = req.body;
     if (!message?.trim()) return res.status(400).json({ answer: "No message provided." });
 
-    // 1. Get resume text from cache
-    const resumeText = await getResumeText();
+    const resumeChunks = await parseResume();
+    const queryEmbedding = embed(message);
 
-    // 2. Build prompt for OpenAI
-    const prompt = `
-You are an AI assistant for Sudharsan Srinivasan.
-Use the following resume text to answer questions concisely and accurately.
+    // Find top 2 most relevant chunks
+    const scored = resumeChunks
+      .map((c) => ({ ...c, score: cosineSim(c.embedding, queryEmbedding) }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 2);
 
-Resume:
-${resumeText}
+    const answer = scored.map((c) => `• ${c.text}`).join("\n\n");
 
-Question:
-${message}
-
-Answer:
-`;
-
-    // 3. Query OpenAI Chat Completion
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo", // free-ish option with your API key
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.2, // factual and concise
-      max_tokens: 500,
-    });
-
-    const answer = completion.choices?.[0]?.message?.content ?? "Sorry, I couldn't generate a response.";
-
-    return res.status(200).json({ answer: answer.trim() });
+    res.status(200).json({ answer: answer || "Sorry, I couldn't find an answer in the resume." });
   } catch (err: any) {
     console.error("Smart AI Assistant Error:", err);
-    return res.status(500).json({ answer: "Server error: " + err.message });
+    res.status(500).json({ answer: "Server error: " + err.message });
   }
 }
