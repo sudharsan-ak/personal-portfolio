@@ -4,7 +4,7 @@ import path from "path";
 import pdf from "pdf-parse";
 
 const HUGGINGFACE_API_KEY = process.env.HF_API_KEY;
-const HUGGINGFACE_MODEL = "google/flan-t5-small"; // Free text generation model
+const HUGGINGFACE_MODEL = "bigscience/bloomz-560m"; // Free text generation model
 
 if (!HUGGINGFACE_API_KEY) {
   console.warn("HF_API_KEY is not set. Please add it in Vercel Environment Variables.");
