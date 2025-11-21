@@ -1,84 +1,42 @@
+// api/SmartAI-Assistant.ts
 import { VercelRequest, VercelResponse } from "@vercel/node";
 import fs from "fs/promises";
 import path from "path";
 import pdf from "pdf-parse";
+import OpenAI from "openai";
 
-const HUGGINGFACE_API_KEY = process.env.HF_API_KEY;
-const HUGGINGFACE_MODEL = "bigscience/bloomz-560m"; // Free text generation model
+// Initialize OpenAI client
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-if (!HUGGINGFACE_API_KEY) {
-  console.warn("HF_API_KEY is not set. Please add it in Vercel Environment Variables.");
-}
+// Cache the resume text so PDF is only parsed once
+let cachedResumeText: string | null = null;
 
-// --- Helper: Read and parse the resume PDF ---
+// Function to read and parse the resume PDF
 async function getResumeText(): Promise<string> {
+  if (cachedResumeText) return cachedResumeText;
+
   try {
-    const pdfPath = path.join(process.cwd(), "client", "public", "resume.pdf"); // Adjust path if needed
+    const pdfPath = path.join(process.cwd(), "client", "public", "resume.pdf");
     const buffer = await fs.readFile(pdfPath);
     const data = await pdf(buffer);
-    return data.text || "";
+    cachedResumeText = data.text;
+    return cachedResumeText;
   } catch (err) {
     console.error("Error reading PDF:", err);
     return "";
   }
 }
 
-// --- Helper: Query Hugging Face Router API ---
-async function queryHuggingFace(prompt: string): Promise<string> {
-  try {
-    const res = await fetch(`https://router.huggingface.co/models/${HUGGINGFACE_MODEL}`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${HUGGINGFACE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        inputs: prompt,
-        options: { wait_for_model: true },
-      }),
-    });
-
-    const text = await res.text();
-
-    // Attempt to parse JSON safely
-    let json: any;
-    try {
-      json = JSON.parse(text);
-    } catch {
-      console.error("Hugging Face response not valid JSON:", text);
-      return "Oops! AI API returned an unexpected response.";
-    }
-
-    // Hugging Face outputs [{ generated_text: "..." }]
-    if (Array.isArray(json) && json[0]?.generated_text) {
-      return json[0].generated_text;
-    }
-
-    // If error message returned
-    if (json.error) return `Error from AI API: ${json.error}`;
-
-    return "Sorry, I couldn't generate a response.";
-  } catch (err) {
-    console.error("Hugging Face API error:", err);
-    return "Oops! Something went wrong with the AI API.";
-  }
-}
-
-// --- Main API handler ---
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const { message } = req.body;
-    if (!message?.trim()) {
-      return res.status(400).json({ answer: "No message provided." });
-    }
+    if (!message?.trim()) return res.status(400).json({ answer: "No message provided." });
 
-    // 1️⃣ Read the resume text
     const resumeText = await getResumeText();
 
-    // 2️⃣ Construct prompt for AI
     const prompt = `
 You are an AI assistant for Sudharsan Srinivasan.
-Use the following resume to answer questions concisely and accurately.
+Use the following resume text to answer questions concisely and accurately.
 
 Resume:
 ${resumeText}
@@ -89,13 +47,18 @@ ${message}
 Answer:
 `;
 
-    // 3️⃣ Query Hugging Face
-    const answer = await queryHuggingFace(prompt);
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini", // or "gpt-4" if you have access
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.2,
+      max_tokens: 600,
+    });
 
-    // 4️⃣ Return the AI answer
-    return res.status(200).json({ answer: answer.trim() });
+    const answer = response.choices[0].message?.content ?? "Sorry, I couldn't generate a response.";
+
+    res.status(200).json({ answer: answer.trim() });
   } catch (err: any) {
     console.error("Smart AI Assistant Error:", err);
-    return res.status(500).json({ answer: "Server error: " + err.message });
+    res.status(500).json({ answer: "Server error: " + err.message });
   }
 }
