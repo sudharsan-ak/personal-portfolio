@@ -7,7 +7,7 @@ import fetch from "node-fetch";
 import { profileData } from "./profileData.js";
 
 const HF_MODEL = "TheBloke/Llama-2-7B-Chat-GGML"; // community-hosted free model
-const HF_API_URL = `https://api-inference.huggingface.co/models/${HF_MODEL}`;
+const HF_API_URL = `https://huggingface.co/${HF_MODEL}`;
 const HF_API_KEY = process.env.HUGGINGFACE_API_KEY;
 
 // Environment check
