@@ -32,6 +32,7 @@ export default function SmartAIAssistantChat({
   const [position, setPosition] = useState({ bottom: 0, right: 0 });
   const chatEndRef = useRef<HTMLDivElement>(null);
 
+  // Position chat near the assistant button
   useEffect(() => {
     if (buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
@@ -42,53 +43,48 @@ export default function SmartAIAssistantChat({
     }
   }, [buttonRef, isOpen]);
 
+  // Scroll to bottom on new message
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Typing effect for bot messages
-  const typeMessage = async (text: string) => {
-    let current = "";
-    const botMessage: Message = { sender: "bot", text: "", isLoading: true };
-    setMessages((prev) => [...prev, botMessage]);
-    for (const char of text) {
-      current += char;
-      setMessages((prev) =>
-        prev.map((msg, idx) =>
-          idx === prev.length - 1 ? { sender: "bot", text: current, isLoading: true } : msg
-        )
-      );
-      await new Promise((r) => setTimeout(r, 15)); // typing speed
-    }
-    setMessages((prev) =>
-      prev.map((msg, idx) =>
-        idx === prev.length - 1 ? { sender: "bot", text: current } : msg
-      )
-    );
-  };
-
   const handleSend = async () => {
     if (!input.trim()) return;
 
+    // Add user message
     const userMessage: Message = { sender: "user", text: input };
     setMessages((prev) => [...prev, userMessage]);
 
-    const messageToSend = input;
-    setInput("");
+    // Add loading bot message
+    const loadingMessage: Message = { sender: "bot", text: "Typing...", isLoading: true };
+    setMessages((prev) => [...prev, loadingMessage]);
 
     try {
-      const res = await fetch("/api/smartai-assistant", {
+      const res = await fetch("/api/llm-assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: messageToSend }),
+        body: JSON.stringify({ message: input }),
       });
 
       const data = await res.json();
-      await typeMessage(data.answer || "Sorry, I couldn't generate a response.");
+
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.isLoading
+            ? { sender: "bot", text: data.answer || "Sorry, I couldn't find anything." }
+            : msg
+        )
+      );
     } catch (err) {
-      console.error("LLM Assistant Error:", err);
-      await typeMessage("Oops! Something went wrong.");
+      console.error("Smart AI Assistant Error:", err);
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.isLoading ? { sender: "bot", text: "Oops! Something went wrong." } : msg
+        )
+      );
     }
+
+    setInput("");
   };
 
   return (
