@@ -7,7 +7,7 @@ import fetch from "node-fetch"; // for Vercel
 import { profileData } from "./profileData.js";
 
 // Use a small free Hugging Face model
-const HF_MODEL = "tiiuae/falcon-7b-instruct"; 
+const HF_MODEL = "mistralai/Mistral-7B-Instruct-v0.1"; 
 const HF_API_URL = `https://router.huggingface.co/models/${HF_MODEL}`;
 const HF_API_KEY = process.env.HUGGINGFACE_API_KEY;
 
