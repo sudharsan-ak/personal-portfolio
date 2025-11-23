@@ -124,7 +124,9 @@ export const profileData = {
     },
   ],
 
-  interests: ["Web Development", "Open Source Contribution", "UI/UX Design", "Basketball", "Cricket", "Travel", "Movies"],
+  interests: ["Web Development", "Open Source Contribution", "UI/UX Design"],
+
+  hobbies: ["Basketball", "Cricket", "Travel", "Movies"],
 
   languages: ["English (Fluent)", "Tamil (Native)", "Hindi (Intermediate)"],
 
