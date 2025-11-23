@@ -29,7 +29,7 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef }: S
   const [position, setPosition] = useState({ bottom: 0, right: 0 });
   const chatEndRef = useRef<HTMLDivElement>(null);
 
-  // Position relative to button
+  // Position chat relative to button
   useEffect(() => {
     if (buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
@@ -40,7 +40,7 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef }: S
     }
   }, [buttonRef, isOpen]);
 
-  // Auto-scroll
+  // Auto-scroll to bottom
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -60,7 +60,13 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef }: S
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: msg, expand }),
       });
-      const data = await res.json();
+
+      let data;
+      try {
+        data = await res.json();
+      } catch (jsonErr) {
+        throw new Error("Invalid JSON response from server");
+      }
 
       setMessages((prev) =>
         prev.map((m) =>
@@ -69,10 +75,14 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef }: S
             : m
         )
       );
-    } catch (err) {
+    } catch (err: any) {
       console.error("Smart AI Assistant Error:", err);
       setMessages((prev) =>
-        prev.map((m) => (m.isLoading ? { sender: "bot", text: "Oops! Something went wrong.", suggestedQuestions: [] } : m))
+        prev.map((m) =>
+          m.isLoading
+            ? { sender: "bot", text: "Oops! Something went wrong.", suggestedQuestions: [] }
+            : m
+        )
       );
     }
 
