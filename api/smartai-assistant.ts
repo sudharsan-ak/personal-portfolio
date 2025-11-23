@@ -47,6 +47,8 @@ async function queryHuggingFace(prompt: string) {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const { message } = req.body;
+    console.log("Received message:", message);
+
     if (!message?.trim()) return res.status(400).json({ answer: "No message provided." });
 
     const resumeText = await getResumeText();
@@ -63,9 +65,11 @@ Answer concisely:
 `;
 
     const answer = await queryHuggingFace(prompt);
+    console.log("Final answer:", answer.trim());
+
     res.status(200).json({ answer: answer.trim() });
   } catch (err: any) {
-    console.error("LLM Assistant Error:", err.message);
+    console.error("LLM Assistant Error:", err);
     res.status(500).json({ answer: "Server error: " + err.message });
   }
 }
