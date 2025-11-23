@@ -3,7 +3,7 @@ import { VercelRequest, VercelResponse } from "@vercel/node";
 import fs from "fs/promises";
 import path from "path";
 import pdf from "pdf-parse";
-import { profileData } from "./profileData";
+import { profileData } from "./profileData.js";
 
 type ResumeChunk = {
   text: string;
