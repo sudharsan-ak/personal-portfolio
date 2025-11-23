@@ -2,7 +2,7 @@ import { VercelRequest, VercelResponse } from "@vercel/node";
 import fs from "fs/promises";
 import path from "path";
 import pdf from "pdf-parse";
-import { profileData } from "../client/src/data/profileData";
+import { profileData } from "./profileData";
 
 type ResumeChunk = {
   text: string;
