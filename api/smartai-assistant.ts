@@ -38,46 +38,49 @@ function toThirdPerson(text: string) {
 let chunks: ResumeChunk[] | null = null;
 
 // Parse resume PDF + clean up header/contact info + combine with profileData
-async function parseResume() {
+async function parseResume(): Promise<ResumeChunk[]> {
   if (chunks) return chunks;
 
-  const pdfPath = path.join(process.cwd(), "client", "public", "resume.pdf");
-  const buffer = await fs.readFile(pdfPath);
-  const data = await pdf(buffer);
-  const text = data.text;
+  try {
+    const pdfPath = path.join(process.cwd(), "client", "public", "resume.pdf");
+    const buffer = await fs.readFile(pdfPath);
+    const data = await pdf(buffer);
+    const text = data.text;
 
-  // Split by double newline, remove empty, remove header/contact info
-  const sections = text
-    .split("\n\n")
-    .map((s) => s.trim())
-    .filter(Boolean)
-    .filter(
-      (s) =>
-        !s.toLowerCase().includes("linkedin") &&
-        !s.toLowerCase().includes("github") &&
-        !s.toLowerCase().includes("sudharsan srinivasan") &&
-        !s.toLowerCase().includes("resume") &&
-        !s.toLowerCase().includes("phone")
-    );
+    const sections = text
+      .split("\n\n")
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .filter(
+        (s) =>
+          !s.toLowerCase().includes("linkedin") &&
+          !s.toLowerCase().includes("github") &&
+          !s.toLowerCase().includes("sudharsan srinivasan") &&
+          !s.toLowerCase().includes("resume") &&
+          !s.toLowerCase().includes("phone")
+      );
 
-  chunks = sections.map((sec) => ({
-    text: sec,
-    section: sec.slice(0, 20),
-    embedding: embed(sec),
-  }));
+    chunks = sections.map((sec) => ({
+      text: sec,
+      section: sec.slice(0, 20),
+      embedding: embed(sec),
+    }));
 
-  // Add profileData as chunks
-  const profileChunks: ResumeChunk[] = [
-    { text: profileData.about, section: "About", embedding: embed(profileData.about) },
-    { text: profileData.skills.join(", "), section: "Skills", embedding: embed(profileData.skills.join(", ")) },
-    { text: profileData.projects.map((p) => p.description).join("\n"), section: "Projects", embedding: embed(profileData.projects.map((p) => p.description).join("\n")) },
-    { text: profileData.hobbies.join(", "), section: "Hobbies", embedding: embed(profileData.hobbies.join(", ")) },
-    { text: profileData.experience.map((e) => e.summary).join("\n"), section: "Experience", embedding: embed(profileData.experience.map((e) => e.summary).join("\n")) },
-    { text: profileData.education.map((e) => `${e.degree} - ${e.institution}`).join("\n"), section: "Education", embedding: embed(profileData.education.map((e) => `${e.degree} - ${e.institution}`).join("\n")) },
-  ];
+    const profileChunks: ResumeChunk[] = [
+      { text: profileData.about, section: "About", embedding: embed(profileData.about) },
+      { text: profileData.skills.join(", "), section: "Skills", embedding: embed(profileData.skills.join(", ")) },
+      { text: profileData.projects.map((p) => p.description).join("\n"), section: "Projects", embedding: embed(profileData.projects.map((p) => p.description).join("\n")) },
+      { text: profileData.hobbies.join(", "), section: "Hobbies", embedding: embed(profileData.hobbies.join(", ")) },
+      { text: profileData.experience.map((e) => e.summary).join("\n"), section: "Experience", embedding: embed(profileData.experience.map((e) => e.summary).join("\n")) },
+      { text: profileData.education.map((e) => `${e.degree} - ${e.institution}`).join("\n"), section: "Education", embedding: embed(profileData.education.map((e) => `${e.degree} - ${e.institution}`).join("\n")) },
+    ];
 
-  chunks.push(...profileChunks);
-  return chunks;
+    chunks?.push(...profileChunks);
+    return chunks || [];
+  } catch (err) {
+    console.error("Resume parsing error:", err);
+    return [];
+  }
 }
 
 // Suggested questions per topic
@@ -112,9 +115,12 @@ function detectTopic(message: string): string | null {
 // Generate adaptive answer, optionally expand
 function generateAnswer(chunks: ResumeChunk[], message: string, expand = false): string {
   const topic = detectTopic(message);
-  // Filter chunks by topic if known
   const relevantChunks = topic
-    ? chunks.filter((c) => c.section.toLowerCase() === topic || topic === "react" || topic === "html" || topic === "node")
+    ? chunks.filter(
+        (c) =>
+          c.section.toLowerCase() === topic ||
+          ["react", "html", "node"].includes(topic)
+      )
     : chunks;
 
   const queryEmbedding = embed(message);
@@ -134,8 +140,12 @@ function generateAnswer(chunks: ResumeChunk[], message: string, expand = false):
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
+    if (req.method !== "POST") {
+      return res.status(405).json({ answer: "Method not allowed", suggestedQuestions: [] });
+    }
+
     const { message, expand = false } = req.body;
-    if (!message?.trim()) return res.status(400).json({ answer: "No message provided." });
+    if (!message?.trim()) return res.status(400).json({ answer: "No message provided.", suggestedQuestions: [] });
 
     const resumeChunks = await parseResume();
     const topic = detectTopic(message);
