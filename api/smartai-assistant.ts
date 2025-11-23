@@ -32,7 +32,7 @@ let chunks: ResumeChunk[] | null = null;
 async function parseResume() {
   if (chunks) return chunks;
 
-  const pdfPath = path.join(process.cwd(), "public", "resume.pdf"); 
+  const pdfPath = path.join(process.cwd(), "client", "public", "resume.pdf"); 
   const buffer = await fs.readFile(pdfPath);
   const data = await pdf(buffer);
 
