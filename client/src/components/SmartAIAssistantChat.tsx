@@ -14,22 +14,24 @@ interface Message {
   sender: "user" | "bot";
   text: string;
   isLoading?: boolean;
-  suggestedQuestions?: string[];
 }
 
-export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef }: SmartAIAssistantChatProps) {
+export default function SmartAIAssistantChat({
+  isOpen,
+  setIsOpen,
+  buttonRef,
+}: SmartAIAssistantChatProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
       sender: "bot",
-      text: "👋 Hi! I'm Sudharsan’s Smart AI Assistant. Ask me anything about his experience, skills, projects, or hobbies.",
-      suggestedQuestions: ["Tell me about his projects", "Tell me about his skills", "What are his hobbies?"],
+      text: "👋 Hi! I'm Sudharsan’s Smart AI Assistant. Ask me anything about his experience, skills, or projects.",
     },
   ]);
+
   const [input, setInput] = useState("");
   const [position, setPosition] = useState({ bottom: 0, right: 0 });
   const chatEndRef = useRef<HTMLDivElement>(null);
 
-  // Position relative to button
   useEffect(() => {
     if (buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
@@ -40,15 +42,14 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef }: S
     }
   }, [buttonRef, isOpen]);
 
-  // Auto-scroll
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const sendMessage = async (msg: string, expand = false) => {
-    if (!msg.trim()) return;
+  const handleSend = async () => {
+    if (!input.trim()) return;
 
-    const userMessage: Message = { sender: "user", text: msg };
+    const userMessage: Message = { sender: "user", text: input };
     setMessages((prev) => [...prev, userMessage]);
 
     const loadingMessage: Message = { sender: "bot", text: "Typing...", isLoading: true };
@@ -58,25 +59,25 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef }: S
       const res = await fetch("/api/smartai-assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: msg, expand }),
+        body: JSON.stringify({ message: input }),
       });
 
       const data = await res.json();
 
       setMessages((prev) =>
-        prev.map((m) =>
-          m.isLoading
-            ? { sender: "bot", text: data.answer, suggestedQuestions: data.suggestedQuestions }
-            : m
+        prev.map((msg) =>
+          msg.isLoading
+            ? { sender: "bot", text: data.answer || "Sorry, I couldn't generate a response." }
+            : msg
         )
       );
     } catch (err) {
       console.error("Smart AI Assistant Error:", err);
       setMessages((prev) =>
-        prev.map((m) =>
-          m.isLoading
-            ? { sender: "bot", text: "Oops! Something went wrong.", suggestedQuestions: [] }
-            : m
+        prev.map((msg) =>
+          msg.isLoading
+            ? { sender: "bot", text: "Oops! Something went wrong." }
+            : msg
         )
       );
     }
@@ -106,32 +107,16 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef }: S
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-3 py-3 space-y-3 text-sm bg-white">
         {messages.map((msg, idx) => (
-          <div key={idx} className="flex flex-col">
-            <div
-              className={`px-3 py-2 rounded-lg max-w-[85%] break-words shadow-sm ${
-                msg.sender === "bot"
-                  ? "bg-gray-100 text-gray-800 self-start"
-                  : "bg-indigo-600 text-white self-end ml-auto"
-              }`}
-              style={{ whiteSpace: "pre-wrap" }}
-            >
-              {msg.text}
-            </div>
-
-            {/* Suggested Questions */}
-            {msg.sender === "bot" && msg.suggestedQuestions && (
-              <div className="flex flex-wrap gap-2 mt-1">
-                {msg.suggestedQuestions.map((q, i) => (
-                  <button
-                    key={i}
-                    onClick={() => sendMessage(q)}
-                    className="bg-indigo-50 text-indigo-700 text-xs px-2 py-1 rounded-md hover:bg-indigo-100 transition"
-                  >
-                    {q}
-                  </button>
-                ))}
-              </div>
-            )}
+          <div
+            key={idx}
+            className={`px-3 py-2 rounded-lg max-w-[85%] break-words shadow-sm ${
+              msg.sender === "bot"
+                ? "bg-gray-100 text-gray-800 self-start"
+                : "bg-indigo-600 text-white self-end ml-auto"
+            }`}
+            style={{ whiteSpace: "pre-wrap" }}
+          >
+            {msg.text}
           </div>
         ))}
         <div ref={chatEndRef} />
@@ -144,11 +129,11 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef }: S
           placeholder="Ask something..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && sendMessage(input)}
+          onKeyDown={(e) => e.key === "Enter" && handleSend()}
           className="flex-1 bg-gray-50 text-gray-900 border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none placeholder-gray-400"
         />
         <button
-          onClick={() => sendMessage(input)}
+          onClick={handleSend}
           className="p-2 rounded-md bg-indigo-600 hover:bg-indigo-500 transition text-white shadow-md"
         >
           <Send className="w-4 h-4" />
