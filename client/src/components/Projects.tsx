@@ -91,13 +91,9 @@ export default function Projects() {
         </div>
         {/* New API Button */}
         <div className="mt-12 flex justify-center">
-          <a
-            href="/api-docs"
-            target="_blank"
-            className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition-colors duration-200"
-          >
+          <InteractiveButton variant="ghost" onClick={() => window.open("/api-docs", "_blank")}>
             Explore My Public APIs
-          </a>
+          </InteractiveButton>
         </div>
       </div>
     </section>
