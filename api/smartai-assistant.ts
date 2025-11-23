@@ -10,6 +10,7 @@ type ResumeChunk = {
   embedding: number[];
 };
 
+// Small helper: cosine similarity
 function cosineSim(a: number[], b: number[]) {
   const dot = a.reduce((sum, val, i) => sum + val * b[i], 0);
   const magA = Math.sqrt(a.reduce((sum, val) => sum + val ** 2, 0));
@@ -17,6 +18,7 @@ function cosineSim(a: number[], b: number[]) {
   return dot / (magA * magB);
 }
 
+// Simple embedding: char codes normalized
 function embed(text: string): number[] {
   return text
     .split("")
@@ -24,6 +26,7 @@ function embed(text: string): number[] {
     .slice(0, 128);
 }
 
+// Convert to 3rd person
 function toThirdPerson(text: string) {
   return text
     .replace(/\bYou\b/gi, "Sudharsan")
@@ -34,6 +37,7 @@ function toThirdPerson(text: string) {
 
 let chunks: ResumeChunk[] | null = null;
 
+// Parse resume PDF + clean up header/contact info + combine with profileData
 async function parseResume() {
   if (chunks) return chunks;
 
@@ -41,7 +45,20 @@ async function parseResume() {
   const buffer = await fs.readFile(pdfPath);
   const data = await pdf(buffer);
   const text = data.text;
-  const sections = text.split("\n\n").map((s) => s.trim()).filter(Boolean);
+
+  // Split by double newline, remove empty, remove header/contact info
+  const sections = text
+    .split("\n\n")
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .filter(
+      (s) =>
+        !s.toLowerCase().includes("linkedin") &&
+        !s.toLowerCase().includes("github") &&
+        !s.toLowerCase().includes("sudharsan srinivasan") &&
+        !s.toLowerCase().includes("resume") &&
+        !s.toLowerCase().includes("phone")
+    );
 
   chunks = sections.map((sec) => ({
     text: sec,
@@ -49,45 +66,30 @@ async function parseResume() {
     embedding: embed(sec),
   }));
 
-  // Include profileData chunks
-  const profileChunks = [
+  // Add profileData as chunks
+  const profileChunks: ResumeChunk[] = [
     { text: profileData.about, section: "About", embedding: embed(profileData.about) },
     { text: profileData.skills.join(", "), section: "Skills", embedding: embed(profileData.skills.join(", ")) },
-    { text: profileData.projects.map(p => p.description).join("\n"), section: "Projects", embedding: embed(profileData.projects.map(p => p.description).join("\n")) },
-    { text: profileData.hobbies.join(", "), section: "Hobbies", embedding: embed(profileData.hobbies.join(", ")) }, // <-- updated
-    { text: profileData.experience.map(e => e.summary).join("\n"), section: "Experience", embedding: embed(profileData.experience.map(e => e.summary).join("\n")) },
+    { text: profileData.projects.map((p) => p.description).join("\n"), section: "Projects", embedding: embed(profileData.projects.map((p) => p.description).join("\n")) },
+    { text: profileData.hobbies.join(", "), section: "Hobbies", embedding: embed(profileData.hobbies.join(", ")) },
+    { text: profileData.experience.map((e) => e.summary).join("\n"), section: "Experience", embedding: embed(profileData.experience.map((e) => e.summary).join("\n")) },
+    { text: profileData.education.map((e) => `${e.degree} - ${e.institution}`).join("\n"), section: "Education", embedding: embed(profileData.education.map((e) => `${e.degree} - ${e.institution}`).join("\n")) },
   ];
 
   chunks.push(...profileChunks);
   return chunks;
 }
 
+// Suggested questions per topic
 const suggestedQuestionsMap: Record<string, string[]> = {
-  projects: [
-    "Tell me about his projects",
-    "Tell me more about the Portfolio Website",
-    "Which project used React?",
-  ],
-  skills: [
-    "Tell me about his HTML/CSS experience",
-    "How skilled is he in Node.js?",
-    "Tell me about his React/TypeScript experience",
-  ],
-  experience: [
-    "Summarize his career progression",
-    "Where has he worked?",
-    "What technologies has he used at Fortress?",
-  ],
-  hobbies: [
-    "What are his hobbies?",
-    "What does he do in his free time?",
-  ],
-  education: [
-    "Tell me about his education",
-    "Where did he get his Master's and Bachelor's degrees?",
-  ],
+  projects: ["Tell me about his projects", "Tell me more about the Portfolio Website", "Which project used React?"],
+  skills: ["Tell me about his HTML/CSS experience", "How skilled is he in Node.js?", "Tell me about his React/TypeScript experience"],
+  experience: ["Summarize his career progression", "Where has he worked?", "What technologies has he used at Fortress?"],
+  hobbies: ["What are his hobbies?", "What does he do in his free time?"],
+  education: ["Tell me about his education", "Where did he get his Master's and Bachelor's degrees?"],
 };
 
+// Keywords to detect topic
 const intents: Record<string, string[]> = {
   projects: ["project", "portfolio", "application", "event management", "testing"],
   react: ["react", "typescript", "frontend", "ui"],
@@ -98,6 +100,7 @@ const intents: Record<string, string[]> = {
   education: ["education", "degree", "school", "university"],
 };
 
+// Detect topic based on message
 function detectTopic(message: string): string | null {
   const msg = message.toLowerCase();
   for (const [topic, keywords] of Object.entries(intents)) {
@@ -106,9 +109,16 @@ function detectTopic(message: string): string | null {
   return null;
 }
 
+// Generate adaptive answer, optionally expand
 function generateAnswer(chunks: ResumeChunk[], message: string, expand = false): string {
+  const topic = detectTopic(message);
+  // Filter chunks by topic if known
+  const relevantChunks = topic
+    ? chunks.filter((c) => c.section.toLowerCase() === topic || topic === "react" || topic === "html" || topic === "node")
+    : chunks;
+
   const queryEmbedding = embed(message);
-  const scored = chunks
+  const scored = relevantChunks
     .map((c) => ({ ...c, score: cosineSim(c.embedding, queryEmbedding) }))
     .sort((a, b) => b.score - a.score)
     .slice(0, 3);
