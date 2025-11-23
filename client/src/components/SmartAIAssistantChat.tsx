@@ -46,43 +46,49 @@ export default function SmartAIAssistantChat({
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Typing effect for bot messages
+  const typeMessage = async (text: string) => {
+    let current = "";
+    const botMessage: Message = { sender: "bot", text: "", isLoading: true };
+    setMessages((prev) => [...prev, botMessage]);
+    for (const char of text) {
+      current += char;
+      setMessages((prev) =>
+        prev.map((msg, idx) =>
+          idx === prev.length - 1 ? { sender: "bot", text: current, isLoading: true } : msg
+        )
+      );
+      await new Promise((r) => setTimeout(r, 15)); // typing speed
+    }
+    setMessages((prev) =>
+      prev.map((msg, idx) =>
+        idx === prev.length - 1 ? { sender: "bot", text: current } : msg
+      )
+    );
+  };
+
   const handleSend = async () => {
     if (!input.trim()) return;
 
     const userMessage: Message = { sender: "user", text: input };
     setMessages((prev) => [...prev, userMessage]);
 
-    const loadingMessage: Message = { sender: "bot", text: "Typing...", isLoading: true };
-    setMessages((prev) => [...prev, loadingMessage]);
+    const messageToSend = input;
+    setInput("");
 
     try {
       const res = await fetch("/api/smartai-assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: input }),
+        body: JSON.stringify({ message: messageToSend }),
       });
 
       const data = await res.json();
-
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg.isLoading
-            ? { sender: "bot", text: data.answer || "Sorry, I couldn't generate a response." }
-            : msg
-        )
-      );
+      await typeMessage(data.answer || "Sorry, I couldn't generate a response.");
     } catch (err) {
-      console.error("Smart AI Assistant Error:", err);
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg.isLoading
-            ? { sender: "bot", text: "Oops! Something went wrong." }
-            : msg
-        )
-      );
+      console.error("LLM Assistant Error:", err);
+      await typeMessage("Oops! Something went wrong.");
     }
-
-    setInput("");
   };
 
   return (
@@ -99,7 +105,10 @@ export default function SmartAIAssistantChat({
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-white shadow-sm">
         <h4 className="font-semibold text-gray-800 text-lg">Smart AI Assistant</h4>
-        <button onClick={() => setIsOpen(false)} className="p-1 rounded-full hover:bg-gray-100 transition">
+        <button
+          onClick={() => setIsOpen(false)}
+          className="p-1 rounded-full hover:bg-gray-100 transition"
+        >
           <X className="w-4 h-4 text-gray-500" />
         </button>
       </div>
