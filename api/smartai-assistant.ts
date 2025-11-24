@@ -12,7 +12,7 @@ const RELATED_TECH: Record<string, string[]> = {
   databases: ["mongodb", "mysql", "sql server", "postgresql"],
 };
 
-// Standardize tech names
+// Helper to format tech names consistently
 function formatTech(tech: string) {
   const mapping: Record<string, string> = {
     javascript: "JavaScript",
@@ -66,51 +66,49 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const query = message.toLowerCase().trim();
 
-    // --- Name handling ---
-    if (/\bfull name\b/.test(query)) return res.json({ answer: profileData.name });
-    if (/\bfirst\s*name\b/.test(query)) return res.json({ answer: profileData.name.split(" ")[0] });
-    if (/\blast\s*name\b/.test(query)) return res.json({ answer: profileData.name.split(" ").slice(1).join(" ") });
-
-    // --- Contact info ---
+    // --- Personal info handling ---
+    if (/first\s*name/.test(query)) return res.json({ answer: profileData.name.split(" ")[0] });
+    if (/last\s*name/.test(query)) return res.json({ answer: profileData.name.split(" ").slice(1).join(" ") });
+    if (/full\s*name|name/.test(query)) return res.json({ answer: profileData.name });
     if (/\b(email|gmail)\b/.test(query)) return res.json({ answer: profileData.contact.email });
     if (/\bphone\b/.test(query)) return res.json({ answer: profileData.contact.phone });
     if (/\blinkedin\b/.test(query)) return res.json({ answer: profileData.contact.linkedin });
     if (/\bgithub\b/.test(query)) return res.json({ answer: profileData.contact.github });
     if (/\bportfolio\b/.test(query)) return res.json({ answer: profileData.portfolio });
 
-    // --- Tech handling ---
+    // --- Skill detection ---
     const skillsSet = new Set(profileData.skills.map((s) => s.toLowerCase()));
-    const mentionedTechs = Array.from(skillsSet).filter((tech) => query.includes(tech.toLowerCase()));
-
+    const mentionedSkills = Array.from(skillsSet).filter((skill) => query.includes(skill.toLowerCase()));
     const askExperienceExplicit = /\b(work experience|experience only)\b/.test(query);
     const askProjectsExplicit = /\b(project|projects)\b/.test(query);
 
-    if (mentionedTechs.length > 0) {
+    if (mentionedSkills.length > 0) {
       const answers: string[] = [];
 
-      for (const tech of mentionedTechs) {
+      for (const skill of mentionedSkills) {
         const expMatches = profileData.experience.filter((e) =>
-          e.technologies.map((x) => x.toLowerCase()).includes(tech)
+          e.technologies.map((t) => t.toLowerCase()).includes(skill)
         );
         const projMatches = profileData.projects.filter((p) =>
-          p.technologies.map((x) => x.toLowerCase()).includes(tech)
+          p.technologies.map((t) => t.toLowerCase()).includes(skill)
         );
 
         let answer = "";
 
         if (askExperienceExplicit) {
           answer = expMatches.length
-            ? `Sudharsan has work experience with ${formatTech(tech)}:\n${formatExperience(expMatches, tech, true)}`
-            : `No, he doesn't have work experience with ${formatTech(tech)}.`;
+            ? `Sudharsan has work experience with ${formatTech(skill)}:\n${formatExperience(expMatches, skill, true)}`
+            : `No, he doesn't have work experience with ${formatTech(skill)}.`;
         } else if (askProjectsExplicit) {
           answer = projMatches.length
-            ? `He has worked on projects involving ${formatTech(tech)}:\n${formatProjects(projMatches, tech)}`
-            : `No, he doesn't have projects involving ${formatTech(tech)}.`;
+            ? `He has worked on projects involving ${formatTech(skill)}:\n${formatProjects(projMatches, skill)}`
+            : `No, he doesn't have projects involving ${formatTech(skill)}.`;
         } else {
-          if (expMatches.length) answer += `Sudharsan has work experience with ${formatTech(tech)}:\n${formatExperience(expMatches, tech)}\n\n`;
-          if (projMatches.length) answer += `He has worked on projects involving ${formatTech(tech)}:\n${formatProjects(projMatches, tech)}\n\n`;
+          // General "experience with" => combine both
+          if (expMatches.length) answer += `Sudharsan has work experience with ${formatTech(skill)}:\n${formatExperience(expMatches, skill)}\n\n`;
+          if (projMatches.length) answer += `He has worked on projects involving ${formatTech(skill)}:\n${formatProjects(projMatches, skill)}\n\n`;
           if (!expMatches.length && !projMatches.length)
-            answer += `Sudharsan has ${formatTech(tech)} listed as a skill but no explicit experience/projects.`;
+            answer += `Sudharsan has ${formatTech(skill)} listed as a skill but no explicit experience/projects.`;
         }
 
         answers.push(answer.trim());
@@ -129,14 +127,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
     }
 
-    // --- Sections ---
+    // --- Sections fallback ---
     if (/\bskills\b/.test(query)) return res.json({ answer: profileData.skills.join(", ") });
     if (/\bprojects\b/.test(query)) return res.json({ answer: profileData.projects.map((p) => `• ${p.name}: ${p.description}`).join("\n") });
     if (/\bexperience\b/.test(query)) return res.json({ answer: profileData.experience.map((e) => `• ${e.role} at ${e.company} (${e.duration})`).join("\n") });
     if (/\beducation\b/.test(query)) return res.json({ answer: profileData.education.map((e) => `• ${e.degree} at ${e.institution} (${e.year})`).join("\n") });
     if (/\babout\b/.test(query)) return res.json({ answer: profileData.about });
 
-    // --- Default fallback ---
+    // --- Default fallback for irrelevant queries ---
     return res.json({
       answer: "I’m only able to answer questions about Sudharsan's skills, projects, experience, education, or contact info. I don’t have information on that.",
     });
