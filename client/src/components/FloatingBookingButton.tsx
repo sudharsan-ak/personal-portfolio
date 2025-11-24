@@ -1,32 +1,32 @@
 import { PopupButton } from "react-calendly";
+import { useRef } from "react";
+import { Calendar } from "lucide-react";
 
 export default function FloatingBookingButton() {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
   return (
-    <div className="fixed bottom-6 right-6 z-50">
-      <PopupButton
-        url="https://calendly.com/sudharsanak1010" // <-- Replace with your Calendly link
-        rootElement={document.getElementById("__next") || document.body}
-        text=""
-        className="p-3 bg-primary text-primary-foreground rounded-full shadow flex items-center justify-center"
+    <div ref={wrapperRef} className="fixed bottom-6 right-6 z-50">
+      {/* Hidden PopupButton */}
+      <div className="absolute opacity-0 w-0 h-0 overflow-hidden pointer-events-none">
+        <PopupButton
+          url="https://calendly.com/sudharsanak1010"
+          rootElement={document.getElementById("__next") || document.body}
+          text="Book Meeting"
+        />
+      </div>
+      
+      {/* Custom Button - styled like TimelineButton */}
+      <button
+        onClick={() => {
+          const popupButton = wrapperRef.current?.querySelector('button') as HTMLButtonElement;
+          popupButton?.click();
+        }}
+        className="p-3 bg-primary text-primary-foreground rounded-full shadow-lg hover:scale-110 transition-transform duration-300"
+        title="Schedule a meeting"
       >
-        {/* Calendar Icon */}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 
-               002-2V7a2 2 0 00-2-2H5a2 2 0 
-               00-2 2v12a2 2 0 002 2z"
-          />
-        </svg>
-      </PopupButton>
+        <Calendar className="w-5 h-5" />
+      </button>
     </div>
   );
 }
