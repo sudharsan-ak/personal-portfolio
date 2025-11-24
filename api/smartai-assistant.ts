@@ -111,7 +111,7 @@ async function prepareResume() {
 
 // --- Query HF LLM (small public model) ---
 async function queryHFLLM(prompt: string) {
-  const LLM_URL = "https://api-inference.huggingface.co/models/TheBloke/guanaco-7B-GPT4All-v2";
+  const LLM_URL = "https://router.huggingface.co/models/TheBloke/guanaco-7B-GPT4All-v2";
 
   const res = await fetch(LLM_URL, {
     method: "POST",
