@@ -2,10 +2,11 @@ import { VercelRequest, VercelResponse } from "@vercel/node";
 import fs from "fs/promises";
 import path from "path";
 import pdf from "pdf-parse";
-import fetch from "node-fetch"; // for API calls
+import fetch from "node-fetch";
 import { profileData } from "./profileData.js";
+import { pipeline } from "@xenova/transformers";
 
-// Hugging Face API
+// HF LLM API
 const HF_API_KEY = process.env.HUGGINGFACE_API_KEY;
 if (!HF_API_KEY) console.warn("⚠️ HUGGINGFACE_API_KEY not set!");
 
@@ -27,9 +28,7 @@ function chunkText(text: string, chunkSize = 300) {
 }
 
 function cosineSimilarity(a: number[], b: number[]) {
-  let dot = 0.0,
-    normA = 0.0,
-    normB = 0.0;
+  let dot = 0, normA = 0, normB = 0;
   for (let i = 0; i < a.length; i++) {
     dot += a[i] * b[i];
     normA += a[i] * a[i];
@@ -44,49 +43,24 @@ function getRelevantChunks(queryEmbedding: number[], chunks: typeof resumeChunks
   return scored.slice(0, topN).map((c) => c.chunk);
 }
 
-// --- Hugging Face API calls ---
+// --- Local embeddings with Xenova Transformers ---
+let embedder: ReturnType<typeof pipeline> | null = null;
 
-// Embeddings via HF
-async function getEmbeddingHF(texts: string[]): Promise<number[][]> {
-  const res = await fetch("https://router.huggingface.co/embeddings/sentence-transformers/all-MiniLM-L6-v2", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${HF_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ inputs: texts }),
-  });
-
-  if (!res.ok) {
-    const txt = await res.text();
-    throw new Error(`HF Embedding API error: ${res.status} - ${txt}`);
+async function initEmbedder() {
+  if (!embedder) {
+    embedder = await pipeline("feature-extraction", "sentence-transformers/all-MiniLM-L6-v2");
   }
-
-  const data = await res.json();
-  return data; // array of embeddings
 }
 
-// LLM via HF
-async function queryHFLLM(prompt: string) {
-  const res = await fetch("https://router.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${HF_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      inputs: prompt,
-      parameters: { max_new_tokens: 300, temperature: 0.2 },
-    }),
-  });
-
-  if (!res.ok) {
-    const txt = await res.text();
-    throw new Error(`HF LLM API error: ${res.status} - ${txt}`);
+async function getEmbeddingsLocal(texts: string[]): Promise<number[][]> {
+  if (!embedder) await initEmbedder();
+  const embeddings: number[][] = [];
+  for (const t of texts) {
+    // feature-extraction returns nested arrays; flatten if needed
+    const result = await embedder!(t) as number[][][];
+    embeddings.push(result[0][0]); 
   }
-
-  const data = await res.json();
-  return data?.generated_text || "Sorry, I couldn't generate a response.";
+  return embeddings;
 }
 
 // --- Prepare resume ---
@@ -116,8 +90,8 @@ async function prepareResume() {
   const data = await pdf(buffer);
   const chunks = chunkText(data.text, 300);
 
-  // Batch embedding
-  const embeddings = await getEmbeddingHF(chunks);
+  // Local embeddings
+  const embeddings = await getEmbeddingsLocal(chunks);
 
   const chunksWithEmbeddings = chunks.map((chunk, idx) => ({
     chunk,
@@ -134,6 +108,29 @@ async function prepareResume() {
   return resumeChunks;
 }
 
+// --- Query HF LLM ---
+async function queryHFLLM(prompt: string) {
+  const res = await fetch("https://router.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${HF_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      inputs: prompt,
+      parameters: { max_new_tokens: 300, temperature: 0.2 },
+    }),
+  });
+
+  if (!res.ok) {
+    const txt = await res.text();
+    throw new Error(`HF LLM API error: ${res.status} - ${txt}`);
+  }
+
+  const data = await res.json();
+  return data?.generated_text || "Sorry, I couldn't generate a response.";
+}
+
 // --- Main Handler ---
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
@@ -143,8 +140,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Load resume embeddings
     const chunksWithEmbeddings = await prepareResume();
 
-    // Embed user question
-    const [questionEmbedding] = await getEmbeddingHF([message]);
+    // Embed user question locally
+    const [questionEmbedding] = await getEmbeddingsLocal([message]);
 
     // Retrieve relevant chunks
     const relevantChunks = getRelevantChunks(questionEmbedding, chunksWithEmbeddings, 5);
