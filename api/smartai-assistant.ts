@@ -224,7 +224,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       default:
         return res.json({
-          answer: "I don't see any explicit information on that topic or technology.",
+          answer: "I’m only able to answer questions about Sudharsan's skills, projects, experience, education, or contact info. I don’t have information on that.",
         });
     }
   } catch (err: any) {
