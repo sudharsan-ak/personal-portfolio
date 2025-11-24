@@ -28,6 +28,16 @@ function formatTech(tech: string) {
     java: "Java",
     kotlin: "Kotlin",
     python: "Python",
+    bootstrap: "Bootstrap",
+    tailwind: "Tailwind",
+    angular: "Angular",
+    vue: "Vue.js",
+    express: "Express",
+    django: "Django",
+    flask: "Flask",
+    mysql: "MySQL",
+    sql: "SQL",
+    postgresql: "PostgreSQL"
   };
   return mapping[tech.toLowerCase()] || tech;
 }
