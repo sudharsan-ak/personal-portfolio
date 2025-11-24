@@ -12,7 +12,7 @@ import SmartAIAssistantButton from "@/components/SmartAIAssistantButton";
 import { PortfolioChatbot } from "@/components/PortfolioChatbot";
 import Resume from "@/pages/Resume";
 import APIPage from "@/pages/API";
-
+import FloatingBookingButton from "@/components/FloatingBookingButton";
 
 function Router() {
   return (
@@ -45,6 +45,8 @@ function App() {
                 <TimelineButton />
               </div>
 
+              {/* ➕ NEW: Floating Booking Button (Calendly) */}
+              <FloatingBookingButton />
               {/* AI Assistant Button
               <div className="fixed bottom-6 right-6 z-50 hidden md:block">
                 <AIAssistantButton />
