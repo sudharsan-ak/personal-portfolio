@@ -8,6 +8,7 @@ type Portfolio = {
     lastName?: string;
     fullName?: string;
     email?: string;
+    gmail?: string;
     phone?: string;
     linkedin?: string;
     github?: string;
@@ -46,7 +47,7 @@ const SECTION_KEYWORDS: Record<string, string[]> = {
   contact: ["contact", "email", "phone", "linkedin", "github", "location", "title"],
 };
 
-// Related tech map
+// Related tech map (optional fallback)
 const RELATED_TECH: Record<string, string[]> = {
   html: ["html5", "css", "css3", "jquery", "jade", "xml", "wordpress", "bootstrap", "sass"],
   css: ["css3", "sass", "less", "bootstrap", "tailwind", "material-ui"],
@@ -59,19 +60,12 @@ const RELATED_TECH: Record<string, string[]> = {
 };
 
 // --- Utilities ---
-function formatExperience(exp: any[], tech?: string) {
-  return exp
-    .map(
-      (e) =>
-        `• ${e.role}${tech ? ` (worked with ${tech.toUpperCase()})` : ""} – ${e.company}${
-          e.duration ? ` (${e.duration})` : ""
-        }`
-    )
-    .join("\n");
+function formatExperience(exp: any[]) {
+  return exp.map((e) => `• ${e.role} at ${e.company}`).join("\n");
 }
 
-function formatProjects(proj: any[], tech?: string) {
-  return proj.map((p) => `• ${p.title}${tech ? ` (used ${tech.toUpperCase()})` : ""}`).join("\n");
+function formatProjects(proj: any[]) {
+  return proj.map((p) => `• ${p.title}`).join("\n");
 }
 
 // --- Main Handler ---
@@ -111,10 +105,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const allTechs = [...new Set([...explicitTechs, ...Object.keys(RELATED_TECH)])];
     const mentionedTechs = allTechs.filter((tech) => query.includes(tech.toLowerCase()));
 
-    // --- Check for intent for experience/projects separately ---
-    const askExperience = /\bexperience\b/.test(query);
-    const askProjects = /\bproject\b/.test(query);
-
     if (mentionedTechs.length > 0) {
       let answers: string[] = [];
 
@@ -128,37 +118,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         let answer = "";
 
-        if (askExperience && expMatches.length > 0) {
-          answer += `Sudharsan has work experience in ${tech.toUpperCase()} at:\n${formatExperience(expMatches, tech)}\n\n`;
-        } else if (askExperience && expMatches.length === 0) {
-          answer += `Sudharsan has ${tech.toUpperCase()} listed under his skills but no explicit work experience.\n\n`;
+        if (expMatches.length > 0) {
+          answer += `Sudharsan has work experience with ${tech.toUpperCase()}:\n`;
+          answer += formatExperience(expMatches) + "\n\n";
         }
 
-        if (askProjects && projMatches.length > 0) {
-          answer += `He has used ${tech.toUpperCase()} in his project(s):\n${formatProjects(projMatches, tech)}\n\n`;
-        } else if (askProjects && projMatches.length === 0) {
-          answer += `Sudharsan has ${tech.toUpperCase()} listed under skills but no projects explicitly mention it.\n\n`;
+        if (projMatches.length > 0) {
+          answer += `He has also worked on projects involving ${tech.toUpperCase()}:\n`;
+          answer += formatProjects(projMatches) + "\n";
         }
 
-        // Fallback when neither experience nor project is explicitly asked
-        if (!askExperience && !askProjects) {
-          if (expMatches.length > 0)
-            answer += `Sudharsan has work experience in ${tech.toUpperCase()} at:\n${formatExperience(expMatches, tech)}\n\n`;
-          if (projMatches.length > 0)
-            answer += `He has used ${tech.toUpperCase()} in his project(s):\n${formatProjects(projMatches, tech)}\n\n`;
-          if (expMatches.length === 0 && projMatches.length === 0)
-            answer += `Sudharsan has ${tech.toUpperCase()} listed under skills but no explicit experience/projects.\n\n`;
-        }
-
-        // Related tech fallback
-        if (!expMatches.length && !projMatches.length && RELATED_TECH[tech]) {
-          answer += `Based on related technologies, Sudharsan should be able to pick up ${tech.toUpperCase()} quickly.\n\n`;
+        if (!expMatches.length && !projMatches.length) {
+          answer += `Sudharsan has ${tech.toUpperCase()} listed in skills but no explicit experience or projects.\n`;
         }
 
         answers.push(answer.trim());
       }
 
-      return res.json({ answer: answers.join("\n") });
+      return res.json({ answer: answers.join("\n\n") });
     }
 
     // --- Section fallback ---
