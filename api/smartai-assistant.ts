@@ -6,9 +6,15 @@ import fetch from "node-fetch";
 import { profileData } from "./profileData.js";
 import { pipeline } from "@xenova/transformers";
 
+// --- Fix Xenova cache on read-only FS ---
+process.env.TRANSFORMERS_CACHE = "/tmp/.cache";
+
 // HF LLM API
 const HF_API_KEY = process.env.HUGGINGFACE_API_KEY;
 if (!HF_API_KEY) console.warn("⚠️ HUGGINGFACE_API_KEY not set!");
+
+// HF router endpoint
+const HF_LLM_URL = "https://router.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1";
 
 // Paths
 const CACHE_FILE = path.join("/tmp", "resume-embeddings.json");
@@ -28,7 +34,9 @@ function chunkText(text: string, chunkSize = 300) {
 }
 
 function cosineSimilarity(a: number[], b: number[]) {
-  let dot = 0, normA = 0, normB = 0;
+  let dot = 0,
+    normA = 0,
+    normB = 0;
   for (let i = 0; i < a.length; i++) {
     dot += a[i] * b[i];
     normA += a[i] * a[i];
@@ -56,9 +64,8 @@ async function getEmbeddingsLocal(texts: string[]): Promise<number[][]> {
   if (!embedder) await initEmbedder();
   const embeddings: number[][] = [];
   for (const t of texts) {
-    // feature-extraction returns nested arrays; flatten if needed
-    const result = await embedder!(t) as number[][][];
-    embeddings.push(result[0][0]); 
+    const result = (await embedder!(t)) as number[][][];
+    embeddings.push(result[0][0]);
   }
   return embeddings;
 }
@@ -85,12 +92,9 @@ async function prepareResume() {
     return resumeChunks;
   }
 
-  // Read PDF and chunk
   const buffer = await fs.readFile(pdfPath);
   const data = await pdf(buffer);
   const chunks = chunkText(data.text, 300);
-
-  // Local embeddings
   const embeddings = await getEmbeddingsLocal(chunks);
 
   const chunksWithEmbeddings = chunks.map((chunk, idx) => ({
@@ -98,9 +102,12 @@ async function prepareResume() {
     embedding: embeddings[idx],
   }));
 
-  // Save cache
-  await fs.writeFile(CACHE_FILE, JSON.stringify(chunksWithEmbeddings), "utf-8");
-  console.log("✅ Resume embeddings generated and cached.");
+  // Save cache to /tmp
+  try {
+    await fs.writeFile(CACHE_FILE, JSON.stringify(chunksWithEmbeddings), "utf-8");
+  } catch (e) {
+    console.warn("⚠️ Could not write cache:", e);
+  }
 
   resumeChunks = chunksWithEmbeddings;
   resumeModifiedTime = modifiedTime;
@@ -108,9 +115,9 @@ async function prepareResume() {
   return resumeChunks;
 }
 
-// --- Query HF LLM ---
+// --- Query Hugging Face Router LLM ---
 async function queryHFLLM(prompt: string) {
-  const res = await fetch("https://router.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1", {
+  const res = await fetch(HF_LLM_URL, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${HF_API_KEY}`,
@@ -137,16 +144,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const { message } = req.body;
     if (!message?.trim()) return res.status(400).json({ answer: "No message provided." });
 
-    // Load resume embeddings
     const chunksWithEmbeddings = await prepareResume();
 
-    // Embed user question locally
+    // Embed user question
     const [questionEmbedding] = await getEmbeddingsLocal([message]);
 
-    // Retrieve relevant chunks
+    // Retrieve top relevant chunks
     const relevantChunks = getRelevantChunks(questionEmbedding, chunksWithEmbeddings, 5);
 
-    // Construct prompt
     const prompt = `
 You are a smart AI assistant for Sudharsan Srinivasan.
 Use ONLY the following profile info and relevant resume chunks to answer the user's question concisely in third-person sentences.
@@ -158,9 +163,7 @@ Question: ${message}
 Answer concisely:
 `;
 
-    // Query LLM
     const answer = await queryHFLLM(prompt);
-
     res.status(200).json({ answer: answer.trim() });
   } catch (err: any) {
     console.error("💥 Smart AI Assistant Error:", err);
