@@ -44,43 +44,43 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef }: A
   }, [messages]);
 
   const handleSend = async () => {
-    if (!input.trim()) return;
+  if (!input.trim()) return;
 
-    const userMessage: Message = { sender: "user", text: input };
-    setMessages((prev) => [...prev, userMessage]);
+  const userMessage: Message = { sender: "user", text: input };
+  setMessages((prev) => [...prev, userMessage]);
 
-    const loadingMessage: Message = { sender: "bot", text: "Typing...", isLoading: true };
-    setMessages((prev) => [...prev, loadingMessage]);
+  // Add loading message and keep its index
+  const loadingMessage: Message = { sender: "bot", text: "Typing...", isLoading: true };
+  setMessages((prev) => [...prev, loadingMessage]);
+  const loadingIndex = messages.length + 1; // this will be the index of loading message
 
-    try {
-      const res = await fetch("/api/smartai-assistant", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: input }),
-      });
+  try {
+    const res = await fetch("/api/smartai-assistant", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: input }),
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg.isLoading
-            ? { sender: "bot", text: data.answer || "Sorry, I couldn't generate a response." }
-            : msg
-        )
-      );
-    } catch (err) {
-      console.error("AI Assistant Error:", err);
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg.isLoading
-            ? { sender: "bot", text: "Oops! Something went wrong. Please try again." }
-            : msg
-        )
-      );
-    }
+    setMessages((prev) => {
+      // Replace only the loading message
+      const newMessages = [...prev];
+      newMessages[loadingIndex] = { sender: "bot", text: data.answer || "Sorry, I couldn't generate a response." };
+      return newMessages;
+    });
+  } catch (err) {
+    console.error("AI Assistant Error:", err);
+    setMessages((prev) => {
+      const newMessages = [...prev];
+      newMessages[loadingIndex] = { sender: "bot", text: "Oops! Something went wrong. Please try again." };
+      return newMessages;
+    });
+  }
 
-    setInput("");
-  };
+  setInput("");
+};
+
 
   return (
     <motion.div
