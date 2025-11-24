@@ -9,7 +9,7 @@ import DynamicBackground from "@/components/DynamicBackground";
 import TimelineButton from "@/components/TimelineButton"; 
 import AIAssistantButton from "@/components/AIAssistantButton";
 import SmartAIAssistantButton from "@/components/SmartAIAssistantButton";
-import { PortfolioChatbot } from "@/components/ui/PortfolioChatbot";
+import { PortfolioChatbot } from "@/components/PortfolioChatbot";
 import Resume from "@/pages/Resume";
 import APIPage from "@/pages/API";
 
