@@ -47,7 +47,7 @@ const SECTION_KEYWORDS: Record<string, string[]> = {
   contact: ["contact", "email", "phone", "linkedin", "github", "location", "title"],
 };
 
-// Related tech map (optional fallback)
+// Related tech map
 const RELATED_TECH: Record<string, string[]> = {
   html: ["html5", "css", "css3", "jquery", "jade", "xml", "wordpress", "bootstrap", "sass"],
   css: ["css3", "sass", "less", "bootstrap", "tailwind", "material-ui"],
@@ -60,12 +60,19 @@ const RELATED_TECH: Record<string, string[]> = {
 };
 
 // --- Utilities ---
-function formatExperience(exp: any[]) {
-  return exp.map((e) => `• ${e.role} at ${e.company}`).join("\n");
+function formatExperience(exp: any[], tech?: string) {
+  return exp
+    .map(
+      (e) =>
+        `• ${e.role}${tech ? ` (worked with ${tech.toUpperCase()})` : ""} – ${e.company}${
+          e.duration ? ` (${e.duration})` : ""
+        }`
+    )
+    .join("\n");
 }
 
-function formatProjects(proj: any[]) {
-  return proj.map((p) => `• ${p.title}`).join("\n");
+function formatProjects(proj: any[], tech?: string) {
+  return proj.map((p) => `• ${p.title}${tech ? ` (used ${tech.toUpperCase()})` : ""}`).join("\n");
 }
 
 // --- Main Handler ---
@@ -95,15 +102,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (/\blocation\b/.test(query)) return res.json({ answer: personal.location ?? "Location not listed." });
     if (/\btitle\b/.test(query)) return res.json({ answer: personal.title ?? "Title not listed." });
 
-    // --- Detect technologies mentioned in query ---
-    const explicitTechs = [
-      ...(data.skills?.flatMap((c) => c.skills.map((s) => s.toLowerCase())) ?? []),
-      ...(data.projects?.flatMap((p) => p.technologies.map((t) => t.toLowerCase())) ?? []),
-      ...(data.experience?.flatMap((e) => e.technologies.map((t) => t.toLowerCase())) ?? []),
-    ];
+    // --- Extract actual skills ---
+    const actualSkills = new Set(
+      data.skills?.flatMap((c) => c.skills.map((s) => s.toLowerCase())) ?? []
+    );
 
-    const allTechs = [...new Set([...explicitTechs, ...Object.keys(RELATED_TECH)])];
-    const mentionedTechs = allTechs.filter((tech) => query.includes(tech.toLowerCase()));
+    // --- Check if query mentions any skill or related tech ---
+    const mentionedTechs = Array.from(actualSkills).filter((tech) => query.includes(tech));
+    const askExperience = /\bexperience\b/.test(query);
+    const askProjects = /\bproject\b/.test(query);
 
     if (mentionedTechs.length > 0) {
       let answers: string[] = [];
@@ -118,24 +125,46 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         let answer = "";
 
-        if (expMatches.length > 0) {
-          answer += `Sudharsan has work experience with ${tech.toUpperCase()}:\n`;
-          answer += formatExperience(expMatches) + "\n\n";
+        if (askExperience && expMatches.length > 0) {
+          answer += `Sudharsan has work experience with ${tech.toUpperCase()}:\n${formatExperience(expMatches, tech)}\n\n`;
+        } else if (askExperience && expMatches.length === 0) {
+          answer += `Sudharsan has ${tech.toUpperCase()} listed as a skill but no explicit work experience.\n\n`;
         }
 
-        if (projMatches.length > 0) {
-          answer += `He has also worked on projects involving ${tech.toUpperCase()}:\n`;
-          answer += formatProjects(projMatches) + "\n";
+        if (askProjects && projMatches.length > 0) {
+          answer += `He has worked on projects involving ${tech.toUpperCase()}:\n${formatProjects(projMatches, tech)}\n\n`;
+        } else if (askProjects && projMatches.length === 0) {
+          answer += `Sudharsan has ${tech.toUpperCase()} listed as a skill but no explicit projects.\n\n`;
         }
 
-        if (!expMatches.length && !projMatches.length) {
-          answer += `Sudharsan has ${tech.toUpperCase()} listed in skills but no explicit experience or projects.\n`;
+        // Fallback when neither experience nor project explicitly asked
+        if (!askExperience && !askProjects) {
+          if (expMatches.length > 0)
+            answer += `Sudharsan has work experience with ${tech.toUpperCase()}:\n${formatExperience(expMatches, tech)}\n\n`;
+          if (projMatches.length > 0)
+            answer += `He has worked on projects involving ${tech.toUpperCase()}:\n${formatProjects(projMatches, tech)}\n\n`;
+          if (expMatches.length === 0 && projMatches.length === 0)
+            answer += `Sudharsan has ${tech.toUpperCase()} listed as a skill but no explicit experience/projects.\n\n`;
         }
 
         answers.push(answer.trim());
       }
 
-      return res.json({ answer: answers.join("\n\n") });
+      return res.json({ answer: answers.join("\n") });
+    }
+
+    // --- Check if query mentions related tech ---
+    const allSkills = Array.from(actualSkills);
+    let relatedTechMentioned: string | null = null;
+    for (const [skill, relatedList] of Object.entries(RELATED_TECH)) {
+      if (relatedList.some((r) => query.includes(r))) {
+        relatedTechMentioned = query.match(new RegExp(`\\b(${relatedList.join("|")})\\b`, "i"))?.[0]?.toLowerCase() || null;
+        if (relatedTechMentioned) {
+          return res.json({
+            answer: `I don't see explicit experience/projects involving ${relatedTechMentioned.toUpperCase()}, but based on his skills with ${skill.toUpperCase()}, he should be able to adapt to it quickly.`,
+          });
+        }
+      }
     }
 
     // --- Section fallback ---
@@ -195,8 +224,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       default:
         return res.json({
-          answer:
-            "I can answer questions about Sudharsan's skills, projects, experience, education, or contact info. I cannot provide information outside his profile.",
+          answer: "I don't see any explicit information on that topic or technology.",
         });
     }
   } catch (err: any) {
