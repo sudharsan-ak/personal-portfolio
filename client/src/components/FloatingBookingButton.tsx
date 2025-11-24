@@ -4,7 +4,7 @@ export default function FloatingBookingButton() {
   return (
     <div className="fixed bottom-6 right-6 z-50">
       <PopupButton
-        url="https://calendly.com/your-username" // <-- Replace with your Calendly link
+        url="https://calendly.com/sudharsanak1010" // <-- Replace with your Calendly link
         rootElement={document.getElementById("__next") || document.body}
         text=""
         className="
