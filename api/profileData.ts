@@ -104,23 +104,23 @@ export const profileData = {
     {
       name: "Portfolio Website",
       description:
-        "Interactive personal portfolio built with React, TypeScript, and Framer Motion. Showcases projects, skills, and experience dynamically.",
-      technologies: ["React", "TypeScript", "Framer Motion", "Tailwind CSS"],
-      link: "https://sudharsansrinivasan.com",
+        "Developed and deployed a responsive personal portfolio website to showcase academic and professional projects. Integrated backend with PHPMyAdmin for dynamic content management and streamlined updates.",
+      technologies: ["XAMPP", "MySQL", "HTML", "CSS", "PHP", "JavaScript"],
+      link: "https://github.com/sudharsan-ak/Portfolio",
     },
     {
-      name: "Internal Tool Suite",
+      name: "Event Management System",
       description:
-        "Developed data management tools for Fortress Information Security’s platform, enabling faster insights into asset vulnerabilities and supply chain data.",
-      technologies: ["Meteor", "MongoDB", "JavaScript", "Node.js"],
+        "Built a web app for event booking and cancellation using Java Servlets and JSP. Automated test cases with Selenium IDE, achieving 100% statement coverage and PIT coverage.",
+      technologies: ["Java", "MySQL Workbench", "JUnit", "Selenium", "Eclipse"],
+      link: "https://github.com/sudharsan-ak/CSE-6329-Catering-Management-System",
+    },
+    {
+      name: "Software Testing Using Java",
+      description:
+        "Implemented basis path testing with MCDC criteria, demonstrating advanced testing methodologies, code coverage, and QA practices for reliable software solutions.",
+      technologies: ["Java", "JUnit", "JaCoCo", "Pitclipse"],
       link: "",
-    },
-    {
-      name: "E-commerce Frontend",
-      description:
-        "Optimized front-end for Merch, integrated with WordPress CMS, improved page load speed, and enhanced user experience.",
-      technologies: ["HTML", "CSS", "JavaScript", "TypeScript", "WordPress"],
-      link: "https://www.merch.co",
     },
   ],
 
