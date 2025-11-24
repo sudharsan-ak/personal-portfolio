@@ -6,18 +6,15 @@ import fetch from "node-fetch";
 import { profileData } from "./profileData.js";
 import { pipeline } from "@xenova/transformers";
 
-// --- Fix Xenova cache on read-only FS ---
+// --- Setup cache folder for Xenova ---
+await fs.mkdir("/tmp/.cache", { recursive: true });
 process.env.TRANSFORMERS_CACHE = "/tmp/.cache";
 
-// HF LLM API
+// HF API key (needed for some models, can be blank for public ones)
 const HF_API_KEY = process.env.HUGGINGFACE_API_KEY;
-if (!HF_API_KEY) console.warn("⚠️ HUGGINGFACE_API_KEY not set!");
-
-// HF router endpoint
-const HF_LLM_URL = "https://router.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1";
 
 // Paths
-const CACHE_FILE = path.join("/tmp", "resume-embeddings.json");
+const CACHE_FILE = "/tmp/resume-embeddings.json";
 
 // In-memory cache
 let resumeChunks: { chunk: string; embedding: number[] }[] | null = null;
@@ -34,9 +31,7 @@ function chunkText(text: string, chunkSize = 300) {
 }
 
 function cosineSimilarity(a: number[], b: number[]) {
-  let dot = 0,
-    normA = 0,
-    normB = 0;
+  let dot = 0, normA = 0, normB = 0;
   for (let i = 0; i < a.length; i++) {
     dot += a[i] * b[i];
     normA += a[i] * a[i];
@@ -51,7 +46,7 @@ function getRelevantChunks(queryEmbedding: number[], chunks: typeof resumeChunks
   return scored.slice(0, topN).map((c) => c.chunk);
 }
 
-// --- Local embeddings with Xenova Transformers ---
+// --- Local embeddings ---
 let embedder: ReturnType<typeof pipeline> | null = null;
 
 async function initEmbedder() {
@@ -78,7 +73,6 @@ async function prepareResume() {
 
   if (resumeChunks && resumeModifiedTime === modifiedTime) return resumeChunks;
 
-  // Try loading cache
   let cachedChunks: { chunk: string; embedding: number[] }[] | null = null;
   try {
     const cached = await fs.readFile(CACHE_FILE, "utf-8");
@@ -102,9 +96,9 @@ async function prepareResume() {
     embedding: embeddings[idx],
   }));
 
-  // Save cache to /tmp
   try {
     await fs.writeFile(CACHE_FILE, JSON.stringify(chunksWithEmbeddings), "utf-8");
+    console.log("✅ Resume embeddings cached to /tmp");
   } catch (e) {
     console.warn("⚠️ Could not write cache:", e);
   }
@@ -115,12 +109,14 @@ async function prepareResume() {
   return resumeChunks;
 }
 
-// --- Query Hugging Face Router LLM ---
+// --- Query HF LLM (small public model) ---
 async function queryHFLLM(prompt: string) {
-  const res = await fetch(HF_LLM_URL, {
+  const LLM_URL = "https://api-inference.huggingface.co/models/TheBloke/guanaco-7B-GPT4All-v2";
+
+  const res = await fetch(LLM_URL, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${HF_API_KEY}`,
+      Authorization: HF_API_KEY ? `Bearer ${HF_API_KEY}` : "",
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -138,18 +134,14 @@ async function queryHFLLM(prompt: string) {
   return data?.generated_text || "Sorry, I couldn't generate a response.";
 }
 
-// --- Main Handler ---
+// --- Handler ---
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const { message } = req.body;
     if (!message?.trim()) return res.status(400).json({ answer: "No message provided." });
 
     const chunksWithEmbeddings = await prepareResume();
-
-    // Embed user question
     const [questionEmbedding] = await getEmbeddingsLocal([message]);
-
-    // Retrieve top relevant chunks
     const relevantChunks = getRelevantChunks(questionEmbedding, chunksWithEmbeddings, 5);
 
     const prompt = `
