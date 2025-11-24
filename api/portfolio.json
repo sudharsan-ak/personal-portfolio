@@ -1,231 +1,140 @@
-{
-  "personal": {
-    "firstName": "Sudharsan",
-    "lastName": "Srinivasan",
-    "fullName": "Sudharsan Srinivasan",
-    "email": "sudharsanak1010@gmail.com",
-    "phone": "+1 (682) 283-0833",
-    "linkedin": "https://linkedin.com/in/sudharsan-srinivasan10",
-    "github": "https://github.com/sudharsan-ak",
-    "location": "Dallas, TX",
-    "title": "Software Engineer"
+export const profileData = {
+  name: "Sudharsan Srinivasan",
+  title: "Software Engineer",
+  email: "sudharsanak1010@gmail.com",
+  location: "Lewisville, TX",
+  phone: "+1 (682) 283-0833",
+  linkedin: "https://www.linkedin.com/in/sudharsan-srinivasan10/",
+  github: "https://github.com/sudharsan-ak",
+  portfolio: "https://sudharsansrinivasan.com",
+
+  education: [
+    {
+      degree: "B.E. in Computer Science and Engineering",
+      institution: "CEG, Anna University",
+      year: 2013-2017,
+      details:
+        "Graduated with Bachelor's Degree in Computer Science, GPA: 7.74/10. Focus on Data Structures, Algorithms, Software Development, OOP, DBMS.",
+    },
+    {
+      degree: "Masters in Science in Computer Science and Engineering",
+      institution: "University of Texas, Arlington",
+      year: 2019-2021,
+      details:
+        "Graduated with Master's Degree in Computer Science, GPA: 7.74/10. Focus on Web Data Management, Software Engineering, Algorithms, Advanced Database Systems.",
+    },
+  ],
+
+  about:
+    "Software Engineer passionate about building scalable, user-focused web applications. Skilled in React, TypeScript, Meteor, MongoDB, Node.js, and UI/UX design. Experienced across full SDLC with a focus on performance, security, and accessibility. Strong problem-solving abilities and quick learner.",
+
+  experience: [
+    {
+      company: "Fortress Information Security",
+      role: "Software Engineer",
+      duration: "Jun 2021 - Present",
+      location: "Orlando, FL",
+      summary:
+        "Develops tools for Cyber Supply Chain and Asset Vulnerability Management using Meteor, MongoDB, and Lodash. Optimizes internal tools and ensures secure and performant web platforms.",
+      achievements: [
+        "Optimized internal tools, reducing data processing time by ~15%.",
+        "Refactored frontend JavaScript code modules, reduced load times by ~30%.",
+        "Delivered solutions through full SDLC, collaborating with 5+ cross-functional team members.",
+        "Integrated frontend with backend APIs and MongoDB workflows, handling high-volume data.",
+        "Implemented RBAC access control, conducted code reviews, and mentored junior engineers.",
+        "Contributed to SBOM and HBOM initiatives for software transparency and security compliance.",
+      ],
+      technologies: ["Meteor", "HTML", "CSS", "Jade", "Lodash", "JavaScript", "MongoDB", "Node.js"],
+    },
+    {
+      company: "Merch",
+      role: "Full Stack Developer Intern",
+      duration: "Aug 2020 – May 2021",
+      location: "Orlando, FL",
+      summary:
+        "Built front-end pages integrated with WordPress CMS, optimized SEO, and improved load times for e-commerce platform.",
+      achievements: [
+        "Designed and deployed dynamic front-end pages with WordPress CMS.",
+        "Reduced average page load time to <5 seconds, improving retention and SEO.",
+        "Increased organic traffic by 20% over 3 months using topic clusters and SEO optimization.",
+        "Integrated APIs for standalone applications and customized storefronts for partners.",
+      ],
+      technologies: ["HTML", "CSS", "JavaScript", "TypeScript", "XAMPP", "WordPress CMS"],
+    },
+    {
+      company: "Cognizant Technology Solutions",
+      role: "Programmer Analyst Trainee",
+      duration: "Jan 2018 – Nov 2018",
+      location: "Chennai, India",
+      summary:
+        "Developed backend jobs for Policy Management Systems using Mainframes and COBOL. Automated manual tasks and optimized processing time.",
+      achievements: [
+        "Developed and optimized backend jobs for PMSC in insurance domain.",
+        "Automated daily jobs, reducing manual intervention and improving execution times by 10%.",
+        "Implemented and deployed code changes on IBM Mainframe production servers.",
+      ],
+      technologies: ["Mainframes", "COBOL", "Jira", "Kanban"],
+    },
+  ],
+
+  skills: [
+    "Javascript",
+    "HTML",
+    "CSS",
+    "Lodash",
+    "React",
+    "TypeScript",
+    "Meteor",
+    "MongoDB",
+    "Node.js",
+    "WordPress",
+    "UI/UX Design",
+    "Framer Motion",
+    "Vite",
+    "REST APIs",
+    "Agile Methodologies",
+    "Jira",
+    "Git/GitHub",
+    "Testing & Debugging",
+    "CI/CD",
+    "SEO Optimization",
+  ],
+
+  projects: [
+    {
+      name: "Portfolio Website",
+      description:
+        "Interactive personal portfolio built with React, TypeScript, and Framer Motion. Showcases projects, skills, and experience dynamically.",
+      technologies: ["React", "TypeScript", "Framer Motion", "Tailwind CSS"],
+      link: "https://sudharsansrinivasan.com",
+    },
+    {
+      name: "Internal Tool Suite",
+      description:
+        "Developed data management tools for Fortress Information Security’s platform, enabling faster insights into asset vulnerabilities and supply chain data.",
+      technologies: ["Meteor", "MongoDB", "JavaScript", "Node.js"],
+      link: "",
+    },
+    {
+      name: "E-commerce Frontend",
+      description:
+        "Optimized front-end for Merch, integrated with WordPress CMS, improved page load speed, and enhanced user experience.",
+      technologies: ["HTML", "CSS", "JavaScript", "TypeScript", "WordPress"],
+      link: "https://www.merch.co",
+    },
+  ],
+
+  interests: ["Web Development", "Open Source Contribution", "UI/UX Design"],
+
+  hobbies: ["Basketball", "Cricket", "Travel", "Movies"],
+
+  languages: ["English (Fluent)", "Tamil (Native)", "Hindi (Intermediate)"],
+
+  contact: {
+    email: "sudharsanak1010@gmail.com",
+    phone: "+1 (682) 283-0833",
+    linkedin: "https://www.linkedin.com/in/sudharsan-srinivasan10/",
+    github: "https://github.com/sudharsan-ak",
+    portfolio: "https://sudharsansrinivasan.com",
   },
-  "about": [
-    {
-      "id": "summary_1",
-      "category": "summary",
-      "content": "Full Stack Developer with 5+ years of experience in building scalable, interactive web applications using JavaScript, Node.js, and MongoDB."
-    },
-    {
-      "id": "summary_2",
-      "category": "summary",
-      "content": "Skilled in performance optimization and UI/UX improvements, with a strong record of collaboration in Agile teams. Delivered high-quality, user-centric web solutions accessed by multiple clients and internal teams."
-    },
-    {
-      "id": "summary_3",
-      "category": "summary",
-      "content": "Specializes in modern web technologies, with a proven track record of reducing load times, improving data efficiency, and implementing secure, scalable systems."
-    }
-  ],
-  "education": [
-    {
-      "id": "edu_ut_arl",
-      "school": "University of Texas, Arlington",
-      "degree": "Master’s in Computer Science",
-      "gpa": "3.58",
-      "duration": "Aug 2019 – May 2021",
-      "coursework": [
-        "Web Data Management",
-        "Software Engineering",
-        "Algorithms",
-        "Advanced Database Systems",
-        "Advanced Software Testing"
-      ]
-    },
-    {
-      "id": "edu_anna_uni",
-      "school": "Anna University, Tamil Nadu, India",
-      "degree": "Bachelor of Engineering in Computer Science and Engineering",
-      "gpa": "7.74",
-      "duration": "Jul 2013 – Apr 2017",
-      "coursework": [
-        "Data Structures",
-        "Design and Analysis of Algorithms",
-        "Software Development",
-        "Object-Oriented Design",
-        "DBMS"
-      ]
-    }
-  ],
-  "experience": [
-    {
-      "id": "exp_fortress",
-      "company": "Fortress Information Security",
-      "role": "Software Engineer",
-      "location": "Orlando, FL",
-      "duration": "Jun 2021 - Present",
-      "technologies": [
-        "Meteor",
-        "HTML",
-        "CSS",
-        "Jade",
-        "Lodash",
-        "JavaScript",
-        "MongoDB"
-      ],
-      "achievements": [
-        "Optimized internal tools for Cyber Supply Chain and Asset Vulnerability Management, reducing data processing time by ~15%.",
-        "Refactored frontend JavaScript modules using Meteor and Lodash; improved load times by ~30%.",
-        "Collaborated with cross-functional teams to deliver full SDLC releases.",
-        "Integrated frontend with backend APIs and large-scale MongoDB data.",
-        "Implemented RBAC access control; conducted code reviews and mentored junior engineers.",
-        "Contributed to SBOM/HBOM security initiatives to improve transparency and compliance."
-      ]
-    },
-    {
-      "id": "exp_merch",
-      "company": "Merch",
-      "role": "Full Stack Developer Intern",
-      "location": "Orlando, FL",
-      "duration": "Aug 2020 – May 2021",
-      "technologies": [
-        "HTML",
-        "CSS",
-        "JavaScript",
-        "TypeScript",
-        "XAMPP",
-        "WordPress CMS"
-      ],
-      "achievements": [
-        "Created dynamic WordPress-integrated front-end pages.",
-        "Reduced page load times to under 5 seconds, boosting SEO and retention.",
-        "Increased organic traffic by 20% in 3 months.",
-        "Integrated APIs to deploy customized storefronts for partner brands."
-      ]
-    },
-    {
-      "id": "exp_cognizant",
-      "company": "Cognizant",
-      "role": "Programmer Analyst",
-      "location": "Chennai, India",
-      "duration": "Jan 2018 – Nov 2018",
-      "technologies": ["Mainframes", "COBOL", "Jira", "Kanban"],
-      "achievements": [
-        "Built and optimized backend jobs for insurance policy systems (PMSC).",
-        "Automated daily jobs, improving execution speed by 10%.",
-        "Deployed COBOL jobs on IBM Mainframe production environments."
-      ]
-    }
-  ],
-  "projects": [
-    {
-      "id": "proj_portfolio",
-      "title": "Personal Portfolio Website",
-      "description": "Developed and deployed a responsive personal portfolio website with PHPMyAdmin backend for dynamic updates.",
-      "technologies": ["XAMPP", "MySQL", "HTML", "CSS", "PHP", "JavaScript"],
-      "year": "2020",
-      "githubUrl": "https://github.com/sudharsan-ak/Portfolio"
-    },
-    {
-      "id": "proj_event_mgmt",
-      "title": "Event Management System",
-      "description": "Web app for event booking/cancellation using Java Servlets and JSP. Achieved 100% statement and PIT coverage with Selenium test automation.",
-      "technologies": [
-        "Java",
-        "MySQL Workbench",
-        "JUnit",
-        "Selenium",
-        "Eclipse"
-      ],
-      "year": "2020",
-      "githubUrl": "https://github.com/sudharsan-ak/CSE-6329-Catering-Management-System"
-    },
-    {
-      "id": "proj_software_testing",
-      "title": "Software Testing Using Java",
-      "description": "Implemented MCDC-based basis path testing using JaCoCo and Pitclipse to demonstrate advanced QA methodologies.",
-      "technologies": ["Java", "JUnit", "JaCoCo", "Pitclipse"],
-      "year": "2019",
-      "githubUrl": ""
-    }
-  ],
-  "skills": [
-    {
-      "category": "Languages",
-      "skills": [
-        "JavaScript (ES6+)",
-        "TypeScript",
-        "Java",
-        "C/C++",
-        "PHP",
-        "SQL"
-      ]
-    },
-    {
-      "category": "Databases/Servers",
-      "skills": ["MongoDB", "MySQL", "SQL Server", "Tomcat"]
-    },
-    {
-      "category": "Frameworks & Libraries",
-      "skills": [
-        "Meteor",
-        "React",
-        "Angular",
-        "Node.js",
-        "Lodash",
-        "Express",
-        "NestJS",
-        "Laravel"
-      ]
-    },
-    {
-      "category": "Web Technologies",
-      "skills": ["HTML5", "CSS3", "Jade", "jQuery", "XML", "WordPress"]
-    },
-    {
-      "category": "Testing",
-      "skills": ["JUnit", "Selenium IDE/WebDriver", "JaCoCo", "Pitclipse"]
-    },
-    {
-      "category": "Tools & Platforms",
-      "skills": [
-        "Cursor",
-        "VS Code",
-        "Git",
-        "Eclipse",
-        "NetBeans",
-        "Studio3T",
-        "Jira",
-        "Kanban",
-        "Notion",
-        "Monday.com"
-      ]
-    },
-    {
-      "category": "Operating Systems",
-      "skills": ["Windows", "Linux (Ubuntu)"]
-    },
-    {
-      "category": "AI Tools",
-      "skills": ["ChatGPT", "Claude", "Gemini", "GitHub Copilot", "Grok"]
-    }
-  ],
-  "contact": [
-    {
-      "type": "email",
-      "value": "sudharsanak1010@gmail.com"
-    },
-    {
-      "type": "phone",
-      "value": "+1 (682) 283-0833"
-    },
-    {
-      "type": "linkedin",
-      "value": "https://linkedin.com/in/sudharsan-srinivasan10"
-    },
-    {
-      "type": "github",
-      "value": "https://github.com/sudharsan-ak"
-    }
-  ]
-}
+};
