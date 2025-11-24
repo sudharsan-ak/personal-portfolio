@@ -1,7 +1,7 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
 const portfolioContext = `
-You are an AI assistant for this portfolio website. You should answer questions about the person's background, experience, skills, and projects.
+You are an AI assistant for this portfolio website. Answer questions about the person's background, experience, skills, and projects.
 
 Instructions:
 - Be helpful, professional, and concise
@@ -13,7 +13,7 @@ Instructions:
 `;
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // Handle CORS preflight requests
+  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -31,22 +31,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Messages array is required' });
     }
 
-    const LOVABLE_API_KEY = process.env.LOVABLE_API_KEY;
-    if (!LOVABLE_API_KEY) {
-      return res.status(500).json({ error: 'LOVABLE_API_KEY not configured' });
+    const CLAUDE_API_KEY = process.env.CLAUDE_API_KEY;
+    if (!CLAUDE_API_KEY) {
+      return res.status(500).json({ error: 'CLAUDE_API_KEY not configured' });
     }
 
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+    const response = await fetch('https://api.anthropic.com/v1/complete', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
+        'Authorization': `Bearer ${CLAUDE_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [
+        model: 'claude-2', // use your Claude model
+        prompt: [
           { role: 'system', content: portfolioContext },
-          ...messages,
+          ...messages.map(m => ({
+            role: m.role === 'assistant' ? 'assistant' : 'user',
+            content: m.content,
+          })),
         ],
         stream: true,
       }),
@@ -57,7 +60,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(response.status).json({ error: errorText });
     }
 
-    // Stream response directly to the client
+    // Stream response to client
     res.setHeader('Content-Type', 'text/event-stream');
     const reader = response.body?.getReader();
     const decoder = new TextDecoder();
