@@ -6,7 +6,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChatMessage, Message } from "@/components/ChatMessage";
 import { toast } from "sonner";
 
-const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/portfolio-chat`;
+// Use the new Vercel serverless endpoint
+const CHAT_URL = "/api/portfolio-chat";
 
 export const PortfolioChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,7 +38,6 @@ export const PortfolioChatbot = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
         body: JSON.stringify({ messages: newMessages }),
       });
@@ -52,24 +52,20 @@ export const PortfolioChatbot = () => {
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let assistantMessage = "";
-      let buffer = "";
 
+      // Add empty assistant message
       setMessages([...newMessages, { role: "assistant", content: "" }]);
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
 
-        buffer += decoder.decode(value, { stream: true });
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk.split("\n");
 
-        let newlineIndex;
-        while ((newlineIndex = buffer.indexOf("\n")) !== -1) {
-          let line = buffer.slice(0, newlineIndex);
-          buffer = buffer.slice(newlineIndex + 1);
-
-          if (line.endsWith("\r")) line = line.slice(0, -1);
-          if (line.startsWith(":") || line.trim() === "") continue;
-          if (!line.startsWith("data: ")) continue;
+        for (let line of lines) {
+          line = line.trim();
+          if (!line || line.startsWith(":") || !line.startsWith("data: ")) continue;
 
           const jsonStr = line.slice(6).trim();
           if (jsonStr === "[DONE]") break;
@@ -79,10 +75,7 @@ export const PortfolioChatbot = () => {
             const content = parsed.choices?.[0]?.delta?.content;
             if (content) {
               assistantMessage += content;
-              setMessages([
-                ...newMessages,
-                { role: "assistant", content: assistantMessage },
-              ]);
+              setMessages([...newMessages, { role: "assistant", content: assistantMessage }]);
             }
           } catch (e) {
             console.error("Parse error:", e);
