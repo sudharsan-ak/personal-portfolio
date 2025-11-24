@@ -55,7 +55,6 @@ async function prepareResume() {
     console.log("⚠️ No cache file found. Will generate new embeddings.");
   }
 
-  // Check if cache is valid (optional: compare PDF modification time)
   if (cachedChunks && resumeModifiedTime === modifiedTime) {
     resumeChunks = cachedChunks;
     console.log("✅ Loaded resume embeddings from cache.");
@@ -67,11 +66,19 @@ async function prepareResume() {
   const data = await pdf(buffer);
   const chunks = chunkText(data.text, 300);
 
-  const chunksWithEmbeddings: { chunk: string; embedding: number[] }[] = [];
-  for (const chunk of chunks) {
-    const embedding = await getEmbedding(chunk);
-    chunksWithEmbeddings.push({ chunk, embedding });
-  }
+  // --- BATCH EMBEDDING ---
+  console.log(`📦 Sending ${chunks.length} chunks in a batch to OpenAI for embedding...`);
+  const resp = await openai.embeddings.create({
+    model: "text-embedding-3-small",
+    input: chunks, // <-- send all chunks at once
+  });
+
+  const chunksWithEmbeddings: { chunk: string; embedding: number[] }[] = chunks.map(
+    (chunk, idx) => ({
+      chunk,
+      embedding: resp.data[idx].embedding,
+    })
+  );
 
   // Save cache
   await fs.writeFile(CACHE_FILE, JSON.stringify(chunksWithEmbeddings), "utf-8");
@@ -83,7 +90,6 @@ async function prepareResume() {
 
   return resumeChunks;
 }
-
 // Cosine similarity
 function cosineSimilarity(a: number[], b: number[]) {
   let dot = 0.0,
