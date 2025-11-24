@@ -11,7 +11,7 @@ const HF_API_KEY = process.env.HUGGINGFACE_API_KEY;
 if (!HF_API_KEY) console.warn("⚠️ HUGGINGFACE_API_KEY not set!");
 
 // Paths
-const CACHE_FILE = path.join(process.cwd(), "client/public/resume-embeddings.json");
+const CACHE_FILE = path.join("/tmp", "resume-embeddings.json");
 
 // In-memory cache
 let resumeChunks: { chunk: string; embedding: number[] }[] | null = null;
