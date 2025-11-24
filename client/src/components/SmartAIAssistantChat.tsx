@@ -53,7 +53,7 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef }: A
     setMessages((prev) => [...prev, loadingMessage]);
 
     try {
-      const res = await fetch("/api/ai-assistant", {
+      const res = await fetch("/api/smartai-assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: input }),
