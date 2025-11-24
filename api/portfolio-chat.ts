@@ -75,73 +75,62 @@ Instructions:
 - Keep responses brief unless user asks for more detail.
 `;
 
+// Claude API endpoint
+const CLAUDE_API_URL = "https://api.anthropic.com/v1/complete";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // Handle CORS preflight
-  if (req.method === 'OPTIONS') {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  // Handle CORS preflight requests
+  if (req.method === "OPTIONS") {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
     return res.status(204).end();
   }
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
     const { messages } = req.body;
-
     if (!messages || !Array.isArray(messages)) {
-      return res.status(400).json({ error: 'Messages array is required' });
+      return res.status(400).json({ error: "Messages array is required" });
     }
 
     const CLAUDE_API_KEY = process.env.CLAUDE_API_KEY;
     if (!CLAUDE_API_KEY) {
-      return res.status(500).json({ error: 'CLAUDE_API_KEY not configured' });
+      return res.status(500).json({ error: "CLAUDE_API_KEY not configured" });
     }
 
-    const response = await fetch('https://api.anthropic.com/v1/complete', {
-      method: 'POST',
+    // Convert messages to a single string for Claude
+    const userPrompt = messages
+      .map((m: any) => `${m.role === "user" ? "User" : "Assistant"}: ${m.content}`)
+      .join("\n");
+
+    const response = await fetch(CLAUDE_API_URL, {
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${CLAUDE_API_KEY}`,
-        'Content-Type': 'application/json',
+        "Authorization": `Bearer ${CLAUDE_API_KEY}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: 'claude-2', // use your Claude model
-        prompt: [
-          { role: 'system', content: portfolioContext },
-          ...messages.map(m => ({
-            role: m.role === 'assistant' ? 'assistant' : 'user',
-            content: m.content,
-          })),
-        ],
-        stream: true,
+        model: "claude-v1",  // use your desired Claude model
+        prompt: `${portfolioContext}\n\n${userPrompt}\nAssistant:`,
+        max_tokens_to_sample: 500,
+        stop_sequences: ["User:", "Assistant:"],
       }),
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      return res.status(response.status).json({ error: errorText });
+      const text = await response.text();
+      return res.status(response.status).json({ error: text });
     }
 
-    // Stream response to client
-    res.setHeader('Content-Type', 'text/event-stream');
-    const reader = response.body?.getReader();
-    const decoder = new TextDecoder();
+    const data = await response.json();
+    const assistantReply = data?.completion || "Sorry, I couldn't generate a response.";
 
-    if (!reader) {
-      return res.status(500).json({ error: 'No response body from AI' });
-    }
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      res.write(decoder.decode(value));
-    }
-
-    res.end();
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error instanceof Error ? error.message : 'Unknown error' });
+    return res.status(200).json({ reply: assistantReply });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: err instanceof Error ? err.message : "Unknown error" });
   }
 }
