@@ -2,28 +2,27 @@ import { PopupButton } from "react-calendly";
 
 export default function FloatingBookingButton() {
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed top-6 right-6 z-50">
       <PopupButton
-        url="https://calendly.com/sudharsanak1010" // <-- Replace with your Calendly link
+        url="https://calendly.com/sudharsanak1010" // <-- Replace with your actual Calendly link
         rootElement={document.getElementById("__next") || document.body}
         text=""
         className="
+          p-3 
+          bg-primary 
+          text-primary-foreground 
+          rounded-full 
+          shadow-lg 
+          hover:scale-110 
+          transition-transform 
+          duration-300 
           flex items-center justify-center
-          w-14 h-14
-          rounded-full
-          bg-blue-600 
-          hover:bg-blue-700
-          dark:bg-blue-500 
-          dark:hover:bg-blue-600
-          shadow-lg
-          cursor-pointer
-          transition-all duration-200
         "
       >
         {/* Calendar Icon */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-7 w-7 text-white"
+          className="h-5 w-5"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
