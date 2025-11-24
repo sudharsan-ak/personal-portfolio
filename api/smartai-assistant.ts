@@ -48,7 +48,7 @@ let embedder: ReturnType<typeof pipeline> | null = null;
 
 async function initEmbedder() {
   if (!embedder) {
-    embedder = await pipeline("feature-extraction", "sentence-transformers/all-MiniLM-L6-v2");
+    embedder = await pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2");
   }
 }
 
