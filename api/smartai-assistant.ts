@@ -1,10 +1,11 @@
 import { VercelRequest, VercelResponse } from "@vercel/node";
+import fs from "fs/promises";
+import path from "path";
 import pdf from "pdf-parse";
-import fetch from "node-fetch";
 import { profileData } from "./profileData.js";
 import { pipeline } from "@xenova/transformers";
 
-// --- Use in-memory embeddings only ---
+// --- In-memory embeddings ---
 let embedder: ReturnType<typeof pipeline> | null = null;
 async function initEmbedder() {
   if (!embedder) {
@@ -47,23 +48,27 @@ function getRelevantChunks(queryEmbedding: number[], chunks: { chunk: string; em
   return scored.slice(0, topN).map((c) => c.chunk);
 }
 
-// --- Prepare resume (in-memory only) ---
+// --- Prepare resume (in-memory) ---
 async function prepareResume(): Promise<{ chunk: string; embedding: number[] }[]> {
-  const pdfPath = "client/public/resume.pdf"; // adjust path
-  const buffer = await fetch(pdfPath).then((r) => r.arrayBuffer());
-  const data = await pdf(Buffer.from(buffer));
+  const pdfPath = path.join(process.cwd(), "client", "public", "resume.pdf"); // absolute path
+  const buffer = await fs.readFile(pdfPath);
+  const data = await pdf(buffer);
   const chunks = chunkText(data.text, 300);
   const embeddings = await getEmbeddingsLocal(chunks);
   return chunks.map((chunk, idx) => ({ chunk, embedding: embeddings[idx] }));
 }
 
-// --- Query HF small model ---
+// --- Query HF LLM ---
+const HF_API_KEY = process.env.HUGGINGFACE_API_KEY;
 async function queryHFLLM(prompt: string) {
   const res = await fetch(
-    "https://router.huggingface.co/models/tiiuae/falcon-7b-instruct", // small public model
+    "https://router.huggingface.co/models/tiiuae/falcon-7b-instruct",
     {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${HF_API_KEY}`,
+      },
       body: JSON.stringify({ inputs: prompt, parameters: { max_new_tokens: 200 } }),
     }
   );
