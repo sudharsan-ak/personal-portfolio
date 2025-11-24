@@ -6,7 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChatMessage, Message } from "@/components/ChatMessage";
 import { toast } from "sonner";
 
-// Serverless endpoint for Claude streaming
+// Vercel serverless endpoint
 const CHAT_URL = "/api/portfolio-chat";
 
 export const PortfolioChatbot = () => {
@@ -14,22 +14,22 @@ export const PortfolioChatbot = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Hi! I'm here to help answer questions about this portfolio. What would you like to know?",
+      content:
+        "Hi! I'm here to help answer questions about this portfolio. What would you like to know?",
     },
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll when new messages arrive
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
 
-  const streamChat = async (userMessage: string) => {
-    const newMessages = [...messages, { role: "user" as const, content: userMessage }];
+  const sendMessage = async (userMessage: string) => {
+    const newMessages = [...messages, { role: "user", content: userMessage }];
     setMessages(newMessages);
     setIsLoading(true);
 
@@ -45,41 +45,10 @@ export const PortfolioChatbot = () => {
         throw new Error(errorData.error || "Failed to get response");
       }
 
-      if (!response.body) throw new Error("No response body");
+      const data = await response.json();
+      const assistantReply = data.reply || "Sorry, I couldn't generate a response.";
 
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let assistantMessage = "";
-
-      // Add empty assistant message
-      setMessages([...newMessages, { role: "assistant", content: "" }]);
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const chunk = decoder.decode(value, { stream: true });
-        const lines = chunk.split("\n");
-
-        for (let line of lines) {
-          line = line.trim();
-          if (!line || line.startsWith(":") || !line.startsWith("data: ")) continue;
-
-          const jsonStr = line.slice(6).trim();
-          if (jsonStr === "[DONE]") break;
-
-          try {
-            const parsed = JSON.parse(jsonStr);
-            const content = parsed.completion; // Claude returns "completion" for streamed text
-            if (content) {
-              assistantMessage += content;
-              setMessages([...newMessages, { role: "assistant", content: assistantMessage }]);
-            }
-          } catch (e) {
-            console.error("Parse error:", e);
-          }
-        }
-      }
+      setMessages([...newMessages, { role: "assistant", content: assistantReply }]);
     } catch (error) {
       console.error("Chat error:", error);
       toast.error(error instanceof Error ? error.message : "Failed to send message");
@@ -95,7 +64,7 @@ export const PortfolioChatbot = () => {
 
     const userMessage = input.trim();
     setInput("");
-    await streamChat(userMessage);
+    await sendMessage(userMessage);
   };
 
   return (
