@@ -1,90 +1,148 @@
-// api/smartai-assistant.ts
 import { VercelRequest, VercelResponse } from "@vercel/node";
 import fs from "fs/promises";
 import path from "path";
 import pdf from "pdf-parse";
-import fetch from "node-fetch"; // for Vercel
+import OpenAI from "openai";
 import { profileData } from "./profileData.js";
 
-// Use a small free Hugging Face model
-const HF_MODEL = "mistralai/Mistral-7B-Instruct-v0.1"; 
-const HF_API_URL = `https://router.huggingface.co/models/${HF_MODEL}`;
-const HF_API_KEY = process.env.HUGGINGFACE_API_KEY;
+// OpenAI client
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+if (!process.env.OPENAI_API_KEY) console.warn("⚠️ OPENAI_API_KEY not set!");
 
-if (!HF_API_KEY) {
-  console.warn("⚠️ HUGGINGFACE_API_KEY not set!");
+// Cache file path
+const CACHE_FILE = path.join(process.cwd(), "client/public/resume-embeddings.json");
+
+// In-memory cache
+let resumeChunks: { chunk: string; embedding: number[] }[] | null = null;
+let resumeModifiedTime: number | null = null;
+
+// Utility: split text into chunks
+function chunkText(text: string, chunkSize = 300) {
+  const words = text.split(/\s+/);
+  const chunks: string[] = [];
+  for (let i = 0; i < words.length; i += chunkSize) {
+    chunks.push(words.slice(i, i + chunkSize).join(" "));
+  }
+  return chunks;
 }
 
-// Read resume PDF text
-async function getResumeText() {
-  const pdfPath = path.join(process.cwd(), "client/public/resume.pdf");
-  console.log("📄 Reading PDF from:", pdfPath);
-
-  const buffer = await fs.readFile(pdfPath);
-  const data = await pdf(buffer);
-  console.log("✅ PDF text extracted, length:", data.text.length);
-  return data.text;
-}
-
-// Query Hugging Face API
-async function queryHuggingFace(prompt: string) {
-  console.log("🤖 Sending prompt to Hugging Face, first 200 chars:\n", prompt.slice(0, 200), "...");
-  
-  const res = await fetch(HF_API_URL, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${HF_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      inputs: prompt,
-      parameters: { max_new_tokens: 150, temperature: 0.2 },
-    }),
+// Generate embedding for text
+async function getEmbedding(text: string) {
+  const resp = await openai.embeddings.create({
+    model: "text-embedding-3-small",
+    input: text,
   });
+  return resp.data[0].embedding;
+}
 
-  if (!res.ok) {
-    const text = await res.text();
-    console.error("❌ Hugging Face API returned error/HTML:", text.slice(0, 500));
-    throw new Error(`HF API error: ${res.status}`);
+// Load or create resume embeddings, auto-update if PDF changed
+async function prepareResume() {
+  const pdfPath = path.join(process.cwd(), "client/public/resume.pdf");
+  const stats = await fs.stat(pdfPath);
+  const modifiedTime = stats.mtimeMs;
+
+  // If in-memory cache exists and PDF not changed, return it
+  if (resumeChunks && resumeModifiedTime === modifiedTime) {
+    return resumeChunks;
   }
 
-  const data = await res.json();
-  console.log("✅ HF API JSON response received");
+  // Try loading cached embeddings
+  let cachedChunks: { chunk: string; embedding: number[] }[] | null = null;
+  try {
+    const cached = await fs.readFile(CACHE_FILE, "utf-8");
+    cachedChunks = JSON.parse(cached);
+  } catch {
+    console.log("⚠️ No cache file found. Will generate new embeddings.");
+  }
 
-  return data[0]?.generated_text || "Sorry, I couldn't generate a response.";
+  // Check if cache is valid (optional: compare PDF modification time)
+  if (cachedChunks && resumeModifiedTime === modifiedTime) {
+    resumeChunks = cachedChunks;
+    console.log("✅ Loaded resume embeddings from cache.");
+    return resumeChunks;
+  }
+
+  // Read PDF and create chunks
+  const buffer = await fs.readFile(pdfPath);
+  const data = await pdf(buffer);
+  const chunks = chunkText(data.text, 300);
+
+  const chunksWithEmbeddings: { chunk: string; embedding: number[] }[] = [];
+  for (const chunk of chunks) {
+    const embedding = await getEmbedding(chunk);
+    chunksWithEmbeddings.push({ chunk, embedding });
+  }
+
+  // Save cache
+  await fs.writeFile(CACHE_FILE, JSON.stringify(chunksWithEmbeddings), "utf-8");
+  console.log("✅ Resume embeddings generated and cached.");
+
+  // Update in-memory cache
+  resumeChunks = chunksWithEmbeddings;
+  resumeModifiedTime = modifiedTime;
+
+  return resumeChunks;
 }
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  console.log("📨 Smart AI Assistant invoked");
+// Cosine similarity
+function cosineSimilarity(a: number[], b: number[]) {
+  let dot = 0.0,
+    normA = 0.0,
+    normB = 0.0;
+  for (let i = 0; i < a.length; i++) {
+    dot += a[i] * b[i];
+    normA += a[i] * a[i];
+    normB += b[i] * b[i];
+  }
+  return dot / (Math.sqrt(normA) * Math.sqrt(normB));
+}
 
+// Retrieve top N relevant chunks for a query
+function getRelevantChunks(queryEmbedding: number[], chunks: typeof resumeChunks, topN = 5) {
+  const scored = chunks.map((c) => ({ ...c, score: cosineSimilarity(queryEmbedding, c.embedding) }));
+  scored.sort((a, b) => b.score - a.score);
+  return scored.slice(0, topN).map((c) => c.chunk);
+}
+
+// Main handler
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const { message } = req.body;
-    console.log("Received message:", message);
+    if (!message?.trim()) return res.status(400).json({ answer: "No message provided." });
 
-    if (!message?.trim()) {
-      console.warn("⚠️ No message provided");
-      return res.status(400).json({ answer: "No message provided." });
-    }
+    // Load resume embeddings (auto-update if PDF changed)
+    const chunksWithEmbeddings = await prepareResume();
 
-    const resumeText = await getResumeText();
+    // Embed user question
+    const questionEmbedding = await getEmbedding(message);
 
+    // Retrieve relevant chunks
+    const relevantChunks = getRelevantChunks(questionEmbedding, chunksWithEmbeddings, 5);
+
+    // Construct prompt
     const prompt = `
-You are a smart AI assistant for Sudharsan Srinivasan. 
-Use the following info to answer questions in **short, crisp, third-person sentences**.
+You are a smart AI assistant for Sudharsan Srinivasan.
+Use ONLY the following profile info and resume chunks to answer the user's question concisely in third-person sentences.
 
 Profile JSON: ${JSON.stringify(profileData)}
-Resume text: ${resumeText}
+Relevant Resume Chunks: ${relevantChunks.join("\n\n")}
+
 Question: ${message}
 Answer concisely:
 `;
 
-    const answer = await queryHuggingFace(prompt);
+    // Query OpenAI
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.2,
+      max_tokens: 400, // slightly higher for multi-topic questions
+    });
 
-    console.log("Answer generated:", answer.slice(0, 200), "...");
-
+    const answer = completion.choices[0].message?.content || "Sorry, I couldn't generate a response.";
     res.status(200).json({ answer: answer.trim() });
   } catch (err: any) {
-    console.error("💥 Smart AI Assistant Error:", err.message);
+    console.error("💥 Smart AI Assistant Error:", err);
     res.status(500).json({ answer: "Server error: " + err.message });
   }
 }
