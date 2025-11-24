@@ -1,10 +1,25 @@
 import { PopupButton } from "react-calendly";
+import { useState } from "react";
 
 export default function FloatingBookingButton() {
+  const [showTooltip, setShowTooltip] = useState(false);
+
   return (
-    <div className="fixed top-6 right-6 z-50">
+    <div
+      className="fixed bottom-6 right-6 z-50 flex flex-col items-center"
+      onMouseEnter={() => setShowTooltip(true)}
+      onMouseLeave={() => setShowTooltip(false)}
+    >
+      {/* Tooltip */}
+      {showTooltip && (
+        <div className="mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded shadow-lg whitespace-nowrap">
+          Book a 30-min call
+        </div>
+      )}
+
+      {/* Floating button */}
       <PopupButton
-        url="https://calendly.com/sudharsanak1010" // <-- Replace with your actual Calendly link
+        url="https://calendly.com/sudharsanak1010" // <-- Replace with your Calendly link
         rootElement={document.getElementById("__next") || document.body}
         text=""
         className="
