@@ -6,7 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChatMessage, Message } from "@/components/ChatMessage";
 import { toast } from "sonner";
 
-// Use the new Vercel serverless endpoint
+// Serverless endpoint for Claude streaming
 const CHAT_URL = "/api/portfolio-chat";
 
 export const PortfolioChatbot = () => {
@@ -14,14 +14,14 @@ export const PortfolioChatbot = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content:
-        "Hi! I'm here to help answer questions about this portfolio. What would you like to know?",
+      content: "Hi! I'm here to help answer questions about this portfolio. What would you like to know?",
     },
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Auto-scroll when new messages arrive
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -36,9 +36,7 @@ export const PortfolioChatbot = () => {
     try {
       const response = await fetch(CHAT_URL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: newMessages }),
       });
 
@@ -72,7 +70,7 @@ export const PortfolioChatbot = () => {
 
           try {
             const parsed = JSON.parse(jsonStr);
-            const content = parsed.choices?.[0]?.delta?.content;
+            const content = parsed.completion; // Claude returns "completion" for streamed text
             if (content) {
               assistantMessage += content;
               setMessages([...newMessages, { role: "assistant", content: assistantMessage }]);
