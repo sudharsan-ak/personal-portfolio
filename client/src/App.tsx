@@ -57,6 +57,10 @@ function App() {
                 <SmartAIAssistantButton />
               </div>
               */}
+              {/* ENABLED: Smart AI Assistant */}
+              <div className="hidden md:block">
+                <SmartAIAssistantButton />
+              </div>
               {/* AI Assistant Button 
               <div className="fixed bottom-6 right-6 z-50 hidden md:block">
                 <PortfolioChatbot />
