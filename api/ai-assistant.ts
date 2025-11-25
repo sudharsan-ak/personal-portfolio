@@ -1,4 +1,4 @@
-import { VercelRequest, VercelResponse } from "@vercel/node";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 import fs from "fs/promises";
 import path from "path";
 
@@ -207,3 +207,4 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({ error: "Server error", details: err.message });
   }
 }
+
