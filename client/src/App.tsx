@@ -48,36 +48,14 @@ function App() {
               {/* ➕ NEW: Floating Booking Button (Calendly)
               <FloatingBookingButton />
               */}
-              {/* AI Assistant Button
-              <div className="fixed bottom-6 right-6 z-50 hidden md:block">
-                <AIAssistantButton />
-              </div>
-               */}
-               {/* Smart AI Assistant Button 
-              <div className="fixed bottom-6 right-6 z-50 hidden md:block">
+              {/* Bottom-right stacked buttons */}
+              <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-4">
+                {/* Smart AI Assistant Button */}
                 <SmartAIAssistantButton />
+              
+                {/* Floating Booking Button */}
+                <FloatingBookingButton />
               </div>
-              */}
-              {/* ENABLED: Smart AI Assistant 
-              <div className="hidden md:block">
-                <SmartAIAssistantButton />
-              </div>
-              */}
-              {/* AI Assistant Button 
-              <div className="fixed bottom-6 right-6 z-50 hidden md:block">
-                <PortfolioChatbot />
-              </div>
-              */}
-
-               {/* Bottom-left: Smart AI Assistant */}
-                <div className="fixed bottom-6 left-6 z-50">
-                  <SmartAIAssistantButton />
-                </div>
-  
-                {/* Bottom-right: Booking Button */}
-                <div className="fixed bottom-6 right-6 z-50">
-                  <FloatingBookingButton />
-                </div>
             </>
           )}
         </DynamicBackground>
