@@ -8,13 +8,13 @@ interface ChatProps {
   isOpen: boolean;
   setIsOpen: (v: boolean) => void;
   buttonRef: React.RefObject<HTMLButtonElement>;
-  theme?: string; // <-- receives: "light" | "dark" | "nightowl" | "system"
+  theme?: string; // "light" | "dark" | "nightowl" | "system"
 }
 
 interface ChatMessage {
   role: "system" | "user" | "assistant";
   content: string;
-  timestamp: string;
+  timestamp: string; // frontend only
 }
 
 export default function SmartAIAssistantChat({
@@ -35,7 +35,7 @@ export default function SmartAIAssistantChat({
   const [isLoading, setIsLoading] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
-  // 🔥 Theme-based styling
+  // Theme-based classes
   const getThemeClasses = () => {
     switch (theme) {
       case "dark":
@@ -47,7 +47,6 @@ export default function SmartAIAssistantChat({
           border: "border-gray-700",
           inputBg: "bg-[#2a2a2a] text-gray-100 border-gray-600",
         };
-
       case "nightowl":
         return {
           bg: "bg-[#011627]",
@@ -57,8 +56,7 @@ export default function SmartAIAssistantChat({
           border: "border-[#0e3b5c]",
           inputBg: "bg-[#0b253a] text-[#d6deeb] border-[#0e3b5c]",
         };
-
-      default: // light mode
+      default:
         return {
           bg: "bg-white",
           header: "bg-indigo-600 text-white",
@@ -82,31 +80,25 @@ export default function SmartAIAssistantChat({
 
     const timestamp = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
-    const userMessage: ChatMessage = {
-      role: "user",
-      content: input,
-      timestamp,
-    };
-
+    // User message
+    const userMessage: ChatMessage = { role: "user", content: input, timestamp };
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
     setInput("");
     setIsLoading(true);
 
-    // Add placeholder AI message for streaming
-    let assistantMessage: ChatMessage = {
-      role: "assistant",
-      content: "",
-      timestamp,
-    };
-
+    // Placeholder for AI response
+    let assistantMessage: ChatMessage = { role: "assistant", content: "", timestamp };
     setMessages((prev) => [...prev, assistantMessage]);
 
     try {
       const response = await fetch("/api/smartai-assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: updatedMessages }),
+        // ❌ Exclude timestamp in API payload
+        body: JSON.stringify({
+          messages: updatedMessages.map(({ role, content }) => ({ role, content })),
+        }),
       });
 
       if (!response.body) throw new Error("No response body from AI");
@@ -130,11 +122,7 @@ export default function SmartAIAssistantChat({
       console.error(err);
       setMessages((prev) => [
         ...prev,
-        {
-          role: "assistant",
-          content: "Oops! Something went wrong. Please try again.",
-          timestamp,
-        },
+        { role: "assistant", content: "Oops! Something went wrong. Please try again.", timestamp },
       ]);
     }
 
@@ -160,13 +148,12 @@ export default function SmartAIAssistantChat({
         {messages.map((msg, idx) => (
           <div key={idx} className="flex flex-col">
             <div
-              className={`p-2 rounded-lg text-sm w-fit max-w-[80%] ${
+              className={`p-2 rounded-lg text-sm w-fit max-w-[80%] break-words ${
                 msg.role === "assistant" ? T.botBubble : `${T.userBubble} ml-auto`
               }`}
             >
               <ReactMarkdown>{msg.content}</ReactMarkdown>
             </div>
-
             {/* Timestamp */}
             <span
               className={`text-[10px] mt-1 ${
@@ -178,7 +165,7 @@ export default function SmartAIAssistantChat({
           </div>
         ))}
 
-        {/* Typing Indicator - bouncing dots */}
+        {/* Typing Indicator */}
         {isLoading && (
           <div className="flex items-center gap-1 text-gray-400 text-xs pl-1">
             <span className="animate-bounce">•</span>
