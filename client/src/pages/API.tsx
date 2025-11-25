@@ -42,6 +42,7 @@ export default function APIPage() {
       } else if (endpoint.type === "timezone") {
         const tzInput = inputs[endpoint.title] || {};
         body = {
+          action: "timezone", 
           ...tzInput,
           hour: tzInput.hour !== undefined && tzInput.hour !== "" ? Number(tzInput.hour) : 12,
           minute: tzInput.minute !== undefined && tzInput.minute !== "" ? Number(tzInput.minute) : 0,
