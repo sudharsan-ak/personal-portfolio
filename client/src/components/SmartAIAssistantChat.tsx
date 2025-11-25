@@ -15,7 +15,6 @@ interface ChatProps {
 interface ChatMessage {
   role: "system" | "user" | "assistant";
   content: string;
-  timestamp: string;
 }
 
 export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, theme }: ChatProps) {
@@ -23,7 +22,6 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
     {
       role: "assistant",
       content: "Hi! I'm your Smart AI Assistant. How can I help you today?",
-      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     },
   ]);
 
@@ -42,7 +40,6 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
           border: "border-gray-700",
           inputBg: "bg-[#2a2a2a] text-gray-100 border-gray-600",
           typing: "text-gray-400",
-          timestamp: "text-gray-400",
           link: "text-blue-400 underline hover:text-blue-300",
         };
       case "nightowl":
@@ -54,7 +51,6 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
           border: "border-[#0e3b5c]",
           inputBg: "bg-[#0b253a] text-[#d6deeb] border-[#0e3b5c]",
           typing: "text-[#d6deeb]",
-          timestamp: "text-[#8892b0]",
           link: "text-blue-400 underline hover:text-blue-300",
         };
       default:
@@ -66,7 +62,6 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
           border: "border-gray-300",
           inputBg: "bg-white text-black border-gray-300",
           typing: "text-gray-400",
-          timestamp: "text-gray-400",
           link: "text-blue-600 underline hover:text-blue-500",
         };
     }
@@ -81,12 +76,9 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
   const sendMessage = async () => {
     if (!input.trim()) return;
 
-    const timestamp = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-
     const userMessage: ChatMessage = {
       role: "user",
       content: input,
-      timestamp,
     };
 
     const updatedMessages = [...messages, userMessage];
@@ -94,7 +86,8 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
     setInput("");
     setIsLoading(true);
 
-    let assistantMessage: ChatMessage = { role: "assistant", content: "", timestamp };
+    // placeholder assistant message
+    let assistantMessage: ChatMessage = { role: "assistant", content: "" };
     setMessages((prev) => [...prev, assistantMessage]);
 
     try {
@@ -128,7 +121,6 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
         {
           role: "assistant",
           content: "Oops! Something went wrong. Please try again.",
-          timestamp,
         },
       ]);
     }
@@ -159,23 +151,18 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
                 msg.role === "assistant" ? T.botBubble : `${T.userBubble} ml-auto`
               }`}
             >
-              <ReactMarkdown remarkPlugins={[remarkGfm]} linkTarget="_blank" components={{
-                a: ({ node, ...props }) => (
-                  <a className={T.link} {...props} />
-                )
-              }}>
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                linkTarget="_blank"
+                components={{
+                  a: ({ node, ...props }) => (
+                    <a className={T.link} {...props} />
+                  ),
+                }}
+              >
                 {msg.content}
               </ReactMarkdown>
             </div>
-
-            {/* Timestamp */}
-            <span
-              className={`text-[10px] mt-1 ${T.timestamp} ${
-                msg.role === "user" ? "text-right" : ""
-              }`}
-            >
-              {msg.timestamp}
-            </span>
           </div>
         ))}
 
