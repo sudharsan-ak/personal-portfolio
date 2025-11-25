@@ -25,7 +25,7 @@ export default function APIPage() {
     { title: "Word Counter", description: "Counts the number of words in the text.", path: "/api/tools", copyKey: "words", type: "input", action: "wordcount" },
     { title: "Character Counter", description: "Counts the number of characters in the text.", path: "/api/tools", copyKey: "characters", type: "input", action: "charcount" },
     { title: "Timezone Converter", description: "Convert a given time from one timezone to another.", path: "/api/tools", type: "timezone", action: "timezone" },
-    { title: "Projects", description: "Fetch projects from the database. Supports optional query parameters: limit, offset, and featured (true/false).", path: "/api/projects" },
+    { title: "Projects", description: "Fetch projects from the database. Supports optional query parameters: limit, offset, and featured (true/false).", path: "/api/projects", type: "get" },
   ];
 
   const [responses, setResponses] = useState<Record<string, any>>({});
@@ -34,23 +34,27 @@ export default function APIPage() {
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
   const fetchData = async (endpoint: ApiEndpoint) => {
-    try {
-      let body: any = { action: endpoint.action };
+  try {
+    let body: any = {};
 
-      if (endpoint.type === "input") body.text = inputs[endpoint.title] ?? "";
-      else if (endpoint.type === "timezone") body = { ...body, ...inputs[endpoint.title] };
-
-      const res = await fetch(endpoint.path, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      const data = await res.json();
-      setResponses(prev => ({ ...prev, [endpoint.title]: data }));
-    } catch {
-      setResponses(prev => ({ ...prev, [endpoint.title]: { error: "Error fetching data" } }));
+    if (endpoint.type === "input") {
+      body.text = inputs[endpoint.title] ?? "";
+    } else if (endpoint.type === "timezone") {
+      body = { ...inputs[endpoint.title] };
     }
-  };
+
+    const res = await fetch(endpoint.path, {
+      method: endpoint.type === "get" ? "GET" : "POST", // ← use GET for 'projects'
+      headers: endpoint.type === "get" ? {} : { "Content-Type": "application/json" },
+      body: endpoint.type === "get" ? undefined : JSON.stringify(body),
+    });
+
+    const data = await res.json();
+    setResponses(prev => ({ ...prev, [endpoint.title]: data }));
+  } catch {
+    setResponses(prev => ({ ...prev, [endpoint.title]: { error: "Error fetching data" } }));
+  }
+};
 
   const copyData = (title: string, key: string) => {
     const data = responses[title];
