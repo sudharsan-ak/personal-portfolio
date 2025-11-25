@@ -8,21 +8,16 @@ interface ChatProps {
   isOpen: boolean;
   setIsOpen: (v: boolean) => void;
   buttonRef: React.RefObject<HTMLButtonElement>;
-  theme?: string; // "light" | "dark" | "nightowl" | "system"
+  theme?: "light" | "dark" | "nightowl" | "system";
 }
 
 interface ChatMessage {
   role: "system" | "user" | "assistant";
   content: string;
-  timestamp: string; // frontend only
+  timestamp: string;
 }
 
-export default function SmartAIAssistantChat({
-  isOpen,
-  setIsOpen,
-  buttonRef,
-  theme,
-}: ChatProps) {
+export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, theme }: ChatProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: "assistant",
@@ -35,7 +30,6 @@ export default function SmartAIAssistantChat({
   const [isLoading, setIsLoading] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
-  // Theme-based classes
   const getThemeClasses = () => {
     switch (theme) {
       case "dark":
@@ -46,6 +40,8 @@ export default function SmartAIAssistantChat({
           botBubble: "bg-[#333] text-gray-200",
           border: "border-gray-700",
           inputBg: "bg-[#2a2a2a] text-gray-100 border-gray-600",
+          typing: "text-gray-400",
+          timestamp: "text-gray-400",
         };
       case "nightowl":
         return {
@@ -55,6 +51,8 @@ export default function SmartAIAssistantChat({
           botBubble: "bg-[#172b4d] text-[#d6deeb]",
           border: "border-[#0e3b5c]",
           inputBg: "bg-[#0b253a] text-[#d6deeb] border-[#0e3b5c]",
+          typing: "text-[#d6deeb]",
+          timestamp: "text-[#8892b0]",
         };
       default:
         return {
@@ -64,13 +62,14 @@ export default function SmartAIAssistantChat({
           botBubble: "bg-gray-200 text-black",
           border: "border-gray-300",
           inputBg: "bg-white text-black border-gray-300",
+          typing: "text-gray-400",
+          timestamp: "text-gray-400",
         };
     }
   };
 
   const T = getThemeClasses();
 
-  // Auto-scroll
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isOpen]);
@@ -80,14 +79,17 @@ export default function SmartAIAssistantChat({
 
     const timestamp = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
-    // User message
-    const userMessage: ChatMessage = { role: "user", content: input, timestamp };
+    const userMessage: ChatMessage = {
+      role: "user",
+      content: input,
+      timestamp,
+    };
+
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
     setInput("");
     setIsLoading(true);
 
-    // Placeholder for AI response
     let assistantMessage: ChatMessage = { role: "assistant", content: "", timestamp };
     setMessages((prev) => [...prev, assistantMessage]);
 
@@ -95,13 +97,10 @@ export default function SmartAIAssistantChat({
       const response = await fetch("/api/smartai-assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        // ❌ Exclude timestamp in API payload
-        body: JSON.stringify({
-          messages: updatedMessages.map(({ role, content }) => ({ role, content })),
-        }),
+        body: JSON.stringify({ messages: updatedMessages }),
       });
 
-      if (!response.body) throw new Error("No response body from AI");
+      if (!response.body) throw new Error("No response body");
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
@@ -122,7 +121,11 @@ export default function SmartAIAssistantChat({
       console.error(err);
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: "Oops! Something went wrong. Please try again.", timestamp },
+        {
+          role: "assistant",
+          content: "Oops! Something went wrong. Please try again.",
+          timestamp,
+        },
       ]);
     }
 
@@ -133,7 +136,7 @@ export default function SmartAIAssistantChat({
 
   return (
     <div
-      className={`fixed bottom-20 right-6 rounded-xl shadow-2xl w-80 h-96 flex flex-col border z-50 animate-fadeIn ${T.bg} ${T.border}`}
+      className={`fixed bottom-20 right-6 rounded-xl shadow-2xl w-[320px] h-[550px] sm:w-[400px] sm:h-[600px] flex flex-col border z-50 animate-fadeIn ${T.bg} ${T.border}`}
     >
       {/* Header */}
       <div className={`p-4 border-b flex items-center justify-between rounded-t-xl ${T.header}`}>
@@ -148,16 +151,17 @@ export default function SmartAIAssistantChat({
         {messages.map((msg, idx) => (
           <div key={idx} className="flex flex-col">
             <div
-              className={`p-2 rounded-lg text-sm w-fit max-w-[80%] break-words ${
+              className={`p-2 rounded-lg text-sm w-fit max-w-[80%] ${
                 msg.role === "assistant" ? T.botBubble : `${T.userBubble} ml-auto`
               }`}
             >
               <ReactMarkdown>{msg.content}</ReactMarkdown>
             </div>
+
             {/* Timestamp */}
             <span
-              className={`text-[10px] mt-1 ${
-                msg.role === "assistant" ? "text-gray-400" : "text-gray-400 text-right"
+              className={`text-[10px] mt-1 ${T.timestamp} ${
+                msg.role === "user" ? "text-right" : ""
               }`}
             >
               {msg.timestamp}
@@ -165,9 +169,9 @@ export default function SmartAIAssistantChat({
           </div>
         ))}
 
-        {/* Typing Indicator */}
+        {/* Typing indicator */}
         {isLoading && (
-          <div className="flex items-center gap-1 text-gray-400 text-xs pl-1">
+          <div className={`flex items-center gap-1 text-xs pl-1 ${T.typing}`}>
             <span className="animate-bounce">•</span>
             <span className="animate-bounce delay-150">•</span>
             <span className="animate-bounce delay-300">•</span>
