@@ -1,7 +1,7 @@
 // api/smartai-assistant.ts
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import Groq from "groq-sdk";
-import { profileData } from "./profileData.js"; // your structured profile data
+import { profileData } from "./profileData.js";
 
 interface ChatMessage {
   role: "system" | "user" | "assistant";
@@ -20,33 +20,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: "Invalid request: messages required" });
     }
 
-    // Prepare system message with your profile data
     const systemMessage: ChatMessage = {
       role: "system",
-      content: `You are an AI assistant for Sudharsan’s personal portfolio. Use ONLY the information provided below to answer questions accurately. 
-      
-Profile Data:
-${JSON.stringify(profileData, null, 2)}
+      content: `You are an AI assistant for Sudharsan’s portfolio. Answer using ONLY this profile data. Do not invent info.
 
-Answer user questions clearly, concisely, and politely. Do not invent information not present in the profile data.`
+Profile Data:
+${JSON.stringify(profileData, null, 2)}`,
     };
 
     const client = new Groq({
       apiKey: process.env.GROQ_API_KEY,
     });
 
-    // Include system message at the start of the conversation
     const chatMessages: ChatMessage[] = [systemMessage, ...messages];
 
-    // Create streaming chat completion
+    // Streaming chat completion
     const completion = await client.chat.completions.create({
-      model: "llama-3.1-8b-instant",
+      model: "llama-3.1-8b-instant", // make sure this is valid
       messages: chatMessages,
       stream: true,
       temperature: 0.7,
     });
 
-    // Stream response to client
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache, no-transform");
     res.setHeader("Connection", "keep-alive");
