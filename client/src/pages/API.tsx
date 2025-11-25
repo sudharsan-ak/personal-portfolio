@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { Badge } from "@/components/ui/badge";
+import InteractiveCard from "@/components/ui/InteractiveCard";
 
 interface ApiEndpoint {
   title: string;
   description: string;
   path: string;
   copyKey?: string;
-  type?: "input" | "timezone";
-  action: string;
+  type?: "input" | "timezone" | "get";
+  action?: string;
 }
 
 const timezones = [
@@ -25,27 +27,29 @@ export default function APIPage() {
     { title: "Word Counter", description: "Counts the number of words in the text.", path: "/api/tools", copyKey: "words", type: "input", action: "wordcount" },
     { title: "Character Counter", description: "Counts the number of characters in the text.", path: "/api/tools", copyKey: "characters", type: "input", action: "charcount" },
     { title: "Timezone Converter", description: "Convert a given time from one timezone to another.", path: "/api/tools", type: "timezone", action: "timezone" },
-    { title: "Projects", description: "Fetch projects from the database. Supports optional query parameters: limit, offset, and featured (true/false).", path: "/api/projects", type: "get" },
+    { title: "Projects", description: "Fetch projects from the database. Supports optional query parameter: limit.", path: "/api/projects", type: "get" },
   ];
 
   const [responses, setResponses] = useState<Record<string, any>>({});
   const [inputs, setInputs] = useState<Record<string, any>>({});
   const [toast, setToast] = useState<string | null>(null);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const projectScrollRefs = useRef<Record<string, HTMLDivElement>>({});
+  const [scrollState, setScrollState] = useState<Record<string, { left: boolean; right: boolean }>>({});
 
   const fetchData = async (endpoint: ApiEndpoint) => {
     try {
       let body: any = {};
-  
+
       if (endpoint.type === "input") {
         body = {
-          action: endpoint.action,      // <-- must match 'charcount', 'wordcount', 'hash'
+          action: endpoint.action,
           text: inputs[endpoint.title] ?? ""
         };
       } else if (endpoint.type === "timezone") {
         const tzInput = inputs[endpoint.title] || {};
         body = {
-          action: "timezone", 
+          action: "timezone",
           ...tzInput,
           hour: tzInput.hour !== undefined && tzInput.hour !== "" ? Number(tzInput.hour) : 12,
           minute: tzInput.minute !== undefined && tzInput.minute !== "" ? Number(tzInput.minute) : 0,
@@ -54,24 +58,35 @@ export default function APIPage() {
           ampm: tzInput.ampm || "AM",
         };
       } else if (endpoint.type === "quote") {
-        body = { action: "quote" };     // <-- mandatory
+        body = { action: "quote" };
       } else if (endpoint.type === "time") {
-        body = { action: "time" };      // <-- mandatory
+        body = { action: "time" };
       }
-  
-      const res = await fetch(endpoint.path, {
-        method: endpoint.type === "get" ? "GET" : "POST", // GET for 'projects'
+
+      let url = endpoint.path;
+      if (endpoint.type === "get") {
+        const limit = inputs[endpoint.title]?.limit;
+        if (limit && limit !== "") {
+          url += `?limit=${encodeURIComponent(limit)}`;
+        }
+      }
+
+      const res = await fetch(url, {
+        method: endpoint.type === "get" ? "GET" : "POST",
         headers: endpoint.type === "get" ? {} : { "Content-Type": "application/json" },
         body: endpoint.type === "get" ? undefined : JSON.stringify(body),
       });
-  
+
       const data = await res.json();
       setResponses(prev => ({ ...prev, [endpoint.title]: data }));
+
+      if (endpoint.title === "Projects") {
+        setTimeout(() => updateScrollButtons(endpoint.title), 100);
+      }
     } catch {
       setResponses(prev => ({ ...prev, [endpoint.title]: { error: "Error fetching data" } }));
     }
   };
-
 
   const copyData = (title: string, key: string) => {
     const data = responses[title];
@@ -85,6 +100,29 @@ export default function APIPage() {
     setExpanded(prev => ({ ...prev, [title]: !prev[title] }));
     setResponses(prev => ({ ...prev, [title]: undefined }));
   };
+
+  const scrollProjects = (title: string, direction: "left" | "right") => {
+    const container = projectScrollRefs.current[title];
+    if (!container) return;
+    const scrollAmount = container.clientWidth * 0.8;
+    container.scrollBy({ left: direction === "right" ? scrollAmount : -scrollAmount, behavior: "smooth" });
+  };
+
+  const updateScrollButtons = (title: string) => {
+    const container = projectScrollRefs.current[title];
+    if (!container) return;
+    const atStart = container.scrollLeft <= 0;
+    const atEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth - 1;
+    setScrollState(prev => ({ ...prev, [title]: { left: !atStart, right: !atEnd } }));
+  };
+
+  const handleScroll = (title: string) => updateScrollButtons(title);
+
+  useEffect(() => {
+    if (responses["Projects"]?.data) {
+      updateScrollButtons("Projects");
+    }
+  }, [responses]);
 
   return (
     <div className="p-8 max-w-5xl mx-auto relative">
@@ -150,6 +188,25 @@ export default function APIPage() {
                   </div>
                 )}
 
+                {endpoint.title === "Projects" && (
+                  <div className="flex items-center gap-2 mb-4">
+                    <input
+                      type="number"
+                      min={1}
+                      placeholder="Limit"
+                      value={inputs[endpoint.title]?.limit || ""}
+                      onChange={e =>
+                        setInputs(prev => ({
+                          ...prev,
+                          [endpoint.title]: { ...prev[endpoint.title], limit: e.target.value }
+                        }))
+                      }
+                      className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700 w-24"
+                    />
+                    <span className="text-sm text-gray-400" title="Optional: Limit how many projects to fetch">❔</span>
+                  </div>
+                )}
+
                 <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 mb-4">
                   <button onClick={() => fetchData(endpoint)} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors duration-200 w-full sm:w-auto">Try It</button>
                   {endpoint.copyKey && response && <button onClick={() => copyData(endpoint.title, endpoint.copyKey!)}
@@ -158,11 +215,56 @@ export default function APIPage() {
                   </button>}
                 </div>
 
-                {response && <div>
-                  <pre className="mt-4 p-4 bg-gray-700 text-green-400 rounded overflow-x-auto break-words max-w-full shadow-lg border border-gray-600">
-                    {JSON.stringify(response, null, 2)}
-                  </pre>
-                </div>}
+                {response && endpoint.title !== "Projects" && (
+                  <div>
+                    <pre className="mt-4 p-4 bg-gray-700 text-green-400 rounded overflow-x-auto break-words max-w-full shadow-lg border border-gray-600">
+                      {JSON.stringify(response, null, 2)}
+                    </pre>
+                  </div>
+                )}
+
+                {response && endpoint.title === "Projects" && Array.isArray(response.data) && (
+                  <div className="relative">
+                    {scrollState[endpoint.title]?.left && (
+                      <button
+                        onClick={() => scrollProjects(endpoint.title, "left")}
+                        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-gray-700 text-white p-2 rounded-full hover:bg-gray-600 transition-colors"
+                      >
+                        ◀
+                      </button>
+                    )}
+
+                    <div
+                      ref={el => { if (el) projectScrollRefs.current[endpoint.title] = el; }}
+                      onScroll={() => handleScroll(endpoint.title)}
+                      className="overflow-x-auto py-2 snap-x snap-mandatory flex gap-4 px-2 scroll-smooth"
+                    >
+                      {response.data.map((project: any, index: number) => (
+                        <InteractiveCard key={index} className="group flex-shrink-0 w-80 snap-start">
+                          <div className="flex flex-col space-y-4 p-4">
+                            <h3 className="text-2xl font-semibold">{project.title}</h3>
+                            <p className="text-sm text-muted-foreground">{project.year}</p>
+                            <p className="text-base">{project.description}</p>
+                            <div className="flex flex-wrap gap-2">
+                              {project.technologies?.map((tech: string, i: number) => (
+                                <Badge key={i} variant="secondary" className="text-sm px-3 py-1">{tech}</Badge>
+                              ))}
+                            </div>
+                          </div>
+                        </InteractiveCard>
+                      ))}
+                    </div>
+
+                    {scrollState[endpoint.title]?.right && (
+                      <button
+                        onClick={() => scrollProjects(endpoint.title, "right")}
+                        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-gray-700 text-white p-2 rounded-full hover:bg-gray-600 transition-colors"
+                      >
+                        ▶
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             )}
           </section>
