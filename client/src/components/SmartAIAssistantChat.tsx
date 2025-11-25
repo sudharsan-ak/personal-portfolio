@@ -1,3 +1,4 @@
+// SmartAIAssistantChat.tsx
 import { useState, useEffect, useRef } from "react";
 import { X } from "lucide-react";
 
@@ -7,8 +8,13 @@ interface ChatProps {
   buttonRef: React.RefObject<HTMLButtonElement>;
 }
 
+interface ChatMessage {
+  role: "system" | "user" | "assistant";
+  content: string;
+}
+
 export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef }: ChatProps) {
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: "assistant",
       content: "Hi! I'm your Smart AI Assistant. How can I help you today?",
@@ -19,6 +25,7 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef }: C
   const chatEndRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Auto scroll
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isOpen]);
@@ -26,7 +33,7 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef }: C
   const sendMessage = async () => {
     if (!input.trim()) return;
 
-    const userMessage = { role: "user", content: input };
+    const userMessage: ChatMessage = { role: "user", content: input };
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
     setInput("");
@@ -35,17 +42,21 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef }: C
     try {
       const response = await fetch("/api/smartai-assistant", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: updatedMessages }),
       });
 
-      const reader = response.body?.getReader();
-      const decoder = new TextDecoder();
+      if (!response.body) throw new Error("No response body from AI API");
 
-      let assistantMessage = { role: "assistant", content: "" };
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let assistantMessage: ChatMessage = { role: "assistant", content: "" };
+
+      // Add empty assistant message first
       setMessages((prev) => [...prev, assistantMessage]);
 
       while (true) {
-        const { value, done } = await reader!.read();
+        const { value, done } = await reader.read();
         if (done) break;
 
         const chunk = decoder.decode(value, { stream: true });
@@ -57,8 +68,12 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef }: C
           return copy;
         });
       }
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error("AI fetch error:", err);
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: "Oops! Something went wrong. Please try again." },
+      ]);
     }
 
     setIsLoading(false);
