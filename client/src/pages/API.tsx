@@ -44,7 +44,7 @@ export default function APIPage() {
         body = {
           ...tzInput,
           hour: tzInput.hour !== undefined && tzInput.hour !== "" ? Number(tzInput.hour) : 12,
-          minute: tzInput.minute !== undefined && tzInput.minute !== "" ? Number(tzInput.minute) : 00,
+          minute: tzInput.minute !== undefined && tzInput.minute !== "" ? Number(tzInput.minute) : 0,
           fromTimezone: tzInput.fromTimezone || "UTC",
           toTimezone: tzInput.toTimezone || "UTC",
           ampm: tzInput.ampm || "AM",
