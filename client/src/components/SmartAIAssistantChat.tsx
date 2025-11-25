@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { X } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface ChatProps {
   isOpen: boolean;
@@ -14,7 +15,6 @@ interface ChatProps {
 interface ChatMessage {
   role: "system" | "user" | "assistant";
   content: string;
-  timestamp: string; // local only
 }
 
 export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, theme }: ChatProps) {
@@ -22,7 +22,6 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
     {
       role: "assistant",
       content: "Hi! I'm your Smart AI Assistant. How can I help you today?",
-      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     },
   ]);
 
@@ -30,7 +29,6 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
   const [isLoading, setIsLoading] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
-  // Theme styles
   const getThemeClasses = () => {
     switch (theme) {
       case "dark":
@@ -42,7 +40,6 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
           border: "border-gray-700",
           inputBg: "bg-[#2a2a2a] text-gray-100 border-gray-600",
           typing: "text-gray-400",
-          timestamp: "text-gray-400",
         };
       case "nightowl":
         return {
@@ -53,7 +50,6 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
           border: "border-[#0e3b5c]",
           inputBg: "bg-[#0b253a] text-[#d6deeb] border-[#0e3b5c]",
           typing: "text-[#d6deeb]",
-          timestamp: "text-[#8892b0]",
         };
       default:
         return {
@@ -64,14 +60,12 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
           border: "border-gray-300",
           inputBg: "bg-white text-black border-gray-300",
           typing: "text-gray-400",
-          timestamp: "text-gray-400",
         };
     }
   };
 
   const T = getThemeClasses();
 
-  // Auto scroll
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isOpen]);
@@ -79,34 +73,24 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
   const sendMessage = async () => {
     if (!input.trim()) return;
 
-    const timestamp = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-
-    const userMessage: ChatMessage = {
-      role: "user",
-      content: input,
-      timestamp,
-    };
-
+    const userMessage: ChatMessage = { role: "user", content: input };
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
     setInput("");
     setIsLoading(true);
 
-    // Add placeholder for assistant
-    let assistantMessage: ChatMessage = { role: "assistant", content: "", timestamp };
+    // Add empty assistant message for streaming
+    let assistantMessage: ChatMessage = { role: "assistant", content: "" };
     setMessages((prev) => [...prev, assistantMessage]);
 
     try {
-      // Only send role + content to API
-      const apiMessages = updatedMessages.map(({ role, content }) => ({ role, content }));
-
       const response = await fetch("/api/smartai-assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: apiMessages }),
+        body: JSON.stringify({ messages: updatedMessages }),
       });
 
-      if (!response.body) throw new Error("No response body");
+      if (!response.body) throw new Error("No response body from AI");
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
@@ -127,11 +111,7 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
       console.error(err);
       setMessages((prev) => [
         ...prev,
-        {
-          role: "assistant",
-          content: "Oops! Something went wrong. Please try again.",
-          timestamp,
-        },
+        { role: "assistant", content: "Oops! Something went wrong. Please try again." },
       ]);
     }
 
@@ -161,17 +141,8 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
                 msg.role === "assistant" ? T.botBubble : `${T.userBubble} ml-auto`
               }`}
             >
-              <ReactMarkdown>{msg.content}</ReactMarkdown>
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
             </div>
-
-            {/* Timestamp */}
-            <span
-              className={`text-[10px] mt-1 ${T.timestamp} ${
-                msg.role === "user" ? "text-right" : ""
-              }`}
-            >
-              {msg.timestamp}
-            </span>
           </div>
         ))}
 
