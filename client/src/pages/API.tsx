@@ -34,27 +34,36 @@ export default function APIPage() {
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
   const fetchData = async (endpoint: ApiEndpoint) => {
-  try {
-    let body: any = {};
-
-    if (endpoint.type === "input") {
-      body.text = inputs[endpoint.title] ?? "";
-    } else if (endpoint.type === "timezone") {
-      body = { ...inputs[endpoint.title] };
+    try {
+      let body: any = {};
+  
+      if (endpoint.type === "input") {
+        body.text = inputs[endpoint.title] ?? "";
+      } else if (endpoint.type === "timezone") {
+        const tzInput = inputs[endpoint.title] || {};
+        body = {
+          ...tzInput,
+          hour: tzInput.hour !== undefined && tzInput.hour !== "" ? Number(tzInput.hour) : 12,
+          minute: tzInput.minute !== undefined && tzInput.minute !== "" ? Number(tzInput.minute) : 00,
+          fromTimezone: tzInput.fromTimezone || "UTC",
+          toTimezone: tzInput.toTimezone || "UTC",
+          ampm: tzInput.ampm || "AM",
+        };
+      }
+  
+      const res = await fetch(endpoint.path, {
+        method: endpoint.type === "get" ? "GET" : "POST", // GET for 'projects'
+        headers: endpoint.type === "get" ? {} : { "Content-Type": "application/json" },
+        body: endpoint.type === "get" ? undefined : JSON.stringify(body),
+      });
+  
+      const data = await res.json();
+      setResponses(prev => ({ ...prev, [endpoint.title]: data }));
+    } catch {
+      setResponses(prev => ({ ...prev, [endpoint.title]: { error: "Error fetching data" } }));
     }
+  };
 
-    const res = await fetch(endpoint.path, {
-      method: endpoint.type === "get" ? "GET" : "POST", // ← use GET for 'projects'
-      headers: endpoint.type === "get" ? {} : { "Content-Type": "application/json" },
-      body: endpoint.type === "get" ? undefined : JSON.stringify(body),
-    });
-
-    const data = await res.json();
-    setResponses(prev => ({ ...prev, [endpoint.title]: data }));
-  } catch {
-    setResponses(prev => ({ ...prev, [endpoint.title]: { error: "Error fetching data" } }));
-  }
-};
 
   const copyData = (title: string, key: string) => {
     const data = responses[title];
