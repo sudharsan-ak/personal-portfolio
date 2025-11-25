@@ -2,11 +2,15 @@ import { PopupButton } from "react-calendly";
 import { useRef } from "react";
 import { Calendar } from "lucide-react";
 
-export default function FloatingBookingButton() {
+interface FloatingBookingButtonProps {
+  onClick?: () => void;
+}
+
+export default function FloatingBookingButton({ onClick }: FloatingBookingButtonProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div ref={wrapperRef} className="fixed bottom-6 right-6 z-50">
+    <div ref={wrapperRef} className="relative z-50">
       {/* Hidden PopupButton */}
       <div className="absolute opacity-0 w-0 h-0 overflow-hidden pointer-events-none">
         <PopupButton
@@ -19,6 +23,7 @@ export default function FloatingBookingButton() {
       {/* Custom Button - styled like TimelineButton */}
       <button
         onClick={() => {
+          onClick?.();
           const popupButton = wrapperRef.current?.querySelector('button') as HTMLButtonElement;
           popupButton?.click();
         }}
