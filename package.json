@@ -41,6 +41,7 @@
     "@radix-ui/react-tooltip": "^1.2.0",
     "@supabase/supabase-js": "^2.0.0",
     "@tanstack/react-query": "^5.60.5",
+    "@vercel/node": "^3.0.0",
     "@xenova/transformers": "^2.4.0", 
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
