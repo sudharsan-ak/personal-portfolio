@@ -1,144 +1,115 @@
-"use client";
+import { useState, useEffect, useRef } from "react";
+import { X } from "lucide-react";
 
-import { motion } from "framer-motion";
-import { useEffect, useRef, useState, RefObject } from "react";
-import { X, Send } from "lucide-react";
-
-interface SmartAIAssistantChatProps {
+interface ChatProps {
   isOpen: boolean;
-  setIsOpen: (val: boolean) => void;
-  buttonRef: RefObject<HTMLButtonElement>;
+  setIsOpen: (v: boolean) => void;
+  buttonRef: React.RefObject<HTMLButtonElement>;
 }
 
-interface Message {
-  sender: "user" | "bot";
-  text: string;
-  isLoading?: boolean;
-}
-
-export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef }: AIAssistantChatProps) {
-  const [messages, setMessages] = useState<Message[]>([
+export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef }: ChatProps) {
+  const [messages, setMessages] = useState([
     {
-      sender: "bot",
-      text: "👋 Hi! I'm Sudharsan’s AI Assistant. Ask me anything about his experience, skills, or projects.",
+      role: "assistant",
+      content: "Hi! I'm your Smart AI Assistant. How can I help you today?",
     },
   ]);
+
   const [input, setInput] = useState("");
-  const [position, setPosition] = useState({ bottom: 0, right: 0 });
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Position relative to button dynamically
-  useEffect(() => {
-    if (buttonRef.current) {
-      const rect = buttonRef.current.getBoundingClientRect();
-      setPosition({
-        bottom: window.innerHeight - rect.top + 8,
-        right: window.innerWidth - rect.right,
-      });
-    }
-  }, [buttonRef, isOpen]);
-
-  // Auto-scroll on new messages
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, isOpen]);
 
-  const handleSend = async () => {
-  if (!input.trim()) return;
+  const sendMessage = async () => {
+    if (!input.trim()) return;
 
-  const userMessage: Message = { sender: "user", text: input };
-  setMessages((prev) => [...prev, userMessage]);
+    const userMessage = { role: "user", content: input };
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
+    setInput("");
+    setIsLoading(true);
 
-  // Add loading message and keep its index
-  const loadingMessage: Message = { sender: "bot", text: "Typing...", isLoading: true };
-  setMessages((prev) => [...prev, loadingMessage]);
-  const loadingIndex = messages.length + 1; // this will be the index of loading message
+    try {
+      const response = await fetch("/api/smartai-assistant", {
+        method: "POST",
+        body: JSON.stringify({ messages: updatedMessages }),
+      });
 
-  try {
-    const res = await fetch("/api/smartai-assistant", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: input }),
-    });
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
 
-    const data = await res.json();
+      let assistantMessage = { role: "assistant", content: "" };
+      setMessages((prev) => [...prev, assistantMessage]);
 
-    setMessages((prev) => {
-      // Replace only the loading message
-      const newMessages = [...prev];
-      newMessages[loadingIndex] = { sender: "bot", text: data.answer || "Sorry, I couldn't generate a response." };
-      return newMessages;
-    });
-  } catch (err) {
-    console.error("AI Assistant Error:", err);
-    setMessages((prev) => {
-      const newMessages = [...prev];
-      newMessages[loadingIndex] = { sender: "bot", text: "Oops! Something went wrong. Please try again." };
-      return newMessages;
-    });
-  }
+      while (true) {
+        const { value, done } = await reader!.read();
+        if (done) break;
 
-  setInput("");
-};
+        const chunk = decoder.decode(value, { stream: true });
+        assistantMessage.content += chunk;
 
+        setMessages((prev) => {
+          const copy = [...prev];
+          copy[copy.length - 1] = assistantMessage;
+          return copy;
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    setIsLoading(false);
+  };
+
+  if (!isOpen) return null;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : 20 }}
-      transition={{ type: "spring", stiffness: 260, damping: 30 }}
-      style={{ bottom: position.bottom, right: position.right }}
-      className={`fixed z-50 w-[90vw] max-w-[420px] h-[75vh] max-h-[650px] sm:w-[380px] sm:h-[550px]
-                 bg-white rounded-2xl shadow-xl overflow-hidden
-                 flex flex-col
-                 ${isOpen ? "pointer-events-auto" : "pointer-events-none"}`}
-    >
+    <div className="fixed bottom-24 right-6 bg-white shadow-2xl rounded-xl w-80 h-96 flex flex-col border z-50 animate-fadeIn">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-white shadow-sm">
-        <h4 className="font-semibold text-gray-800 text-lg">AI Assistant</h4>
-        <button
-          onClick={() => setIsOpen(false)}
-          className="p-1 rounded-full hover:bg-gray-100 transition"
-        >
-          <X className="w-4 h-4 text-gray-500" />
+      <div className="p-4 border-b flex items-center justify-between bg-indigo-600 text-white rounded-t-xl">
+        <h2 className="font-semibold">Smart AI Assistant</h2>
+        <button onClick={() => setIsOpen(false)}>
+          <X className="w-5 h-5" />
         </button>
       </div>
 
-      {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto px-3 py-3 space-y-3 text-sm bg-white">
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto p-3 space-y-3">
         {messages.map((msg, idx) => (
           <div
             key={idx}
-            className={`px-3 py-2 rounded-lg max-w-[85%] break-words shadow-sm ${
-              msg.sender === "bot"
-                ? "bg-gray-100 text-gray-800 self-start"
-                : "bg-indigo-600 text-white self-end ml-auto"
+            className={`p-2 rounded-lg text-sm w-fit max-w-[80%] ${
+              msg.role === "assistant"
+                ? "bg-gray-200 text-black"
+                : "bg-indigo-600 text-white ml-auto"
             }`}
-            style={{ whiteSpace: "pre-wrap" }}
           >
-            {msg.text}
+            {msg.content}
           </div>
         ))}
-        <div ref={chatEndRef} />
+        <div ref={chatEndRef}></div>
       </div>
 
       {/* Input */}
-      <div className="flex items-center gap-2 p-3 border-t border-gray-200 bg-white">
+      <div className="p-3 border-t flex gap-2">
         <input
-          type="text"
-          placeholder="Ask something..."
+          className="flex-1 border rounded-lg px-3 py-2 text-sm"
+          placeholder="Type a message..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSend()}
-          className="flex-1 bg-gray-50 text-gray-900 border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none placeholder-gray-400"
+          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
         />
         <button
-          onClick={handleSend}
-          className="p-2 rounded-md bg-indigo-600 hover:bg-indigo-500 transition text-white shadow-md"
+          onClick={sendMessage}
+          disabled={isLoading}
+          className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm disabled:opacity-50"
         >
-          <Send className="w-4 h-4" />
+          Send
         </button>
       </div>
-    </motion.div>
+    </div>
   );
 }
