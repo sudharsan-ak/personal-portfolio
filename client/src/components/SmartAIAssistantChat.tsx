@@ -14,7 +14,7 @@ interface ChatProps {
 interface ChatMessage {
   role: "system" | "user" | "assistant";
   content: string;
-  timestamp: string;
+  timestamp: string; // local only
 }
 
 export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, theme }: ChatProps) {
@@ -30,6 +30,7 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
   const [isLoading, setIsLoading] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
+  // Theme styles
   const getThemeClasses = () => {
     switch (theme) {
       case "dark":
@@ -70,6 +71,7 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
 
   const T = getThemeClasses();
 
+  // Auto scroll
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isOpen]);
@@ -90,14 +92,18 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
     setInput("");
     setIsLoading(true);
 
+    // Add placeholder for assistant
     let assistantMessage: ChatMessage = { role: "assistant", content: "", timestamp };
     setMessages((prev) => [...prev, assistantMessage]);
 
     try {
+      // Only send role + content to API
+      const apiMessages = updatedMessages.map(({ role, content }) => ({ role, content }));
+
       const response = await fetch("/api/smartai-assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: updatedMessages }),
+        body: JSON.stringify({ messages: apiMessages }),
       });
 
       if (!response.body) throw new Error("No response body");
@@ -136,7 +142,7 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
 
   return (
     <div
-      className={`fixed bottom-20 right-6 rounded-xl shadow-2xl w-[320px] h-[550px] sm:w-[400px] sm:h-[600px] flex flex-col border z-50 animate-fadeIn ${T.bg} ${T.border}`}
+      className={`fixed bottom-20 right-6 rounded-xl shadow-2xl w-[360px] h-[600px] sm:w-[440px] sm:h-[650px] flex flex-col border z-50 animate-fadeIn ${T.bg} ${T.border}`}
     >
       {/* Header */}
       <div className={`p-4 border-b flex items-center justify-between rounded-t-xl ${T.header}`}>
