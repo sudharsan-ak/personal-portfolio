@@ -5,14 +5,13 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Home from "@/pages/Home";
 import NotFound from "@/pages/not-found";
-import DynamicBackground from "@/components/DynamicBackground"; 
-import TimelineButton from "@/components/TimelineButton"; 
-import AIAssistantButton from "@/components/AIAssistantButton";
+import DynamicBackground from "@/components/DynamicBackground";
+import TimelineButton from "@/components/TimelineButton";
 import SmartAIAssistantButton from "@/components/SmartAIAssistantButton";
-import { PortfolioChatbot } from "@/components/PortfolioChatbot";
+import FloatingBookingButton from "@/components/FloatingBookingButton";
 import Resume from "@/pages/Resume";
 import APIPage from "@/pages/API";
-import FloatingBookingButton from "@/components/FloatingBookingButton";
+import { useState } from "react";
 
 function Router() {
   return (
@@ -27,6 +26,8 @@ function Router() {
 
 function App() {
   const [location] = useLocation();
+  const [currentTheme, setCurrentTheme] = useState<"light" | "dark" | "nightowl" | "system">("light");
+  const [isAIOpen, setIsAIOpen] = useState(false);
 
   const hideFloatingButtons = location === "/resume" || location === "/api-docs";
 
@@ -37,24 +38,22 @@ function App() {
         <DynamicBackground>
           <Router />
 
-          {/* Floating Buttons */}
           {!hideFloatingButtons && (
             <>
-              {/* Timeline Button */}
               <div className="hidden md:block">
                 <TimelineButton />
               </div>
 
-              {/* ➕ NEW: Floating Booking Button (Calendly)
-              <FloatingBookingButton />
-              */}
-              {/* Bottom-right stacked buttons */}
-              <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-4">
-                {/* Smart AI Assistant Button */}
-                <SmartAIAssistantButton />
-              
-                {/* Floating Booking Button */}
-                <FloatingBookingButton />
+              {/* Bottom-right floating buttons: place side-by-side to avoid stacking */}
+              <div className="fixed bottom-6 right-6 z-50 flex flex-row items-center gap-4">
+                <FloatingBookingButton
+                  onClick={() => setIsAIOpen(false)} // close AI if booking clicked
+                />
+                <SmartAIAssistantButton
+                  isOpen={isAIOpen}
+                  setIsOpen={setIsAIOpen}
+                  theme={currentTheme}
+                />
               </div>
             </>
           )}
