@@ -15,6 +15,7 @@ interface ChatProps {
 interface ChatMessage {
   role: "system" | "user" | "assistant";
   content: string;
+  timestamp: string;
 }
 
 export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, theme }: ChatProps) {
@@ -22,6 +23,7 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
     {
       role: "assistant",
       content: "Hi! I'm your Smart AI Assistant. How can I help you today?",
+      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     },
   ]);
 
@@ -40,6 +42,8 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
           border: "border-gray-700",
           inputBg: "bg-[#2a2a2a] text-gray-100 border-gray-600",
           typing: "text-gray-400",
+          timestamp: "text-gray-400",
+          link: "text-blue-400 underline hover:text-blue-300",
         };
       case "nightowl":
         return {
@@ -50,6 +54,8 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
           border: "border-[#0e3b5c]",
           inputBg: "bg-[#0b253a] text-[#d6deeb] border-[#0e3b5c]",
           typing: "text-[#d6deeb]",
+          timestamp: "text-[#8892b0]",
+          link: "text-blue-400 underline hover:text-blue-300",
         };
       default:
         return {
@@ -60,6 +66,8 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
           border: "border-gray-300",
           inputBg: "bg-white text-black border-gray-300",
           typing: "text-gray-400",
+          timestamp: "text-gray-400",
+          link: "text-blue-600 underline hover:text-blue-500",
         };
     }
   };
@@ -73,14 +81,20 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
   const sendMessage = async () => {
     if (!input.trim()) return;
 
-    const userMessage: ChatMessage = { role: "user", content: input };
+    const timestamp = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+    const userMessage: ChatMessage = {
+      role: "user",
+      content: input,
+      timestamp,
+    };
+
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
     setInput("");
     setIsLoading(true);
 
-    // Add empty assistant message for streaming
-    let assistantMessage: ChatMessage = { role: "assistant", content: "" };
+    let assistantMessage: ChatMessage = { role: "assistant", content: "", timestamp };
     setMessages((prev) => [...prev, assistantMessage]);
 
     try {
@@ -90,7 +104,7 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
         body: JSON.stringify({ messages: updatedMessages }),
       });
 
-      if (!response.body) throw new Error("No response body from AI");
+      if (!response.body) throw new Error("No response body");
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
@@ -111,7 +125,11 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
       console.error(err);
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: "Oops! Something went wrong. Please try again." },
+        {
+          role: "assistant",
+          content: "Oops! Something went wrong. Please try again.",
+          timestamp,
+        },
       ]);
     }
 
@@ -122,7 +140,7 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
 
   return (
     <div
-      className={`fixed bottom-20 right-6 rounded-xl shadow-2xl w-[360px] h-[600px] sm:w-[440px] sm:h-[650px] flex flex-col border z-50 animate-fadeIn ${T.bg} ${T.border}`}
+      className={`fixed bottom-20 right-6 rounded-xl shadow-2xl w-[350px] h-[600px] sm:w-[450px] sm:h-[650px] flex flex-col border z-50 animate-fadeIn ${T.bg} ${T.border}`}
     >
       {/* Header */}
       <div className={`p-4 border-b flex items-center justify-between rounded-t-xl ${T.header}`}>
@@ -141,8 +159,23 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
                 msg.role === "assistant" ? T.botBubble : `${T.userBubble} ml-auto`
               }`}
             >
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
+              <ReactMarkdown remarkPlugins={[remarkGfm]} linkTarget="_blank" components={{
+                a: ({ node, ...props }) => (
+                  <a className={T.link} {...props} />
+                )
+              }}>
+                {msg.content}
+              </ReactMarkdown>
             </div>
+
+            {/* Timestamp */}
+            <span
+              className={`text-[10px] mt-1 ${T.timestamp} ${
+                msg.role === "user" ? "text-right" : ""
+              }`}
+            >
+              {msg.timestamp}
+            </span>
           </div>
         ))}
 
