@@ -6,27 +6,25 @@ interface ApiEndpoint {
   path: string;
   copyKey?: string;
   type?: "input" | "timezone";
-  action?: string;
+  action: string;
 }
 
 const timezones = [
-  "UTC", "Africa/Johannesburg", "America/New_York", "America/Chicago",
-  "America/Denver", "America/Los_Angeles", "America/Sao_Paulo", "America/Toronto",
-  "Asia/Kolkata", "Asia/Tokyo", "Asia/Shanghai", "Asia/Singapore",
-  "Australia/Sydney", "Australia/Melbourne", "Europe/London", "Europe/Berlin",
-  "Europe/Paris", "Europe/Moscow", "Pacific/Auckland"
+  "UTC","Africa/Johannesburg","America/New_York","America/Chicago",
+  "America/Denver","America/Los_Angeles","America/Sao_Paulo","America/Toronto",
+  "Asia/Kolkata","Asia/Tokyo","Asia/Shanghai","Asia/Singapore",
+  "Australia/Sydney","Australia/Melbourne","Europe/London","Europe/Berlin",
+  "Europe/Paris","Europe/Moscow","Pacific/Auckland"
 ];
 
 export default function APIPage() {
   const endpoints: ApiEndpoint[] = [
-    { title: "Random Quote", description: "Returns a random programming quote.", path: "/api/quote", copyKey: "quote" },
-    { title: "Current Time", description: "Returns the current server time in UTC.", path: "/api/time", copyKey: "currentTime" },
-    { title: "API Visitor Counter", description: "Returns the number of API visits.", path: "/api/visits" },
+    { title: "Random Quote", description: "Returns a random programming quote.", path: "/api/tools", copyKey: "quote", action: "quote" },
+    { title: "Current Time", description: "Returns the current server time in UTC.", path: "/api/tools", copyKey: "currentTime", action: "time" },
     { title: "SHA256 Hash Generator", description: "Send text and receive its SHA256 hash.", path: "/api/tools", copyKey: "hash", type: "input", action: "hash" },
     { title: "Word Counter", description: "Counts the number of words in the text.", path: "/api/tools", copyKey: "words", type: "input", action: "wordcount" },
     { title: "Character Counter", description: "Counts the number of characters in the text.", path: "/api/tools", copyKey: "characters", type: "input", action: "charcount" },
     { title: "Timezone Converter", description: "Convert a given time from one timezone to another.", path: "/api/tools", type: "timezone", action: "timezone" },
-    { title: "Projects", description: "Fetch projects from the database.", path: "/api/projects" },
   ];
 
   const [responses, setResponses] = useState<Record<string, any>>({});
@@ -38,19 +36,14 @@ export default function APIPage() {
     try {
       let body: any = { action: endpoint.action };
 
-      if (endpoint.type === "input") {
-        body.text = inputs[endpoint.title] ?? "";
-      } else if (endpoint.type === "timezone") {
-        const tz = inputs[endpoint.title] || {};
-        body = { ...body, ...tz };
-      }
+      if (endpoint.type === "input") body.text = inputs[endpoint.title] ?? "";
+      else if (endpoint.type === "timezone") body = { ...body, ...inputs[endpoint.title] };
 
       const res = await fetch(endpoint.path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
-
       const data = await res.json();
       setResponses(prev => ({ ...prev, [endpoint.title]: data }));
     } catch {
@@ -81,10 +74,8 @@ export default function APIPage() {
 
         return (
           <section key={endpoint.title} className="mb-6 border border-gray-700 rounded">
-            <div
-              className="flex justify-between items-center p-4 cursor-pointer bg-gray-900 hover:bg-gray-800 transition-colors duration-200"
-              onClick={() => toggleExpand(endpoint.title)}
-            >
+            <div className="flex justify-between items-center p-4 cursor-pointer bg-gray-900 hover:bg-gray-800 transition-colors duration-200"
+              onClick={() => toggleExpand(endpoint.title)}>
               <h2 className="text-2xl font-semibold text-white">{endpoint.title}</h2>
               <span className={`transform transition-transform duration-300 ${isExpanded ? "rotate-90" : "rotate-0"}`}>➤</span>
             </div>
@@ -105,48 +96,33 @@ export default function APIPage() {
 
                 {endpoint.type === "timezone" && (
                   <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 mb-4 items-center">
-                    {["fromTimezone", "hour", "minute", "ampm", "toTimezone"].map(field => {
+                    {["fromTimezone","hour","minute","ampm","toTimezone"].map(field => {
                       if (field === "fromTimezone" || field === "toTimezone") {
-                        return (
-                          <div className="flex flex-col" key={field}>
-                            <label className="mb-1">{field === "fromTimezone" ? "From Timezone" : "To Timezone"}</label>
-                            <select
-                              value={inputs[endpoint.title]?.[field] || "UTC"}
-                              onChange={e => setInputs(prev => ({ ...prev, [endpoint.title]: { ...prev[endpoint.title], [field]: e.target.value } }))}
-                              className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700"
-                            >
-                              {timezones.map(tz => <option key={tz} value={tz}>{tz}</option>)}
-                            </select>
-                          </div>
-                        );
-                      } else if (field === "ampm") {
-                        return (
-                          <div className="flex flex-col" key={field}>
-                            <label className="mb-1">AM/PM</label>
-                            <select
-                              value={inputs[endpoint.title]?.ampm || "AM"}
-                              onChange={e => setInputs(prev => ({ ...prev, [endpoint.title]: { ...prev[endpoint.title], ampm: e.target.value } }))}
-                              className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700"
-                            >
-                              <option value="AM">AM</option>
-                              <option value="PM">PM</option>
-                            </select>
-                          </div>
-                        );
+                        return <div className="flex flex-col" key={field}>
+                          <label className="mb-1">{field==="fromTimezone"?"From Timezone":"To Timezone"}</label>
+                          <select value={inputs[endpoint.title]?.[field] || "UTC"}
+                            onChange={e => setInputs(prev => ({ ...prev, [endpoint.title]: { ...prev[endpoint.title], [field]: e.target.value } }))}
+                            className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700">
+                            {timezones.map(tz => <option key={tz} value={tz}>{tz}</option>)}
+                          </select>
+                        </div>;
+                      } else if (field==="ampm") {
+                        return <div className="flex flex-col" key={field}>
+                          <label className="mb-1">AM/PM</label>
+                          <select value={inputs[endpoint.title]?.ampm || "AM"}
+                            onChange={e => setInputs(prev => ({ ...prev, [endpoint.title]: { ...prev[endpoint.title], ampm: e.target.value } }))}
+                            className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700">
+                            <option value="AM">AM</option>
+                            <option value="PM">PM</option>
+                          </select>
+                        </div>;
                       } else {
-                        return (
-                          <div className="flex flex-col" key={field}>
-                            <label className="mb-1">{field === "hour" ? "Hour" : "Minute"}</label>
-                            <input
-                              type="number"
-                              min={0}
-                              max={field === "hour" ? 12 : 59}
-                              value={inputs[endpoint.title]?.[field] ?? ""}
-                              onChange={e => setInputs(prev => ({ ...prev, [endpoint.title]: { ...prev[endpoint.title], [field]: e.target.value } }))}
-                              className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700 w-20"
-                            />
-                          </div>
-                        );
+                        return <div className="flex flex-col" key={field}>
+                          <label className="mb-1">{field==="hour"?"Hour":"Minute"}</label>
+                          <input type="number" min={0} max={field==="hour"?12:59} value={inputs[endpoint.title]?.[field]??""}
+                            onChange={e => setInputs(prev => ({ ...prev, [endpoint.title]: { ...prev[endpoint.title], [field]: e.target.value } }))}
+                            className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700 w-20"/>
+                        </div>;
                       }
                     })}
                   </div>
@@ -154,20 +130,17 @@ export default function APIPage() {
 
                 <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 mb-4">
                   <button onClick={() => fetchData(endpoint)} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors duration-200 w-full sm:w-auto">Try It</button>
-                  {endpoint.copyKey && response && (
-                    <button onClick={() => copyData(endpoint.title, endpoint.copyKey!)} className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition-colors duration-200 w-full sm:w-auto">
-                      Copy {endpoint.copyKey}
-                    </button>
-                  )}
+                  {endpoint.copyKey && response && <button onClick={() => copyData(endpoint.title, endpoint.copyKey!)}
+                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition-colors duration-200 w-full sm:w-auto">
+                    Copy {endpoint.copyKey}
+                  </button>}
                 </div>
 
-                {response && (
-                  <div>
-                    <pre className="mt-4 p-4 bg-gray-700 text-green-400 rounded overflow-x-auto break-words max-w-full shadow-lg border border-gray-600">
-                      {JSON.stringify(response, null, 2)}
-                    </pre>
-                  </div>
-                )}
+                {response && <div>
+                  <pre className="mt-4 p-4 bg-gray-700 text-green-400 rounded overflow-x-auto break-words max-w-full shadow-lg border border-gray-600">
+                    {JSON.stringify(response, null, 2)}
+                  </pre>
+                </div>}
               </div>
             )}
           </section>
