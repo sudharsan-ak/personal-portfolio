@@ -77,6 +77,11 @@ export default function APIPage() {
       path: "/api/timezone",
       type: "timezone",
     },
+    {
+      title: "Projects",
+      description: "Fetch projects from the database. Supports optional query parameters: limit, offset, and featured (true/false).",
+      path: "/api/projects",
+    },
   ];
 
   const [responses, setResponses] = useState<Record<string, any>>({});
