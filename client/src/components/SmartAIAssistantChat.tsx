@@ -82,7 +82,7 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef }: C
   if (!isOpen) return null;
 
   return (
-    <div className="fixed bottom-24 right-6 bg-white shadow-2xl rounded-xl w-80 h-96 flex flex-col border z-50 animate-fadeIn">
+    <div className="fixed bottom-20 right-6 bg-white shadow-2xl rounded-xl w-80 h-96 flex flex-col border z-50 animate-fadeIn">
       {/* Header */}
       <div className="p-4 border-b flex items-center justify-between bg-indigo-600 text-white rounded-t-xl">
         <h2 className="font-semibold">Smart AI Assistant</h2>
