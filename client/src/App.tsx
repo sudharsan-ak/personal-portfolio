@@ -68,13 +68,13 @@ function App() {
               </div>
               */}
 
-              {/* Floating Booking Button (move it above the AI button) */}
-              <div className="fixed bottom-20 right-6 z-50">
+              {/* Floating Buttons Stack */}
+              {/* Booking Button goes slightly above Smart AI Button */}
+              <div className="fixed right-6 bottom-20 z-50">
                 <FloatingBookingButton />
               </div>
-              
-              {/* Smart AI Assistant Button */}
-              <div className="fixed bottom-6 right-6 z-50">
+
+              <div className="fixed right-6 bottom-6 z-50">
                 <SmartAIAssistantButton />
               </div>
             </>
