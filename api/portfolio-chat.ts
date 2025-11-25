@@ -1,4 +1,4 @@
-import { VercelRequest, VercelResponse } from '@vercel/node';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 const portfolioContext = `
 You are an AI assistant for the portfolio of Sudharsan Srinivasan, a Full Stack Software Engineer. You should answer questions about Sudharsan's background, experience, skills, education, and projects. Be professional, concise, and helpful. If asked about something not included here, politely clarify what you do know.
