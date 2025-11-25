@@ -38,7 +38,10 @@ export default function APIPage() {
       let body: any = {};
   
       if (endpoint.type === "input") {
-        body.text = inputs[endpoint.title] ?? "";
+        body = {
+          action: endpoint.action,      // <-- must match 'charcount', 'wordcount', 'hash'
+          text: inputs[endpoint.title] ?? ""
+        };
       } else if (endpoint.type === "timezone") {
         const tzInput = inputs[endpoint.title] || {};
         body = {
@@ -50,6 +53,10 @@ export default function APIPage() {
           toTimezone: tzInput.toTimezone || "UTC",
           ampm: tzInput.ampm || "AM",
         };
+      } else if (endpoint.type === "quote") {
+        body = { action: "quote" };     // <-- mandatory
+      } else if (endpoint.type === "time") {
+        body = { action: "time" };      // <-- mandatory
       }
   
       const res = await fetch(endpoint.path, {
