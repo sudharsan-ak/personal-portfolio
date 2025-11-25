@@ -70,11 +70,8 @@ function App() {
 
               {/* Floating Buttons Stack */}
               {/* Booking Button goes slightly above Smart AI Button */}
-              <div className="fixed right-6 bottom-20 z-50">
+              <div className="fixed right-6 bottom-6 z-50 flex flex-col items-end gap-4">
                 <FloatingBookingButton />
-              </div>
-
-              <div className="fixed right-6 bottom-6 z-50">
                 <SmartAIAssistantButton />
               </div>
             </>
