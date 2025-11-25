@@ -1,9 +1,14 @@
-import { useRef, useState } from "react";
+import { useRef, Dispatch, SetStateAction } from "react";
 import { MessageCircle } from "lucide-react";
 import SmartAIAssistantChat from "./SmartAIAssistantChat";
 
-export default function SmartAIAssistantButton() {
-  const [isOpen, setIsOpen] = useState(false);
+interface Props {
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  theme?: "light" | "dark" | "nightowl" | "system";
+}
+
+export default function SmartAIAssistantButton({ isOpen, setIsOpen, theme }: Props) {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   return (
@@ -11,12 +16,16 @@ export default function SmartAIAssistantButton() {
       <button
         ref={buttonRef}
         onClick={() => setIsOpen((prev) => !prev)}
-        className="fixed bottom-6 right-6 bg-indigo-600 hover:bg-indigo-500 text-white p-4 rounded-full shadow-lg z-50 transition-all duration-300 hover:scale-110"
+        className="p-3 bg-primary text-primary-foreground rounded-full shadow-lg hover:scale-110 transition-transform duration-300 z-50"
       >
-        <MessageCircle className="w-6 h-6" />
+        <MessageCircle className="w-5 h-5" />
       </button>
-      <SmartAIAssistantChat isOpen={isOpen} setIsOpen={setIsOpen} buttonRef={buttonRef} />
+      <SmartAIAssistantChat
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        buttonRef={buttonRef}
+        theme={theme}
+      />
     </>
   );
 }
-
