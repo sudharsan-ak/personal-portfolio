@@ -137,9 +137,19 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     if (action === "time") {
+      const zone = typeof req.body?.timezone === "string" && req.body.timezone.trim() ? req.body.timezone : "UTC";
+    
+      const utc = DateTime.utc();
+      const local = utc.setZone(zone);
+    
+      if (!local.isValid) {
+        return res.status(400).json({ error: "Invalid timezone" });
+      }
+    
       return res.status(200).json({
-        currentTime: new Date().toISOString(),
-        timezone: "UTC",
+        utc: utc.toISO(),
+        localTime: local.toFormat("h:mm a"),
+        timezone: zone,
       });
     }
 
