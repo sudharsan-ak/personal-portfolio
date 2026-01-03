@@ -22,7 +22,7 @@ const timezones = [
 export default function APIPage() {
   const endpoints: ApiEndpoint[] = [
     //{ title: "Random Quote", description: "Returns a random programming quote.", path: "/api/tools", copyKey: "quote", action: "quote" },
-    //{ title: "Current Time", description: "Returns the current server time in UTC.", path: "/api/tools", copyKey: "currentTime", action: "time" },
+    { title: "Current Time", description: "Returns the current server time in UTC.", path: "/api/tools", copyKey: "currentTime", action: "time" },
     { title: "SHA256 Hash Generator", description: "Send text and receive its SHA256 hash.", path: "/api/tools", copyKey: "hash", type: "input", action: "hash" },
     { title: "Word Counter", description: "Counts the number of words in the text.", path: "/api/tools", copyKey: "words", type: "input", action: "wordcount" },
     { title: "Character Counter", description: "Counts the number of characters in the text.", path: "/api/tools", copyKey: "characters", type: "input", action: "charcount" },
