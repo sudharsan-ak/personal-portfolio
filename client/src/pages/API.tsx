@@ -27,7 +27,7 @@ export default function APIPage() {
     { title: "Word Counter", description: "Counts the number of words in the text.", path: "/api/tools", copyKey: "words", type: "input", action: "wordcount" },
     { title: "Character Counter", description: "Counts the number of characters in the text.", path: "/api/tools", copyKey: "characters", type: "input", action: "charcount" },
     { title: "Timezone Converter", description: "Convert a given time from one timezone to another.", path: "/api/tools", type: "timezone", action: "timezone" },
-    { title: "Projects", description: "Fetch projects from the database. Supports optional query parameter: limit.", path: "/api/projects", type: "get" },
+    { title: "Projects", description: "Fetch projects from AWS Lambda (Supabase-backed). Supports optional query parameter: limit.", path: import.meta.env.VITE_AWS_PROJECTS_URL || "/api/projects", type: "get" }
   ];
 
   const [responses, setResponses] = useState<Record<string, any>>({});
