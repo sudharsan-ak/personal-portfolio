@@ -134,8 +134,10 @@ export default function APIPage() {
 
         return (
           <section key={endpoint.title} className="mb-6 border border-gray-700 rounded">
-            <div className="flex justify-between items-center p-4 cursor-pointer bg-gray-900 hover:bg-gray-800 transition-colors duration-200"
-              onClick={() => toggleExpand(endpoint.title)}>
+            <div
+              className="flex justify-between items-center p-4 cursor-pointer bg-gray-900 hover:bg-gray-800 transition-colors duration-200"
+              onClick={() => toggleExpand(endpoint.title)}
+            >
               <h2 className="text-2xl font-semibold text-white">{endpoint.title}</h2>
               <span className={`transform transition-transform duration-300 ${isExpanded ? "rotate-90" : "rotate-0"}`}>➤</span>
             </div>
@@ -158,31 +160,46 @@ export default function APIPage() {
                   <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 mb-4 items-center">
                     {["fromTimezone","hour","minute","ampm","toTimezone"].map(field => {
                       if (field === "fromTimezone" || field === "toTimezone") {
-                        return <div className="flex flex-col" key={field}>
-                          <label className="mb-1">{field==="fromTimezone"?"From Timezone":"To Timezone"}</label>
-                          <select value={inputs[endpoint.title]?.[field] || "UTC"}
-                            onChange={e => setInputs(prev => ({ ...prev, [endpoint.title]: { ...prev[endpoint.title], [field]: e.target.value } }))}
-                            className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700">
-                            {timezones.map(tz => <option key={tz} value={tz}>{tz}</option>)}
-                          </select>
-                        </div>;
+                        return (
+                          <div className="flex flex-col" key={field}>
+                            <label className="mb-1">{field==="fromTimezone"?"From Timezone":"To Timezone"}</label>
+                            <select
+                              value={inputs[endpoint.title]?.[field] || "UTC"}
+                              onChange={e => setInputs(prev => ({ ...prev, [endpoint.title]: { ...prev[endpoint.title], [field]: e.target.value } }))}
+                              className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700"
+                            >
+                              {timezones.map(tz => <option key={tz} value={tz}>{tz}</option>)}
+                            </select>
+                          </div>
+                        );
                       } else if (field==="ampm") {
-                        return <div className="flex flex-col" key={field}>
-                          <label className="mb-1">AM/PM</label>
-                          <select value={inputs[endpoint.title]?.ampm || "AM"}
-                            onChange={e => setInputs(prev => ({ ...prev, [endpoint.title]: { ...prev[endpoint.title], ampm: e.target.value } }))}
-                            className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700">
-                            <option value="AM">AM</option>
-                            <option value="PM">PM</option>
-                          </select>
-                        </div>;
+                        return (
+                          <div className="flex flex-col" key={field}>
+                            <label className="mb-1">AM/PM</label>
+                            <select
+                              value={inputs[endpoint.title]?.ampm || "AM"}
+                              onChange={e => setInputs(prev => ({ ...prev, [endpoint.title]: { ...prev[endpoint.title], ampm: e.target.value } }))}
+                              className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700"
+                            >
+                              <option value="AM">AM</option>
+                              <option value="PM">PM</option>
+                            </select>
+                          </div>
+                        );
                       } else {
-                        return <div className="flex flex-col" key={field}>
-                          <label className="mb-1">{field==="hour"?"Hour":"Minute"}</label>
-                          <input type="number" min={0} max={field==="hour"?12:59} value={inputs[endpoint.title]?.[field]??""}
-                            onChange={e => setInputs(prev => ({ ...prev, [endpoint.title]: { ...prev[endpoint.title], [field]: e.target.value } }))}
-                            className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700 w-20"/>
-                        </div>;
+                        return (
+                          <div className="flex flex-col" key={field}>
+                            <label className="mb-1">{field==="hour"?"Hour":"Minute"}</label>
+                            <input
+                              type="number"
+                              min={0}
+                              max={field==="hour"?12:59}
+                              value={inputs[endpoint.title]?.[field]??""}
+                              onChange={e => setInputs(prev => ({ ...prev, [endpoint.title]: { ...prev[endpoint.title], [field]: e.target.value } }))}
+                              className="px-4 py-2 rounded bg-gray-900 text-white border border-gray-700 w-20"
+                            />
+                          </div>
+                        );
                       }
                     })}
                   </div>
@@ -208,11 +225,21 @@ export default function APIPage() {
                 )}
 
                 <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 mb-4">
-                  <button onClick={() => fetchData(endpoint)} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors duration-200 w-full sm:w-auto">Try It</button>
-                  {endpoint.copyKey && response && <button onClick={() => copyData(endpoint.title, endpoint.copyKey!)}
-                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition-colors duration-200 w-full sm:w-auto">
-                    Copy {endpoint.copyKey}
-                  </button>}
+                  <button
+                    onClick={() => fetchData(endpoint)}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors duration-200 w-full sm:w-auto"
+                  >
+                    Try It
+                  </button>
+
+                  {endpoint.copyKey && response && (
+                    <button
+                      onClick={() => copyData(endpoint.title, endpoint.copyKey!)}
+                      className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition-colors duration-200 w-full sm:w-auto"
+                    >
+                      Copy {endpoint.copyKey}
+                    </button>
+                  )}
                 </div>
 
                 {response && endpoint.title !== "Projects" && (
@@ -240,14 +267,46 @@ export default function APIPage() {
                       className="overflow-x-auto py-2 snap-x snap-mandatory flex gap-4 px-2 scroll-smooth"
                     >
                       {response.data.map((project: any, index: number) => (
-                        <InteractiveCard key={index} className="group flex-shrink-0 w-80 snap-start">
-                          <div className="flex flex-col space-y-4 p-4">
-                            <h3 className="text-2xl font-semibold">{project.title}</h3>
-                            <p className="text-sm text-muted-foreground">{project.year}</p>
-                            <p className="text-base">{project.description}</p>
-                            <div className="flex flex-wrap gap-2">
+                        <InteractiveCard
+                          key={index}
+                          className="
+                            group flex-shrink-0 w-80 snap-start
+                            bg-white text-gray-900
+                            rounded-2xl border border-gray-200 shadow-sm
+                            transition-all duration-200
+                            hover:bg-gray-900 hover:text-white hover:shadow-lg hover:-translate-y-1
+                          "
+                        >
+                          <div className="flex flex-col space-y-3 p-5">
+                            <div className="space-y-1">
+                              <h3 className="text-xl font-semibold leading-snug text-gray-900 group-hover:text-white transition-colors">
+                                {project.title}
+                              </h3>
+
+                              <p className="text-xs font-medium tracking-wide uppercase text-gray-500 group-hover:text-gray-300 transition-colors">
+                                {project.year}
+                              </p>
+                            </div>
+
+                            <p className="text-sm leading-relaxed text-gray-700 group-hover:text-gray-200 transition-colors line-clamp-4">
+                              {project.description}
+                            </p>
+
+                            <div className="flex flex-wrap gap-2 pt-1">
                               {project.technologies?.map((tech: string, i: number) => (
-                                <Badge key={i} variant="secondary" className="text-sm px-3 py-1">{tech}</Badge>
+                                <Badge
+                                  key={i}
+                                  variant="secondary"
+                                  className="
+                                    rounded-full
+                                    px-3 py-1 text-xs font-medium
+                                    bg-gray-100 text-gray-800 border border-gray-200
+                                    group-hover:bg-gray-700 group-hover:text-white group-hover:border-gray-600
+                                    transition-colors
+                                  "
+                                >
+                                  {tech}
+                                </Badge>
                               ))}
                             </div>
                           </div>
@@ -271,11 +330,18 @@ export default function APIPage() {
         );
       })}
 
-      {toast && <div className="fixed bottom-6 right-6 bg-gray-900 text-white px-4 py-2 rounded shadow-lg animate-fade-in">{toast}</div>}
+      {toast && (
+        <div className="fixed bottom-6 right-6 bg-gray-900 text-white px-4 py-2 rounded shadow-lg animate-fade-in">
+          {toast}
+        </div>
+      )}
 
       <style>
         {`
-          @keyframes fade-in { 0% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: translateY(0); } }
+          @keyframes fade-in {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+          }
           .animate-fade-in { animation: fade-in 0.3s ease-out; }
         `}
       </style>
