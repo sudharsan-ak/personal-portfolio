@@ -272,7 +272,7 @@ export default function APIPage() {
                       onScroll={() => handleScroll(endpoint.title)}
                       className="overflow-x-auto py-2 snap-x snap-mandatory flex gap-4 px-2 scroll-smooth"
                     >
-                      {response.data.map((project: any, index: number) => {
+                      {response.data.map((project: any, index: number) => (
                         // console.log("PROJECT ITEM:", project);
                         <InteractiveCard
                           key={index}
@@ -334,7 +334,7 @@ export default function APIPage() {
                             </div>
                           </div>
                         </InteractiveCard>
-                      })}
+                      ))}
                     </div>
 
                     {scrollState[endpoint.title]?.right && (
