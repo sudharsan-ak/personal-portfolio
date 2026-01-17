@@ -311,7 +311,7 @@ export default function APIPage() {
                               </p>
                             </div>
 
-                            <p className="text-sm leading-relaxed text-gray-700 group-hover:text-gray-200 transition-colors line-clamp-4">
+                            <p className="text-sm leading-relaxed text-gray-700 group-hover:text-gray-200 transition-colors line-clamp-3 group-hover:line-clamp-none">
                               {project.description}
                             </p>
 
