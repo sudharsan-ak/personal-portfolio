@@ -12825,21 +12825,19 @@ async function fetchProjectsAWS(q) {
 }
 
 // lambda/projects.ts
-var ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "*";
-var corsHeaders = {
-  "access-control-allow-origin": ALLOWED_ORIGIN,
-  "access-control-allow-methods": "GET,OPTIONS",
-  "access-control-allow-headers": "content-type"
-};
 async function handler(event) {
   const method = event.requestContext.http.method;
   if (method === "OPTIONS") {
-    return { statusCode: 204, headers: corsHeaders };
+    return {
+      statusCode: 204,
+      headers: {},
+      body: ""
+    };
   }
   if (method !== "GET") {
     return {
       statusCode: 405,
-      headers: corsHeaders,
+      headers: { "content-type": "application/json" },
       body: JSON.stringify({ error: "Method Not Allowed" })
     };
   }
@@ -12848,15 +12846,18 @@ async function handler(event) {
     const result = await fetchProjectsAWS(qs);
     return {
       statusCode: result.statusCode,
-      headers: { ...corsHeaders, "content-type": "application/json" },
+      headers: { "content-type": "application/json" },
       body: JSON.stringify(result.body)
     };
   } catch (e) {
     console.error("Lambda projects error:", e);
     return {
       statusCode: 500,
-      headers: { ...corsHeaders, "content-type": "application/json" },
-      body: JSON.stringify({ error: "Server error", message: e?.message ?? "Unexpected error" })
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        error: "Server error",
+        message: e?.message ?? "Unexpected error"
+      })
     };
   }
 }
