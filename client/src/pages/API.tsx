@@ -33,7 +33,10 @@ export default function APIPage() {
   const [responses, setResponses] = useState<Record<string, any>>({});
   const [inputs, setInputs] = useState<Record<string, any>>({});
   const [toast, setToast] = useState<string | null>(null);
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+
+  // ✅ Accordion: only one section open at a time
+  const [expandedTitle, setExpandedTitle] = useState<string | null>(null);
+
   const projectScrollRefs = useRef<Record<string, HTMLDivElement>>({});
   const [scrollState, setScrollState] = useState<Record<string, { left: boolean; right: boolean }>>({});
 
@@ -96,8 +99,9 @@ export default function APIPage() {
     setTimeout(() => setToast(null), 2000);
   };
 
+  // ✅ Toggle accordion: opening one closes the other
   const toggleExpand = (title: string) => {
-    setExpanded(prev => ({ ...prev, [title]: !prev[title] }));
+    setExpandedTitle(prev => (prev === title ? null : title));
     setResponses(prev => ({ ...prev, [title]: undefined }));
   };
 
@@ -130,7 +134,7 @@ export default function APIPage() {
 
       {endpoints.map(endpoint => {
         const response = responses[endpoint.title];
-        const isExpanded = expanded[endpoint.title];
+        const isExpanded = expandedTitle === endpoint.title;
 
         return (
           <section key={endpoint.title} className="mb-6 border border-gray-700 rounded">
@@ -284,8 +288,10 @@ export default function APIPage() {
                                   href={project.gitlab_url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="inline-block"
-                                  onClick={(e) => e.stopPropagation()}
+                                  className="inline-block pointer-events-auto relative z-10"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                  }}
                                 >
                                   <h3 className="text-xl font-semibold leading-snug text-gray-900 group-hover:text-white transition-colors hover:underline">
                                     {project.title}
