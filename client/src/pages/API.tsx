@@ -19,6 +19,8 @@ const timezones = [
   "Europe/Paris","Europe/Moscow","Pacific/Auckland"
 ];
 
+const awsPath = "https://nxlxvfrsvyk7jjxdchbgaqxyvm0otytd.lambda-url.us-east-2.on.aws/";
+
 export default function APIPage() {
   const endpoints: ApiEndpoint[] = [
     { title: "Random Quote", description: "Returns a random programming quote.", path: "/api/tools", copyKey: "quote", type: "quote", action: "quote" },
@@ -27,7 +29,7 @@ export default function APIPage() {
     { title: "Word Counter", description: "Counts the number of words in the text.", path: "/api/tools", copyKey: "words", type: "input", action: "wordcount" },
     { title: "Character Counter", description: "Counts the number of characters in the text.", path: "/api/tools", copyKey: "characters", type: "input", action: "charcount" },
     { title: "Timezone Converter", description: "Convert a given time from one timezone to another.", path: "/api/tools", type: "timezone", action: "timezone" },
-    { title: "Projects", description: "Fetch projects from AWS Lambda (Supabase-backed). Supports optional query parameter: limit.", path: "https://nxlxvfrsvyk7jjxdchbgaqxyvm0otytd.lambda-url.us-east-2.on.aws/" || "/api/projects", type: "get" }
+    { title: "Projects", description: "Fetch projects from AWS Lambda (Supabase-backed). Supports optional query parameter: limit.", path: awsPath || "/api/projects", type: "get" }
   ];
 
   const [responses, setResponses] = useState<Record<string, any>>({});
@@ -270,7 +272,8 @@ export default function APIPage() {
                       onScroll={() => handleScroll(endpoint.title)}
                       className="overflow-x-auto py-2 snap-x snap-mandatory flex gap-4 px-2 scroll-smooth"
                     >
-                      {response.data.map((project: any, index: number) => (
+                      {response.data.map((project: any, index: number) => {
+                        console.log("PROJECT ITEM:", project);
                         <InteractiveCard
                           key={index}
                           className="
@@ -331,7 +334,7 @@ export default function APIPage() {
                             </div>
                           </div>
                         </InteractiveCard>
-                      ))}
+                      })}
                     </div>
 
                     {scrollState[endpoint.title]?.right && (
