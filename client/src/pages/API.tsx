@@ -273,7 +273,7 @@ export default function APIPage() {
                       className="overflow-x-auto py-2 snap-x snap-mandatory flex gap-4 px-2 scroll-smooth"
                     >
                       {response.data.map((project: any, index: number) => {
-                        console.log("PROJECT ITEM:", project);
+                        // console.log("PROJECT ITEM:", project);
                         <InteractiveCard
                           key={index}
                           className="
@@ -286,9 +286,9 @@ export default function APIPage() {
                         >
                           <div className="flex flex-col space-y-3 p-5">
                             <div className="space-y-1">
-                              {project.gitlab_url ? (
+                              {project.github_url ? (
                                 <a
-                                  href={project.gitlab_url}
+                                  href={project.github_url}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="inline-block pointer-events-auto relative z-10"
