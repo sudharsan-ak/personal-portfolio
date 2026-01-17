@@ -279,9 +279,23 @@ export default function APIPage() {
                         >
                           <div className="flex flex-col space-y-3 p-5">
                             <div className="space-y-1">
-                              <h3 className="text-xl font-semibold leading-snug text-gray-900 group-hover:text-white transition-colors">
-                                {project.title}
-                              </h3>
+                              {project.gitlab_url ? (
+                                <a
+                                  href={project.gitlab_url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-block"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <h3 className="text-xl font-semibold leading-snug text-gray-900 group-hover:text-white transition-colors hover:underline">
+                                    {project.title}
+                                  </h3>
+                                </a>
+                              ) : (
+                                <h3 className="text-xl font-semibold leading-snug text-gray-900 group-hover:text-white transition-colors">
+                                  {project.title}
+                                </h3>
+                              )}
 
                               <p className="text-xs font-medium tracking-wide uppercase text-gray-500 group-hover:text-gray-300 transition-colors">
                                 {project.year}
