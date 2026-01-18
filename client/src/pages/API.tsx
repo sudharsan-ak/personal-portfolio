@@ -272,7 +272,7 @@ export default function APIPage() {
                       onScroll={() => handleScroll(endpoint.title)}
                       className="overflow-x-auto py-2 snap-x snap-mandatory flex gap-4 px-2 scroll-smooth"
                     >
-                      {response.data.map((project: any, index: number) => {
+                      {response.data.map((project: any, index: number) => (
                         // console.log("PROJECT ITEM:", project);
                         <InteractiveCard
                           key={index}
@@ -286,9 +286,9 @@ export default function APIPage() {
                         >
                           <div className="flex flex-col space-y-3 p-5">
                             <div className="space-y-1">
-                              {project.gitlab_url ? (
+                              {project.github_url ? (
                                 <a
-                                  href={project.gitlab_url}
+                                  href={project.github_url}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="inline-block pointer-events-auto relative z-10"
@@ -311,7 +311,7 @@ export default function APIPage() {
                               </p>
                             </div>
 
-                            <p className="text-sm leading-relaxed text-gray-700 group-hover:text-gray-200 transition-colors line-clamp-4">
+                            <p className="text-sm leading-relaxed text-gray-700 group-hover:text-gray-200 transition-colors line-clamp-3 group-hover:line-clamp-none">
                               {project.description}
                             </p>
 
@@ -334,7 +334,7 @@ export default function APIPage() {
                             </div>
                           </div>
                         </InteractiveCard>
-                      })}
+                      ))}
                     </div>
 
                     {scrollState[endpoint.title]?.right && (
