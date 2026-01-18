@@ -1,1 +1,11 @@
 node_modules
+
+# Frontend build output (DO NOT commit)
+dist/public
+
+# OS junk
+.DS_Store
+
+# Env files
+.env
+.env.local
