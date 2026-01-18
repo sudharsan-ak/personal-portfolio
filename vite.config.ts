@@ -31,6 +31,14 @@ export default defineConfig({
     emptyOutDir: true,
   },
   server: {
+    // ✅ ADD THIS PROXY
+    proxy: {
+      "/api": {
+        target: "https://sudharsansrinivasan.com",
+        changeOrigin: true,
+        secure: true,
+      },
+    },
     fs: {
       strict: true,
       deny: ["**/.*"],
