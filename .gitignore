@@ -9,3 +9,5 @@ dist/public
 # Env files
 .env
 .env.local
+
+package-lock.json
