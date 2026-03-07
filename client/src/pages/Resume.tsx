@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
+import "react-pdf/dist/esm/Page/TextLayer.css";
 import { ZoomIn, ZoomOut, RefreshCcw, Download } from "lucide-react";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
@@ -90,7 +91,7 @@ export default function Resume() {
               key={`page_${index + 1}`}
               pageNumber={index + 1}
               width={pageWidth * scale}
-              renderTextLayer={false}
+              renderTextLayer={true}
               renderAnnotationLayer={true}
             />
           ))}
