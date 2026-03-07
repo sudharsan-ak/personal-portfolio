@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Menu, X, Moon, Sun, Eye, Monitor } from "lucide-react";
 import InteractiveButton from "@/components/ui/InteractiveButton";
-import headshotImage from "@/assets/generated_images/Professional_developer_headshot_96bafc1e.png";
+import headshotImage from "@/assets/generated_images/Sudharsan_Srinivasan_Graduation.jpg";
 
 type ThemeOption = "light" | "dark" | "nightowl" | "system";
 

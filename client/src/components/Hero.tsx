@@ -1,5 +1,5 @@
 import { Github, Linkedin, Mail } from "lucide-react";
-import headshotImage from "@/assets/generated_images/Professional_developer_headshot_96bafc1e.png";
+import headshotImage from "@/assets/generated_images/Sudharsan_Srinivasan_Graduation.jpg";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import InteractiveButton from "@/components/ui/InteractiveButton";
