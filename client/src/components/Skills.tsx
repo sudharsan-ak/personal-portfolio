@@ -20,23 +20,25 @@ import InteractiveCard from "@/components/ui/InteractiveCard";
 
 const icons: Record<string, JSX.Element> = {
   Languages: <Code2 className="h-5 w-5 text-primary" />,
-  "Databases/Servers": <Database className="h-5 w-5 text-primary" />,
-  "Frameworks & Libraries": <Layers className="h-5 w-5 text-primary" />,
-  "Web Technologies": <Globe className="h-5 w-5 text-primary" />,
+  Frontend: <Globe className="h-5 w-5 text-primary" />,
+  Backend: <Layers className="h-5 w-5 text-primary" />,
+  "Cloud/DevOps": <Wrench className="h-5 w-5 text-primary" />,
+  Databases: <Database className="h-5 w-5 text-primary" />,
   Testing: <FlaskConical className="h-5 w-5 text-primary" />,
-  "Tools & Platforms": <Wrench className="h-5 w-5 text-primary" />,
+  Tools: <Wrench className="h-5 w-5 text-primary" />,
   "Operating Systems": <Monitor className="h-5 w-5 text-primary" />,
   "AI Tools": <Brain className="h-5 w-5 text-primary" />,
 };
 
 export default function Skills() {
   const skillCategories = [
-    { category: "Languages", skills: ["JavaScript (ES6+)", "TypeScript", "Java", "C/C++", "PHP", "SQL"] },
-    { category: "Databases/Servers", skills: ["MongoDB", "MySQL", "SQL Server", "Tomcat"] },
-    { category: "Frameworks & Libraries", skills: ["Meteor", "React", "Angular", "Node.js", "Lodash", "Express", "NestJS", "Laravel"] },
-    { category: "Web Technologies", skills: ["HTML5", "CSS3", "Jade", "jQuery", "XML", "WordPress"] },
-    { category: "Testing", skills: ["JUnit", "Selenium IDE/WebDriver", "JaCoCo", "Pitclipse"] },
-    { category: "Tools & Platforms", skills: ["Cursor", "VS Code", "Git", "Eclipse", "NetBeans", "Studio3T", "Jira", "Kanban", "Notion", "Monday.com"] },
+    { category: "Languages", skills: ["JavaScript (ES6+)", "TypeScript", "Python", "Java", "C/C++", "PHP", "SQL", "OOP"] },
+    { category: "Frontend", skills: ["HTML5", "CSS3", "React", "Angular", "Tailwind CSS", "Bootstrap", "Material UI", "WordPress", "jQuery"] },
+    { category: "Backend", skills: ["Node.js", "Express", "NestJS", "Laravel", "Meteor", "REST APIs", "Jade", "Lodash", "XML"] },
+    { category: "Cloud/DevOps", skills: ["AWS Lambda", "Vercel", "Docker", "Nginx", "Jenkins", "CI/CD", "Prometheus", "Grafana", "Humio"] },
+    { category: "Databases", skills: ["PostgreSQL", "MySQL", "MongoDB", "Redis", "Supabase", "SQL Server", "Tomcat"] },
+    { category: "Testing", skills: ["JUnit", "Selenium IDE/WebDriver", "Playwright", "Cypress", "JaCoCo", "Pitclipse"] },
+    { category: "Tools", skills: ["Git/GitHub", "Cursor", "VS Code", "Eclipse", "NetBeans", "Studio3T", "Jira", "Agile", "Kanban", "Figma", "Notion", "Monday.com"] },
     { category: "Operating Systems", skills: ["Windows", "Linux (Ubuntu)"] },
     { category: "AI Tools", skills: ["ChatGPT", "Claude", "Gemini", "GitHub Copilot", "Grok"] },
   ];
