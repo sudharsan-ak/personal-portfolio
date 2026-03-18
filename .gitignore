@@ -1,13 +1,22 @@
-node_modules
+node_modules/
 
-# Frontend build output (DO NOT commit)
-dist/public
+# Build output
+dist/
+coverage/
 
 # OS junk
 .DS_Store
+Thumbs.db
 
 # Env files
 .env
-.env.local
+.env.*
+!.env.example
 
-package-lock.json
+# Local platform/tooling
+.vercel/
+*.local
+*.log
+
+# Generated scratch files
+client/src/Pasted-*.txt
