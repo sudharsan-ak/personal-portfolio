@@ -27,7 +27,7 @@ export default function Projects() {
       githubUrl: "https://github.com/sudharsan-ak/recruiter-finder",
     },
     {
-      title: "LinkedReach AI",
+      title: "LinkedIn Reach AI",
       tagline: "Find recruiter emails using AI from any LinkedIn profile",
       description:
         "A Chrome extension that auto-detects a recruiter's name, company, and domain from the active LinkedIn profile tab. It uses Groq to cross-reference Hunter, Apollo, and Snov search results, then returns ranked email candidates with confidence scores and source attribution.",
@@ -46,8 +46,8 @@ export default function Projects() {
         "Secure local API key storage through Chrome storage",
       ],
       imagePath: "/projects/linkedinreach-ai.png",
-      imageAlt: "LinkedReach AI extension popup on a LinkedIn profile",
-      githubUrl: "https://github.com/sudharsan-ak/linkedreach-ai",
+      imageAlt: "LinkedIn Reach AI extension popup on a LinkedIn profile",
+      githubUrl: "https://github.com/sudharsan-ak/linkedin-reach-ai",
     },
     {
       title: "JobFlow Automator",
