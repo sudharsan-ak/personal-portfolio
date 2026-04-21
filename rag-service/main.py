@@ -29,7 +29,7 @@ SUPABASE_URL = os.environ["SUPABASE_URL"]
 SUPABASE_SERVICE_KEY = os.environ["SUPABASE_SERVICE_KEY"]
 GROQ_API_KEY = os.environ["GROQ_API_KEY"]
 TOP_K = 5
-MATCH_THRESHOLD = 0.1
+MATCH_THRESHOLD = 0.05
 
 # module-level singletons — loaded once at startup
 _model: SentenceTransformer | None = None
