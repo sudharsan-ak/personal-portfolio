@@ -1,0 +1,82 @@
+[
+  {
+    "question": "What is Sudharsan's current job title?",
+    "expected": "Software Engineer at Fortress Information Security"
+  },
+  {
+    "question": "How many years of experience does Sudharsan have?",
+    "expected": "5+ years"
+  },
+  {
+    "question": "What frontend frameworks does Sudharsan know?",
+    "expected": "React, Tailwind CSS, Bootstrap, Material UI, HTML, CSS"
+  },
+  {
+    "question": "What databases has Sudharsan worked with?",
+    "expected": "MongoDB, PostgreSQL, MySQL, Supabase, Redis"
+  },
+  {
+    "question": "What cloud platforms has Sudharsan used?",
+    "expected": "AWS Lambda, Vercel, Docker"
+  },
+  {
+    "question": "Where did Sudharsan complete his Master's degree?",
+    "expected": "University of Texas at Arlington"
+  },
+  {
+    "question": "What was Sudharsan's undergraduate degree?",
+    "expected": "Bachelor of Engineering in Computer Science from Anna University"
+  },
+  {
+    "question": "What performance improvement did Sudharsan achieve with MongoDB Atlas Search?",
+    "expected": "Cut query latency by 35%"
+  },
+  {
+    "question": "How many junior engineers did Sudharsan tech lead?",
+    "expected": "4 junior engineers"
+  },
+  {
+    "question": "What is the JobFlow Automator project?",
+    "expected": "A TypeScript/Node.js CLI tool with Playwright that automates job applications across 3 job boards, reducing manual effort by 75%"
+  },
+  {
+    "question": "What is the LinkedIn Recruiter Finder?",
+    "expected": "A Chrome extension that scans LinkedIn job and People pages to find recruiter profiles and track outreach history"
+  },
+  {
+    "question": "What technologies power the portfolio website?",
+    "expected": "React, TypeScript, Tailwind CSS, Supabase, AWS Lambda, Vercel"
+  },
+  {
+    "question": "What did Sudharsan do at Cognizant?",
+    "expected": "Developed and optimized COBOL backend jobs for Policy Management Systems on IBM Mainframe, improving execution times by 10%"
+  },
+  {
+    "question": "What was Sudharsan's role at Merch?",
+    "expected": "Full Stack Developer Intern — built frontend pages with WordPress, increased organic traffic by 20%, reduced load time to 5 seconds"
+  },
+  {
+    "question": "What languages does Sudharsan know (programming)?",
+    "expected": "JavaScript, TypeScript, Python, Java, C/C++, PHP, SQL"
+  },
+  {
+    "question": "What monitoring tools has Sudharsan used?",
+    "expected": "Prometheus, Grafana, Humio"
+  },
+  {
+    "question": "How did Sudharsan handle the SlickGrid performance issue?",
+    "expected": "Replaced multiple find queries with a MongoDB aggregation pipeline to handle 250K+ records and reduce latency"
+  },
+  {
+    "question": "What is Sudharsan's location and is he open to relocation?",
+    "expected": "Dallas, TX and open to relocation"
+  },
+  {
+    "question": "What testing frameworks has Sudharsan used?",
+    "expected": "Jest, React Testing Library, Selenium, JUnit, Playwright, Cypress"
+  },
+  {
+    "question": "What did Sudharsan achieve with CI/CD at Fortress?",
+    "expected": "Led CI/CD adoption using automated pipelines, shortening deployment and testing cycles and improving release predictability"
+  }
+]
