@@ -50,7 +50,7 @@ export default function About() {
         <motion.div whileHover={{ y: -5 }} transition={{ duration: 0.3 }}>
           <InteractiveCard className="mb-16">
             <p className="text-base leading-relaxed mb-4">
-              Full Stack Developer with 5+ years of experience in building
+              Full Stack Developer with 6+ years of experience in building
               scalable, interactive web applications using JavaScript, Node.js,
               and MongoDB.
             </p>

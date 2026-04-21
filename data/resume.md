@@ -11,7 +11,7 @@
 - Portfolio: https://sudharsansrinivasan.com
 
 ## Professional Summary
-Full Stack Software Engineer with 5+ years of experience building production web applications using JavaScript/TypeScript, Meteor.js/React, Node.js, and modern API-driven systems. Experienced in shipping end-to-end features, building configurable workflow-heavy user experiences, and improving performance, reliability, and maintainability across complex production systems.
+Full Stack Software Engineer with 6+ years of experience building production web applications using JavaScript/TypeScript, Meteor.js/React, Node.js, and modern API-driven systems. Experienced in shipping end-to-end features, building configurable workflow-heavy user experiences, and improving performance, reliability, and maintainability across complex production systems.
 
 ## Technical Skills — Languages
 Sudharsan knows JavaScript (ES6+), TypeScript, Python, Java, C/C++, PHP, SQL. He is proficient in Object-Oriented Programming (OOP). His primary languages are JavaScript and TypeScript.

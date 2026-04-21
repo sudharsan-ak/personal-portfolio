@@ -1,6 +1,6 @@
 # About Sudharsan Srinivasan
 
-Sudharsan Srinivasan is a Full Stack Software Engineer with 5+ years of professional experience. He is based in Dallas, TX and open to relocation. His name is Sudharsan Srinivasan. People may also ask about "Sudharsan" or "the person behind this portfolio."
+Sudharsan Srinivasan is a Full Stack Software Engineer with 6+ years of professional experience. He is based in Dallas, TX and open to relocation. His name is Sudharsan Srinivasan. People may also ask about "Sudharsan" or "the person behind this portfolio."
 
 ## Personal Summary
 Sudharsan is a software engineer who specializes in building scalable, user-focused web applications. He has expertise in JavaScript, TypeScript, React, Meteor.js, Node.js, and modern API-driven systems. He is passionate about performance, reliability, and clean maintainable code.
@@ -24,4 +24,4 @@ Sudharsan speaks English fluently. Tamil is his native language. He also speaks 
 Sudharsan enjoys basketball and cricket. He also likes travel and movies. His professional interests include web development, open source contribution, and UI/UX design.
 
 ## Years of Experience
-Sudharsan has 5+ years of software engineering experience. He graduated with his Master's degree in 2021 and has been working professionally since 2018.
+Sudharsan has 6+ years of software engineering experience. He graduated with his Master's degree in 2021 and has been working professionally since 2018.
