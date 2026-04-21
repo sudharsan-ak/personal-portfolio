@@ -17,6 +17,7 @@ Thumbs.db
 
 # Local platform/tooling
 .vercel/
+.claude/
 *.local
 *.log
 
