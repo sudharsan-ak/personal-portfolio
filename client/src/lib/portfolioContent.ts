@@ -19,18 +19,20 @@ GitHub: github.com/sudharsan-ak
 
 # Professional Experience
 
-**Software Engineer | Fortress Information Security, Lewisville, TX**  
-*Jun 2023 - Present*  
-- Deliver internal and client-facing features through full SDLC, integrating React/Meteor UI with backend APIs and MongoDB pipelines.  
-- Implement RBAC access control to improve workflow efficiency and system security.  
-- Mentor 3+ junior engineers, lead code reviews, and contribute to SBOM/HBOM initiatives.  
-- Collaborate with major U.S. energy utilities and renewable energy providers.
+**Software Engineer | Fortress Information Security, Lewisville, TX**
+*Jun 2023 - Apr 2026*
+- Introduced MongoDB Atlas Search for grid views, using optimized indexing and aggregation pipelines to cut query latency by 35%.
+- Resolved a severe production performance issue in SlickGrid handling 250K+ records by replacing multiple find queries with a MongoDB aggregation pipeline.
+- Developed a reusable bulk update capability adopted across multiple business objects.
+- Engineered a configurable custom tabs system for workflow-heavy product surfaces.
+- Delivered a real-time bi-directional messaging feature using Meteor publish/subscribe.
+- Tech led 4 junior engineers, reducing PR turnaround time by 10%.
 
-**Associate Software Engineer | Fortress Information Security, Lewisville, TX**  
-*Jun 2021 - May 2023*  
-- Participated and led Scrum ceremonies (sprint planning, daily standups, retrospectives).  
-- Optimized internal cyber risk tools (~15% faster processing) and refactored UI components (~30% faster load).  
-- Enhanced MongoDB workflows for smoother client experiences.
+**Associate Software Engineer | Fortress Information Security, Lewisville, TX**
+*Jun 2021 - May 2023*
+- Led Scrum execution and CI/CD adoption across the team.
+- Optimized cyber risk processing using JavaScript/Meteor and MongoDB, boosting performance by 15%, reducing load time by 30%, and lowering data retrieval latency by 40%.
+- Implemented unit, integration, and E2E tests using Jest, React Testing Library, Selenium, and JUnit.
 
 **Full Stack Developer Intern | Merch, Lewisville, TX**  
 *Aug 2020 - May 2021*  

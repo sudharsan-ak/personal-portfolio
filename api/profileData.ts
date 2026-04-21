@@ -32,19 +32,33 @@ export const profileData = {
     {
       company: "Fortress Information Security",
       role: "Software Engineer",
-      duration: "Jun 2021 - Present",
-      location: "Orlando, FL",
+      duration: "Jun 2023 - Apr 2026",
+      location: "Lewisville, TX",
       summary:
-        "Develops tools for Cyber Supply Chain and Asset Vulnerability Management using Meteor, MongoDB, and Lodash. Optimizes internal tools and ensures secure and performant web platforms.",
+        "Delivered full-stack features for Cyber Supply Chain and Asset Vulnerability Management using JavaScript/TypeScript, Meteor, React, and MongoDB.",
       achievements: [
-        "Optimized internal tools, reducing data processing time by ~15%.",
-        "Refactored frontend JavaScript code modules, reduced load times by ~30%.",
-        "Delivered solutions through full SDLC, collaborating with 5+ cross-functional team members.",
-        "Integrated frontend with backend APIs and MongoDB workflows, handling high-volume data.",
-        "Implemented RBAC access control, conducted code reviews, and mentored junior engineers.",
-        "Contributed to SBOM and HBOM initiatives for software transparency and security compliance.",
+        "Introduced MongoDB Atlas Search for grid views, using optimized indexing and aggregation pipelines to cut query latency by 35%.",
+        "Resolved a severe production performance issue in SlickGrid handling 250K+ records by replacing multiple find queries with a single MongoDB aggregation pipeline.",
+        "Developed a reusable bulk update capability adopted across multiple business objects, eliminating duplicated update logic.",
+        "Engineered a configurable custom tabs system for workflow-heavy product surfaces.",
+        "Delivered a real-time bi-directional messaging feature using Meteor publish/subscribe.",
+        "Tech led 4 junior engineers, driving code reviews and reducing PR turnaround time by 10%.",
       ],
-      technologies: ["Meteor", "HTML", "CSS", "Jade", "Lodash", "JavaScript", "MongoDB", "Node.js"],
+      technologies: ["JavaScript", "TypeScript", "Meteor", "React", "MongoDB", "MongoDB Atlas Search", "SlickGrid", "Node.js"],
+    },
+    {
+      company: "Fortress Information Security",
+      role: "Associate Software Engineer",
+      duration: "Jun 2021 - May 2023",
+      location: "Lewisville, TX",
+      summary:
+        "Led Scrum execution and optimized cyber risk processing tools using JavaScript, Meteor, and MongoDB.",
+      achievements: [
+        "Led Scrum execution and CI/CD adoption across the team.",
+        "Optimized cyber risk processing, boosting performance by 15%, reducing load time by 30%, and lowering data retrieval latency by 40%.",
+        "Implemented unit, integration, and E2E tests using Jest, React Testing Library, Selenium, and JUnit.",
+      ],
+      technologies: ["JavaScript", "Meteor", "MongoDB", "React", "Jest", "Selenium", "CI/CD"],
     },
     {
       company: "Merch",
