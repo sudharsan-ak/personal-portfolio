@@ -69,6 +69,17 @@ Full Stack Software Engineer with 5+ years of experience building production web
 
 **Technologies:** COBOL, IBM Mainframe, Jira, Kanban
 
+## Projects
+
+### JobFlow Automator
+TypeScript, Node.js, Playwright CLI tool that automates job applications across 3 job boards with a human-in-the-loop workflow, reducing manual effort by 75%.
+
+### LinkedIn Recruiter Finder
+JavaScript Chrome extension that scans LinkedIn job and People pages to find recruiter profiles, track outreach history, and reduce manual research time during job searches.
+
+### Personal Portfolio Website
+React, TypeScript, Tailwind CSS portfolio with serverless contact form (Supabase/PostgreSQL + Nodemailer), serverless Projects REST API on AWS Lambda, and an AI assistant powered by a Python FastAPI RAG service using sentence-transformers and pgvector for semantic search.
+
 ## Education
 
 - **Master of Science (Computer Science)** — University of Texas at Arlington | Aug 2019 – May 2021
