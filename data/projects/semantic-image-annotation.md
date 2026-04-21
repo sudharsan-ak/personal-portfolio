@@ -12,4 +12,4 @@ MATLAB, Computer Vision, Image Processing, Multi-Label Classification
 - Demonstrates knowledge of computer vision, image processing, and machine learning classification
 
 ## Links
-- GitHub: https://github.com/sudharsan-ak
+- GitHub: https://github.com/sudharsan-ak/Multi-Label-Image-Annotation

@@ -96,7 +96,7 @@ Sudharsan built his personal portfolio website at https://sudharsansrinivasan.co
 The Event Management System is a Java web application built by Sudharsan for event booking and cancellation using Java Servlets and JSP. It has 100% statement coverage and PIT mutation coverage achieved through automated Selenium tests and JUnit. GitHub: https://github.com/sudharsan-ak/CSE-6329-Catering-Management-System. Technologies: Java, JSP, MySQL Workbench, JUnit, Selenium, Eclipse.
 
 ## Projects — Semantic Understanding of Image using Multi-Label Image Annotation
-This is a MATLAB-based computer vision project by Sudharsan that performs semantic understanding of images using multi-label image annotation techniques. It identifies multiple objects and concepts in a single image. Technologies: MATLAB, Computer Vision, Image Processing, Multi-Label Classification.
+This is a MATLAB-based computer vision project by Sudharsan that performs semantic understanding of images using multi-label image annotation techniques. It identifies multiple objects and concepts in a single image. Technologies: MATLAB, Computer Vision, Image Processing, Multi-Label Classification. GitHub: https://github.com/sudharsan-ak/Multi-Label-Image-Annotation.
 
 ## Languages Spoken
 - English: Fluent
