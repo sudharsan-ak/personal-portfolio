@@ -14,8 +14,8 @@ Sudharsan lives in Dallas, TX and is open to relocation. His location is Dallas,
 - Portfolio website: https://sudharsansrinivasan.com
 - Email: sudharsanak1010@gmail.com
 
-## Current Job
-Sudharsan currently works as a Software Engineer at Fortress Information Security. He has been there since June 2023. His current role is Software Engineer. He tech leads 4 junior engineers, drives code reviews, and owns delivery quality across multiple product surfaces.
+## Most Recent Job
+Sudharsan most recently worked as a Software Engineer at Fortress Information Security from June 2023 to April 2026. He is no longer at Fortress. He tech led 4 junior engineers, drove code reviews, and owned delivery quality across multiple product surfaces.
 
 ## Languages Spoken
 Sudharsan speaks English fluently. Tamil is his native language. He also speaks Hindi at an intermediate level.

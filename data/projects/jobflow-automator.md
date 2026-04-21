@@ -13,4 +13,4 @@ TypeScript, Node.js, Playwright, CLI
 - Human-in-the-loop design ensures user reviews and approves each submission before it goes through
 
 ## Links
-- GitHub: https://github.com/sudharsan-ak
+- GitHub: https://github.com/sudharsan-ak/job-autopilot

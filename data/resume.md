@@ -31,8 +31,8 @@ Sudharsan has worked with PostgreSQL, MySQL, Supabase, MongoDB, and Redis. He ha
 ## Technical Skills — Tools
 Sudharsan uses Git, GitLab, GitHub, Agile methodologies, Jira, Figma, Prometheus, Grafana, and Humio. He is familiar with AI tools like ChatGPT and Claude.
 
-## Work Experience — Software Engineer at Fortress Information Security (Current Job)
-Sudharsan works as a Software Engineer at Fortress Information Security from June 2023 to April 2026 in Lewisville, TX. This is his current and most recent job. Fortress Information Security is a cybersecurity company focused on Cyber Supply Chain and Asset Vulnerability Management.
+## Work Experience — Software Engineer at Fortress Information Security
+Sudharsan worked as a Software Engineer at Fortress Information Security from June 2023 to April 2026 in Lewisville, TX. This was his most recent job. He is no longer at Fortress as of April 2026. Fortress Information Security is a cybersecurity company focused on Cyber Supply Chain and Asset Vulnerability Management.
 
 Key achievements at Fortress as Software Engineer:
 - Introduced MongoDB Atlas Search for grid views, using optimized indexing and aggregation pipelines to cut query latency by 35%
@@ -81,13 +81,22 @@ Sudharsan has a Master of Science in Computer Science from the University of Tex
 Sudharsan has a Bachelor of Engineering in Computer Science and Engineering from Anna University. He attended from July 2013 to April 2017. His undergraduate degree is from Anna University in India.
 
 ## Projects — JobFlow Automator
-The JobFlow Automator is a project built by Sudharsan. It is a TypeScript and Node.js CLI tool that uses Playwright browser automation with a human-in-the-loop workflow to automate job applications across 3 job boards. It reduces manual job application effort by 75%. The JobFlow Automator project is on GitHub at https://github.com/sudharsan-ak. Technologies: TypeScript, Node.js, Playwright.
+The JobFlow Automator is a project built by Sudharsan. It is a TypeScript and Node.js CLI tool that uses Playwright browser automation with a human-in-the-loop workflow to automate job applications across 3 job boards. It reduces manual job application effort by 75%. The JobFlow Automator project is on GitHub at https://github.com/sudharsan-ak/job-autopilot. Technologies: TypeScript, Node.js, Playwright.
 
 ## Projects — LinkedIn Recruiter Finder
-The LinkedIn Recruiter Finder is a Chrome extension built by Sudharsan. It scans LinkedIn job pages and People pages to find recruiter profiles, tracks outreach history, and reduces manual research time during job searches. It is built with JavaScript and the Chrome Extension API. The LinkedIn Recruiter Finder is on GitHub at https://github.com/sudharsan-ak.
+The LinkedIn Recruiter Finder is a Chrome extension built by Sudharsan. It scans LinkedIn job pages and People pages to find recruiter profiles, tracks outreach history, and reduces manual research time during job searches. It is built with JavaScript and the Chrome Extension API. The LinkedIn Recruiter Finder is on GitHub at https://github.com/sudharsan-ak/recruiter-finder.
+
+## Projects — LinkedReach AI
+LinkedReach AI is a Chrome extension built by Sudharsan that automates recruiter email discovery on LinkedIn. When visiting a LinkedIn profile, it scrapes the person's name, company, and domain, then uses Groq LLM and web search to infer likely email addresses with confidence scores. It is privacy-conscious — all API keys stay on-device. Built with JavaScript, Chrome Extension Manifest V3, and Groq. GitHub: https://github.com/sudharsan-ak/linkedin-reach-ai.
 
 ## Projects — Personal Portfolio Website
 Sudharsan built his personal portfolio website at https://sudharsansrinivasan.com. It is built with React, TypeScript, and Tailwind CSS. It includes a serverless contact form using Supabase, PostgreSQL, and Nodemailer. It has a serverless Projects REST API on AWS Lambda and Supabase. It features an AI chat assistant powered by a Python FastAPI RAG service using sentence-transformers and pgvector for semantic search. The portfolio is deployed on Vercel.
+
+## Projects — Event Management System
+The Event Management System is a Java web application built by Sudharsan for event booking and cancellation using Java Servlets and JSP. It has 100% statement coverage and PIT mutation coverage achieved through automated Selenium tests and JUnit. GitHub: https://github.com/sudharsan-ak/CSE-6329-Catering-Management-System. Technologies: Java, JSP, MySQL Workbench, JUnit, Selenium, Eclipse.
+
+## Projects — Semantic Understanding of Image using Multi-Label Image Annotation
+This is a MATLAB-based computer vision project by Sudharsan that performs semantic understanding of images using multi-label image annotation techniques. It identifies multiple objects and concepts in a single image. Technologies: MATLAB, Computer Vision, Image Processing, Multi-Label Classification.
 
 ## Languages Spoken
 - English: Fluent

@@ -13,4 +13,4 @@ JavaScript, Chrome Extension API, HTML, CSS
 - Uses Chrome storage API for persistent history across sessions
 
 ## Links
-- GitHub: https://github.com/sudharsan-ak
+- GitHub: https://github.com/sudharsan-ak/recruiter-finder
