@@ -19,12 +19,12 @@ export default function Experience() {
       logo: fortressLogo,
       technologies: ["JavaScript", "TypeScript", "Meteor", "React", "MongoDB", "Node.js", "MongoDB Atlas Search", "SlickGrid"],
       achievements: [
-        "Introduced MongoDB Atlas Search for grid views, using optimized indexing and aggregation pipelines to cut query latency by 35%",
-        "Resolved a severe production performance issue in SlickGrid handling 250K+ records by replacing multiple find queries with a single MongoDB aggregation pipeline",
-        "Developed a reusable bulk update capability adopted across multiple business objects, eliminating duplicated update logic across the product",
-        "Engineered a configurable custom tabs system for workflow-heavy product surfaces, enabling teams to ship new views without code changes",
-        "Delivered a real-time bi-directional messaging feature using Meteor publish/subscribe for instant in-app communication",
-        "Tech led 4 junior engineers, driving code reviews and reducing PR turnaround time by 10%",
+        "Introduced MongoDB Atlas Search for grid views while preserving backward-compatible search, filters, and sorting, using optimized indexing and aggregation pipelines to cut query latency by 35%",
+        "Resolved a severe SlickGrid performance issue handling 250K+ records by replacing multiple find queries with a MongoDB aggregation pipeline, restoring reliable grid behavior",
+        "Built a reusable bulk update workflow across multiple business objects, syncing user changes with backend updates, database writes, and aggregation refreshes so grid workflows stayed aligned",
+        "Engineered a configurable custom tabs system for 500+ users, translating per-subscription settings into dynamic UI behavior with Redis-backed configuration retrieval",
+        "Delivered real-time bidirectional messaging between an AWS-hosted platform and vendor portal using Meteor publish/subscribe and reactive data flows",
+        "Led 4 junior engineers through code reviews, improving maintainability and reducing PR turnaround by 10%",
       ],
     },
     {
@@ -36,9 +36,9 @@ export default function Experience() {
       logo: fortressLogo,
       technologies: ["JavaScript", "Meteor", "MongoDB", "React", "Jest", "Selenium", "CI/CD"],
       achievements: [
-        "Led Scrum execution and CI/CD adoption, running sprint planning, standups, and retrospectives across the team",
-        "Optimized cyber risk processing using JavaScript/Meteor and MongoDB, boosting performance by 15%, reducing load time by 30%, and lowering data retrieval latency by 40%",
-        "Implemented unit, integration, and E2E tests using Jest, React Testing Library, Selenium, and JUnit, improving release confidence",
+        "Led Scrum execution and CI/CD adoption using sprint planning, standups, retrospectives, and automated pipelines, shortening deployment and testing cycles",
+        "Optimized cyber risk processing with JavaScript/Meteor, Lodash-based UI components, and MongoDB query/indexing improvements, boosting performance by 15%, reducing load time by 30%, and lowering data retrieval latency by 40%",
+        "Implemented unit, integration, and E2E tests for React/JavaScript features using Jest, React Testing Library, Selenium, and JUnit, reducing regressions and improving release confidence",
       ],
     },
     {
