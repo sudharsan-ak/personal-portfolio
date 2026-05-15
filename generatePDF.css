@@ -1,0 +1,330 @@
+@media print {
+  @page {
+    size: A4;
+    margin: 10mm;
+  }
+
+  html.pdf-export,
+  html.pdf-export body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .pdf-export *,
+  .pdf-export *::before,
+  .pdf-export *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .pdf-export nav {
+    position: static !important;
+    box-shadow: none !important;
+    border-bottom: 1px solid hsl(var(--border)) !important;
+    background: hsl(var(--background)) !important;
+    backdrop-filter: none !important;
+  }
+
+  .pdf-export #projects,
+  .pdf-export #skills,
+  .pdf-export #about,
+  .pdf-export #contact {
+    background: hsl(var(--muted) / 0.3) !important;
+    padding: 30px 32px !important;
+  }
+
+  .pdf-export #skills,
+  .pdf-export #about,
+  .pdf-export #contact {
+    break-before: page;
+  }
+
+  .pdf-export #projects h2,
+  .pdf-export .pdf-experience-page h2,
+  .pdf-export #skills h2,
+  .pdf-export #about h2,
+  .pdf-export #contact h2 {
+    font-size: 34px !important;
+    line-height: 1.1 !important;
+    font-weight: 800 !important;
+    margin-bottom: 20px !important;
+  }
+
+  .pdf-export .pdf-project-list {
+    display: grid !important;
+    gap: 14px !important;
+  }
+
+  .pdf-export .pdf-project-list > *,
+  .pdf-export .pdf-experience-list > * {
+    margin-top: 0 !important;
+  }
+
+  .pdf-export .pdf-experience-list {
+    display: block !important;
+  }
+
+  .pdf-export .pdf-experience-list > * + * {
+    margin-top: 8px !important;
+  }
+
+  .pdf-export section#experience {
+    padding: 0 !important;
+    background: transparent !important;
+  }
+
+  .pdf-export .pdf-experience-page {
+    break-before: page !important;
+    background: hsl(var(--muted) / 0.3) !important;
+    padding: 28px 32px !important;
+  }
+
+  .pdf-export .pdf-experience-page + .pdf-experience-page {
+    padding-top: 36px !important;
+  }
+
+  .pdf-export .pdf-experience-page h2 {
+    text-align: center !important;
+  }
+
+  .pdf-export .pdf-project-card {
+    break-inside: avoid !important;
+    padding: 14px 16px !important;
+    box-shadow: 0 1px 4px hsl(0 0% 0% / 0.12) !important;
+  }
+
+  .pdf-export .pdf-project-card > div {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 150px !important;
+    gap: 14px !important;
+    align-items: start !important;
+  }
+
+  .pdf-export .pdf-project-card h3 {
+    font-size: 16px !important;
+    line-height: 1.15 !important;
+  }
+
+  .pdf-export .pdf-project-card p {
+    font-size: 10px !important;
+    line-height: 1.35 !important;
+  }
+
+  .pdf-export .pdf-project-card [class*="space-y-4"] {
+    gap: 8px !important;
+  }
+
+  .pdf-export .pdf-project-card [class*="max-h-0"] {
+    display: none !important;
+  }
+
+  .pdf-export .pdf-project-card [class*="inline-flex"] {
+    font-size: 9px !important;
+    line-height: 1.1 !important;
+    padding: 4px 6px !important;
+  }
+
+  .pdf-export .pdf-project-card a[class*="inline-flex"] {
+    width: 26px !important;
+    height: 26px !important;
+    padding: 0 !important;
+  }
+
+  .pdf-export .pdf-project-card > div > div:last-child {
+    overflow: hidden !important;
+    padding: 6px !important;
+  }
+
+  .pdf-export .pdf-project-card > div > div:last-child > div {
+    height: 118px !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    padding: 6px !important;
+  }
+
+  .pdf-export .pdf-project-card img {
+    width: 100% !important;
+    height: 104px !important;
+    min-height: 0 !important;
+    object-fit: contain !important;
+    object-position: top center !important;
+  }
+
+  .pdf-export .pdf-project-more {
+    margin-top: 10px !important;
+  }
+
+  .pdf-export .pdf-project-more a {
+    height: auto !important;
+    padding: 5px 10px !important;
+    font-size: 11px !important;
+  }
+
+  .pdf-export .pdf-experience-card,
+  .pdf-export .pdf-experience-card:hover {
+    break-inside: auto !important;
+    background: #fff !important;
+    padding: 10px 14px !important;
+    box-shadow: 0 1px 4px hsl(0 0% 0% / 0.12) !important;
+  }
+
+  .pdf-export .pdf-experience-card > div {
+    flex-direction: row !important;
+    gap: 12px !important;
+  }
+
+  .pdf-export .pdf-experience-card img {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  .pdf-export .pdf-experience-card h3 {
+    font-size: 16px !important;
+    line-height: 1.2 !important;
+  }
+
+  .pdf-export .pdf-experience-card p,
+  .pdf-export .pdf-experience-card span,
+  .pdf-export .pdf-experience-card li {
+    font-size: 10.5px !important;
+    line-height: 1.35 !important;
+  }
+
+  .pdf-export .pdf-experience-card [class*="space-y-4"] {
+    gap: 6px !important;
+  }
+
+  .pdf-export .pdf-experience-card [class*="inline-flex"] {
+    font-size: 8.5px !important;
+    line-height: 1.1 !important;
+    padding: 3px 6px !important;
+  }
+
+  .pdf-export .pdf-experience-card ul {
+    gap: 4px !important;
+  }
+
+  .pdf-export section#experience button {
+    display: none !important;
+  }
+
+  .pdf-export #skills {
+    padding-top: 34px !important;
+  }
+
+  .pdf-export .pdf-skills-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 14px !important;
+  }
+
+  .pdf-export .pdf-skill-card-wrap,
+  .pdf-export .pdf-skill-card {
+    break-inside: avoid !important;
+  }
+
+  .pdf-export .pdf-skill-card {
+    padding: 18px !important;
+    box-shadow: 0 1px 4px hsl(0 0% 0% / 0.12) !important;
+  }
+
+  .pdf-export .pdf-skill-card h3 {
+    font-size: 17px !important;
+  }
+
+  .pdf-export .pdf-skill-card [class*="inline-flex"] {
+    font-size: 10px !important;
+    line-height: 1.1 !important;
+    padding: 4px 7px !important;
+  }
+
+  .pdf-export .pdf-about-card,
+  .pdf-export .pdf-contact-card {
+    background: #fff !important;
+    break-inside: avoid !important;
+    box-shadow: 0 1px 4px hsl(0 0% 0% / 0.12) !important;
+  }
+
+  .pdf-export #about {
+    padding-top: 34px !important;
+  }
+
+  .pdf-export #about h2,
+  .pdf-export #contact h2 {
+    margin-bottom: 16px !important;
+  }
+
+  .pdf-export #about .pdf-about-card {
+    padding: 20px !important;
+  }
+
+  .pdf-export #about .pdf-about-card p {
+    font-size: 13px !important;
+    line-height: 1.35 !important;
+    margin-bottom: 8px !important;
+  }
+
+  .pdf-export .pdf-about-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+  }
+
+  .pdf-export #about img {
+    width: 48px !important;
+    height: 48px !important;
+  }
+
+  .pdf-export #about h4 {
+    font-size: 18px !important;
+    line-height: 1.25 !important;
+  }
+
+  .pdf-export #about span,
+  .pdf-export #about p {
+    font-size: 12px !important;
+  }
+
+  .pdf-export #contact {
+    padding-top: 34px !important;
+    padding-bottom: 22px !important;
+  }
+
+  .pdf-export .pdf-contact-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 24px !important;
+  }
+
+  .pdf-export .pdf-contact-card {
+    padding: 14px !important;
+  }
+
+  .pdf-export #contact input,
+  .pdf-export #contact textarea {
+    font-size: 17px !important;
+    padding: 12px 14px !important;
+  }
+
+  .pdf-export #contact textarea {
+    height: 150px !important;
+  }
+
+  .pdf-export #contact button {
+    height: 44px !important;
+  }
+
+  .pdf-export .pdf-footer {
+    background: hsl(var(--muted) / 0.3) !important;
+    break-inside: avoid !important;
+    padding: 28px 28px 260px !important;
+    border-top: 1px solid hsl(var(--border)) !important;
+  }
+
+  .pdf-export .pdf-footer > div {
+    align-items: center !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    gap: 26px !important;
+  }
+}

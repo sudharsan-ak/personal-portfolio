@@ -1,4 +1,5 @@
 import puppeteer from "puppeteer";
+import { readFileSync } from "node:fs";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -22,8 +23,68 @@ async function autoScroll(page) {
   });
 }
 
-const url = "https://sudharsansrinivasan.com/api-docs";
-const output = "sudharsansrinivasan-fullpage2.pdf";
+const url = process.env.PDF_URL || "https://sudharsansrinivasan.com";
+const output = process.env.PDF_OUTPUT || "Sudharsan-Srinivasan-Portfolio.pdf";
+
+const pdfStyles = readFileSync(new URL("./generatePDF.css", import.meta.url), "utf8");
+
+async function applyPdfLayout(page) {
+  await page.evaluate(() => {
+    document.documentElement.classList.add("pdf-export");
+
+    const addClass = (selector, className) => {
+      document.querySelectorAll(selector).forEach((node) => {
+        node.classList.add(className);
+      });
+    };
+
+    addClass("#projects > div > div:nth-of-type(1)", "pdf-project-list");
+    addClass("#projects > div > div:nth-of-type(1) > div", "pdf-project-card");
+    addClass("#projects > div > div:nth-of-type(2)", "pdf-project-more");
+
+    const experience = document.querySelector("#experience");
+    const experienceCards = [
+      ...document.querySelectorAll("#experience > div > div:nth-of-type(1) > div"),
+    ];
+    if (experience && experienceCards.length > 0) {
+      experienceCards.forEach((node) => {
+        node.classList.add("pdf-experience-card");
+      });
+      experience.innerHTML = "";
+
+      const page = document.createElement("div");
+      page.className = "pdf-experience-page";
+
+      const heading = document.createElement("h2");
+      heading.textContent = "Experience";
+      page.appendChild(heading);
+
+      const list = document.createElement("div");
+      list.className = "pdf-experience-list";
+      experienceCards.forEach((card) => list.appendChild(card));
+      page.appendChild(list);
+      experience.appendChild(page);
+    }
+
+    addClass("#skills > div > div:nth-of-type(1)", "pdf-skills-grid");
+    document
+      .querySelectorAll("#skills > div > div:nth-of-type(1) > div")
+      .forEach((node) => {
+        node.classList.add("pdf-skill-card-wrap");
+        node.firstElementChild?.classList.add("pdf-skill-card");
+      });
+
+    addClass("#about [class*='shadow-md']", "pdf-about-card");
+    addClass("#about > div > div:nth-of-type(2) > div:nth-of-type(2)", "pdf-about-grid");
+
+    addClass("#contact > div > div:nth-of-type(1)", "pdf-contact-grid");
+    addClass("#contact [class*='shadow-md']", "pdf-contact-card");
+
+    document.querySelector("footer")?.classList.add("pdf-footer");
+  });
+
+  await page.addStyleTag({ content: pdfStyles });
+}
 
 const browser = await puppeteer.launch({
   headless: "new",
@@ -43,6 +104,8 @@ try {
 
   // small wait for animations/fonts/images
   await sleep(1500);
+
+  await applyPdfLayout(page);
 
   await page.pdf({
     path: output,

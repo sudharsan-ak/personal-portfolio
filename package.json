@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "build:lambda:projects": "esbuild lambda/projects.ts --bundle --platform=node --target=node20 --format=cjs --outfile=dist/projects/index.js"
+    "build:lambda:projects": "esbuild lambda/projects.ts --bundle --platform=node --target=node20 --format=cjs --outfile=dist/projects/index.js",
+    "pdf:portfolio": "node generatePDF.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
