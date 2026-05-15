@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hide all fixed/floating buttons while a lightbox is open */
+body.lightbox-open .fixed:not([data-lightbox]) {
+  visibility: hidden;
+  pointer-events: none;
+}
+
 /* LIGHT MODE */
 :root {
   --button-outline: rgba(0,0,0, .10);

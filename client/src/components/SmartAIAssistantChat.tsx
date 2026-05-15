@@ -153,10 +153,9 @@ export default function SmartAIAssistantChat({ isOpen, setIsOpen, buttonRef, the
             >
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
-                linkTarget="_blank"
                 components={{
                   a: ({ node, ...props }) => (
-                    <a className={T.link} {...props} />
+                    <a className={T.link} target="_blank" rel="noopener noreferrer" {...props} />
                   ),
                 }}
               >

@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import InteractiveButton from "@/components/ui/InteractiveButton";
 import InteractiveCard from "@/components/ui/InteractiveCard";
+import ImageLightbox from "@/components/ui/ImageLightbox";
 
 export default function Hero() {
+  const [lightboxOpen, setLightboxOpen] = useState(false);
   const [greeting, setGreeting] = useState("Hello");
   const [greetingIcon, setGreetingIcon] = useState("👋");
 
@@ -146,7 +148,10 @@ export default function Hero() {
             animate={{ y: [-10, 0, -10] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           >
-            <InteractiveCard className="w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 p-0 overflow-hidden border-none rounded-lg hover:scale-105 transition-transform duration-300">
+            <InteractiveCard
+              className="w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 p-0 overflow-hidden border-none rounded-lg hover:scale-105 transition-transform duration-300 cursor-zoom-in"
+              onClick={() => setLightboxOpen(true)}
+            >
               <img
                 src={headshotImage}
                 alt="Sudharsan Srinivasan"
@@ -157,7 +162,15 @@ export default function Hero() {
         </div>
       </div>
 
-      <style jsx>{`
+      {lightboxOpen && (
+        <ImageLightbox
+          src={headshotImage}
+          alt="Sudharsan Srinivasan"
+          onClose={() => setLightboxOpen(false)}
+        />
+      )}
+
+      <style>{`
         @keyframes wave {
           0% { transform: rotate(0deg); }
           15% { transform: rotate(14deg); }

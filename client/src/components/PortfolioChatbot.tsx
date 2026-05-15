@@ -29,7 +29,7 @@ export const PortfolioChatbot = () => {
   }, [messages]);
 
   const sendMessage = async (userMessage: string) => {
-    const newMessages = [...messages, { role: "user", content: userMessage }];
+    const newMessages: Message[] = [...messages, { role: "user" as const, content: userMessage }];
     setMessages(newMessages);
     setIsLoading(true);
 
@@ -48,7 +48,7 @@ export const PortfolioChatbot = () => {
       const data = await response.json();
       const assistantReply = data.reply || "Sorry, I couldn't generate a response.";
 
-      setMessages([...newMessages, { role: "assistant", content: assistantReply }]);
+      setMessages([...newMessages, { role: "assistant" as const, content: assistantReply }]);
     } catch (error) {
       console.error("Chat error:", error);
       toast.error(error instanceof Error ? error.message : "Failed to send message");

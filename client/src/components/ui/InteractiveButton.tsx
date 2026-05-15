@@ -1,15 +1,32 @@
-import { ButtonHTMLAttributes, ReactNode } from "react";
+import React, { ButtonHTMLAttributes, ReactNode } from "react";
 
 interface InteractiveButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
+  variant?: string;
+  size?: string;
+  asChild?: boolean;
 }
 
-export default function InteractiveButton({ children, className = "", ...props }: InteractiveButtonProps) {
+export default function InteractiveButton({ children, className = "", variant: _variant, size, asChild, ...props }: InteractiveButtonProps) {
+  const isIcon = size === "icon";
+  if (asChild) {
+    const child = children as React.ReactElement<React.HTMLAttributes<HTMLElement>>;
+    return (
+      <child.type
+        {...child.props}
+        className={`relative overflow-hidden transition-all duration-300 group
+          rounded-md ${isIcon ? "p-2" : "px-4 py-2"} font-medium
+          bg-background text-foreground border border-border
+          hover:bg-primary/10 hover:shadow-lg hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary
+          ${className} ${(child.props.className as string) ?? ""}`}
+      />
+    );
+  }
   return (
     <button
       {...props}
       className={`relative overflow-hidden transition-all duration-300 group
-        rounded-md px-4 py-2 font-medium
+        rounded-md ${isIcon ? "p-2" : "px-4 py-2"} font-medium
         bg-background text-foreground border border-border
         hover:bg-primary/10 hover:shadow-lg hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary
         ${className}`}

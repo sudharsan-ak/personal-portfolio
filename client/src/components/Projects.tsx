@@ -1,9 +1,12 @@
 import { Badge } from "@/components/ui/badge";
 import { Github } from "lucide-react";
+import { useState } from "react";
 import InteractiveCard from "@/components/ui/InteractiveCard";
 import InteractiveButton from "@/components/ui/InteractiveButton";
+import ImageLightbox from "@/components/ui/ImageLightbox";
 
 export default function Projects() {
+  const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
   const projects = [
     {
       title: "LinkedIn Recruiter Finder",
@@ -73,6 +76,7 @@ export default function Projects() {
   ];
 
   return (
+    <>
     <section
       id="projects"
       className="py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-muted/30"
@@ -150,7 +154,8 @@ export default function Projects() {
                       <img
                         src={project.imagePath}
                         alt={project.imageAlt}
-                        className="h-full min-h-[220px] w-full rounded-lg object-cover object-top"
+                        className="h-full min-h-[220px] w-full rounded-lg object-cover object-top cursor-zoom-in"
+                        onClick={() => setLightbox({ src: project.imagePath!, alt: project.imageAlt })}
                       />
                     ) : (
                       <>
@@ -193,5 +198,14 @@ export default function Projects() {
         </div>
       </div>
     </section>
+
+      {lightbox && (
+        <ImageLightbox
+          src={lightbox.src}
+          alt={lightbox.alt}
+          onClose={() => setLightbox(null)}
+        />
+      )}
+    </>
   );
 }

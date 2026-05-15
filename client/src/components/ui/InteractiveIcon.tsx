@@ -4,6 +4,8 @@ interface InteractiveIconProps {
   children: ReactNode;
   href: string;
   ariaLabel?: string;
+  as?: string;
+  target?: string;
 }
 
 export default function InteractiveIcon({ children, href, ariaLabel }: InteractiveIconProps) {
