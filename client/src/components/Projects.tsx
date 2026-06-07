@@ -9,6 +9,27 @@ export default function Projects() {
   const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
   const projects = [
     {
+      title: "Resume Tailoring Workflow",
+      tagline: "AI-assisted resume tailoring from fit check to recruiter outreach",
+      description:
+        "A privacy-first, 6-stage AI workflow system that takes a master resume and job description, runs a fit check, rewrites bullets from verified evidence, generates a role-specific LaTeX PDF, and drafts recruiter outreach - all from a single AI coding assistant session with no private data committed to git.",
+      technologies: [
+        "PowerShell",
+        "LaTeX",
+        "Claude Code",
+        "Docker",
+        "Markdown",
+      ],
+      highlights: [
+        "6-stage pipeline: fit check → suggestions → bullet rewriting → PDF generation → outreach drafting",
+        "Evidence-grounded rewriting - AI only tailors from claims already in your resume, no hallucinated metrics",
+        "Privacy-first architecture: output is gitignored, all candidate data stays local",
+      ],
+      imagePath: "/projects/resume-tailoring-workflow.png",
+      imageAlt: "Resume Tailoring Workflow running fit check in Cursor with Codex AI assistant",
+      githubUrl: "https://github.com/sudharsan-ak/resume-tailoring-workflow",
+    },
+    {
       title: "LinkedIn Recruiter Finder",
       tagline: "Automate recruiter discovery while you browse LinkedIn",
       description:
@@ -28,29 +49,6 @@ export default function Projects() {
       imagePath: "/projects/recruiter-finder.png",
       imageAlt: "LinkedIn Recruiter Finder extension interface",
       githubUrl: "https://github.com/sudharsan-ak/recruiter-finder",
-    },
-    {
-      title: "LinkedIn Reach AI",
-      tagline: "Find recruiter emails using AI from any LinkedIn profile",
-      description:
-        "A Chrome extension that auto-detects a recruiter's name, company, and domain from the active LinkedIn profile tab. It uses Groq to cross-reference Hunter, Apollo, and Snov search results, then returns ranked email candidates with confidence scores and source attribution.",
-      technologies: [
-        "JavaScript",
-        "Chrome Extension APIs",
-        "Manifest V3",
-        "Groq API",
-        "Serper API",
-        "HTML",
-        "CSS",
-      ],
-      highlights: [
-        "Content-script profile detection on linkedin.com/in/* pages",
-        "Multi-source email inference with LLM-assisted ranking",
-        "Secure local API key storage through Chrome storage",
-      ],
-      imagePath: "/projects/linkedinreach-ai.png",
-      imageAlt: "LinkedIn Reach AI extension popup on a LinkedIn profile",
-      githubUrl: "https://github.com/sudharsan-ak/linkedin-reach-ai",
     },
     {
       title: "JobFlow Automator",

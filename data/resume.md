@@ -80,6 +80,9 @@ Sudharsan built his personal portfolio website at https://sudharsansrinivasan.co
 ## Projects — LinkedIn Recruiter Finder
 The LinkedIn Recruiter Finder is a Chrome extension built by Sudharsan using JavaScript and Chrome Extension Manifest V3. It has a side panel and background scans to automate recruiter discovery on LinkedIn. It builds job intelligence workflows to capture job descriptions, metadata, tech stacks, fit scores, and repost signals. It adds company history caching, scan queues, and bulk company scanning to speed recruiter discovery. GitHub: https://github.com/sudharsan-ak/recruiter-finder.
 
+## Projects — Resume Tailoring Workflow
+The Resume Tailoring Workflow is an open-source, privacy-first AI workflow system built by Sudharsan. It is a 6-stage pipeline that takes a master resume and job description, runs a fit check with scoring, rewrites bullets from verified evidence only, generates a role-specific LaTeX PDF, and drafts recruiter outreach - all from a single AI coding assistant session (Claude Code, Codex, or Copilot). No private candidate data is committed to git. Built with PowerShell, LaTeX, Claude Code, Docker, and Markdown. GitHub: https://github.com/sudharsan-ak/resume-tailoring-workflow.
+
 ## Projects — JobFlow Automator
 The JobFlow Automator is a TypeScript and Node.js CLI tool built by Sudharsan. It uses Playwright browser automation with a human-in-the-loop workflow to automate job applications across 3 job boards, reducing manual job application effort by 75%. GitHub: https://github.com/sudharsan-ak/job-autopilot. Technologies: TypeScript, Node.js, Playwright.
 
