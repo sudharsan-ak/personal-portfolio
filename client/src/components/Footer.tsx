@@ -12,15 +12,30 @@ export default function Footer() {
         </p>
 
         <div className="flex gap-6 mt-4">
-          <InteractiveIcon as="a" href="https://github.com/sudharsan-ak" target="_blank">
-            <Github className="h-6 w-6" />
-          </InteractiveIcon>
-          <InteractiveIcon as="a" href="https://linkedin.com/in/sudharsan-srinivasan10" target="_blank">
-            <Linkedin className="h-6 w-6" />
-          </InteractiveIcon>
-          <InteractiveIcon as="a" href="mailto:sudharsanak1010@gmail.com">
-            <Mail className="h-6 w-6" />
-          </InteractiveIcon>
+          <div className="relative group/tip">
+            <InteractiveIcon as="a" href="https://github.com/sudharsan-ak" target="_blank">
+              <Github className="h-6 w-6" />
+            </InteractiveIcon>
+            <span className="absolute bottom-9 left-1/2 -translate-x-1/2 text-xs bg-foreground text-background px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover/tip:opacity-100 transition-opacity duration-200 pointer-events-none">
+              GitHub
+            </span>
+          </div>
+          <div className="relative group/tip">
+            <InteractiveIcon as="a" href="https://linkedin.com/in/sudharsan-srinivasan10" target="_blank">
+              <Linkedin className="h-6 w-6" />
+            </InteractiveIcon>
+            <span className="absolute bottom-9 left-1/2 -translate-x-1/2 text-xs bg-foreground text-background px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover/tip:opacity-100 transition-opacity duration-200 pointer-events-none">
+              LinkedIn
+            </span>
+          </div>
+          <div className="relative group/tip">
+            <InteractiveIcon as="a" href="mailto:sudharsanak1010@gmail.com">
+              <Mail className="h-6 w-6" />
+            </InteractiveIcon>
+            <span className="absolute bottom-9 left-1/2 -translate-x-1/2 text-xs bg-foreground text-background px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover/tip:opacity-100 transition-opacity duration-200 pointer-events-none">
+              Email
+            </span>
+          </div>
         </div>
       </div>
     </footer>

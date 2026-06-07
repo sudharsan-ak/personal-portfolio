@@ -17,6 +17,7 @@ export default function SmartAIAssistantButton({ isOpen, setIsOpen, theme }: Pro
         ref={buttonRef}
         onClick={() => setIsOpen((prev) => !prev)}
         className="p-3 bg-primary text-primary-foreground rounded-full shadow-lg hover:scale-110 transition-transform duration-300 z-50"
+        title="Ask AI"
       >
         <MessageCircle className="w-5 h-5" />
       </button>

@@ -114,30 +114,30 @@ export default function Hero() {
 
           {/* Social Media Icons */}
           <div className="flex gap-6 mt-4">
-            <a
-              href="https://github.com/sudharsan-ak"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition-colors duration-300 text-foreground group-hover:text-primary"
-            >
-              <Github className="h-6 w-6 transition-colors duration-300 group-hover:text-primary" />
-            </a>
-
-            <a
-              href="https://linkedin.com/in/sudharsan-srinivasan10"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition-colors duration-300 text-foreground group-hover:text-primary"
-            >
-              <Linkedin className="h-6 w-6 transition-colors duration-300 group-hover:text-primary" />
-            </a>
-
-            <a
-              href="mailto:sudharsanak1010@gmail.com"
-              className="transition-colors duration-300 text-foreground group-hover:text-primary"
-            >
-              <Mail className="h-6 w-6 transition-colors duration-300 group-hover:text-primary" />
-            </a>
+            <div className="relative group/tip">
+              <a href="https://github.com/sudharsan-ak" target="_blank" rel="noopener noreferrer" className="transition-colors duration-300 text-foreground hover:text-primary block">
+                <Github className="h-6 w-6" />
+              </a>
+              <span className="absolute bottom-9 left-1/2 -translate-x-1/2 text-xs bg-foreground text-background px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover/tip:opacity-100 transition-opacity duration-200 pointer-events-none">
+                GitHub
+              </span>
+            </div>
+            <div className="relative group/tip">
+              <a href="https://linkedin.com/in/sudharsan-srinivasan10" target="_blank" rel="noopener noreferrer" className="transition-colors duration-300 text-foreground hover:text-primary block">
+                <Linkedin className="h-6 w-6" />
+              </a>
+              <span className="absolute bottom-9 left-1/2 -translate-x-1/2 text-xs bg-foreground text-background px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover/tip:opacity-100 transition-opacity duration-200 pointer-events-none">
+                LinkedIn
+              </span>
+            </div>
+            <div className="relative group/tip">
+              <a href="mailto:sudharsanak1010@gmail.com" className="transition-colors duration-300 text-foreground hover:text-primary block">
+                <Mail className="h-6 w-6" />
+              </a>
+              <span className="absolute bottom-9 left-1/2 -translate-x-1/2 text-xs bg-foreground text-background px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover/tip:opacity-100 transition-opacity duration-200 pointer-events-none">
+                Email
+              </span>
+            </div>
           </div>
         </InteractiveCard>
 

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { Menu, X, Moon, Sun, Eye, Monitor } from "lucide-react";
+import { Menu, X, Moon, Sun, Eye, Monitor, Zap } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 import InteractiveButton from "@/components/ui/InteractiveButton";
 import headshotImage from "@/assets/generated_images/Sudharsan_Srinivasan_Graduation.jpg";
 
@@ -11,9 +12,12 @@ export default function Navigation() {
   const [theme, setTheme] = useState<ThemeOption>("light");
   const [isDesktopDropdownOpen, setIsDesktopDropdownOpen] = useState(false);
   const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false);
+  const [builtWithOpen, setBuiltWithOpen] = useState(false);
 
   const desktopDropdownRef = useRef<HTMLDivElement>(null);
   const mobileDropdownRef = useRef<HTMLDivElement>(null);
+  const builtWithDesktopRef = useRef<HTMLDivElement>(null);
+  const builtWithMobileRef = useRef<HTMLDivElement>(null);
 
   const themeOptions: { label: string; value: ThemeOption; icon: any }[] = [
     { label: "Light", value: "light", icon: Sun },
@@ -45,6 +49,14 @@ export default function Navigation() {
       ) {
         setIsMobileDropdownOpen(false);
       }
+      if (
+        builtWithDesktopRef.current &&
+        !builtWithDesktopRef.current.contains(e.target as Node) &&
+        builtWithMobileRef.current &&
+        !builtWithMobileRef.current.contains(e.target as Node)
+      ) {
+        setBuiltWithOpen(false);
+      }
     };
     document.addEventListener("click", handleClickOutside);
 
@@ -71,6 +83,36 @@ export default function Navigation() {
     setIsDesktopDropdownOpen(false);
     setIsMobileDropdownOpen(false);
   };
+
+  useEffect(() => {
+    if (!builtWithOpen) return;
+    const timer = setTimeout(() => setBuiltWithOpen(false), 3000);
+    return () => clearTimeout(timer);
+  }, [builtWithOpen]);
+
+  const builtWithPopover = (
+    <AnimatePresence>
+      {builtWithOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: -6, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -6, scale: 0.95 }}
+          transition={{ duration: 0.15 }}
+          className="absolute right-0 top-10 z-50 w-fit rounded-xl border border-border bg-background shadow-lg p-3 space-y-1.5"
+        >
+          <p className="text-xs font-semibold text-foreground uppercase tracking-wide whitespace-nowrap">How this site is built</p>
+          <ul className="text-xs text-muted-foreground space-y-1">
+            <li className="whitespace-nowrap">⚛️ React + TypeScript + Tailwind CSS</li>
+            <li className="whitespace-nowrap">🐍 Python FastAPI (AI chat backend)</li>
+            <li className="whitespace-nowrap">🗄️ Supabase + PostgreSQL + pgvector</li>
+            <li className="whitespace-nowrap">☁️ AWS Lambda (serverless APIs)</li>
+            <li className="whitespace-nowrap">🐳 Docker + Railway (RAG service)</li>
+            <li className="whitespace-nowrap">🚀 Deployed on Vercel</li>
+          </ul>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
 
   const navLinks = [
     { id: "about", label: "About" },
@@ -139,6 +181,18 @@ export default function Navigation() {
             Explore APIs
           </InteractiveButton>
 
+          {/* Built With (Desktop) */}
+          <div className="relative" ref={builtWithDesktopRef}>
+            <InteractiveButton
+              variant="ghost"
+              size="icon"
+              onClick={() => setBuiltWithOpen((o) => !o)}
+            >
+              <Zap className="h-5 w-5" />
+            </InteractiveButton>
+            {builtWithPopover}
+          </div>
+
           {/* Theme Dropdown (Desktop) */}
           <div className="relative" ref={desktopDropdownRef}>
             <InteractiveButton
@@ -169,6 +223,18 @@ export default function Navigation() {
 
         {/* Mobile */}
         <div className="md:hidden flex items-center gap-2" ref={mobileDropdownRef}>
+          {/* Built With (Mobile) */}
+          <div className="relative" ref={builtWithMobileRef}>
+            <InteractiveButton
+              variant="ghost"
+              size="icon"
+              onClick={() => setBuiltWithOpen((o) => !o)}
+            >
+              <Zap className="h-5 w-5" />
+            </InteractiveButton>
+            {builtWithPopover}
+          </div>
+
           {/* Mobile Theme Dropdown */}
           <div className="relative">
             <InteractiveButton
