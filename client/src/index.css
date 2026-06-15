@@ -149,16 +149,65 @@ body.lightbox-open .fixed:not([data-lightbox]) {
   --ring: 195 85% 55%;
 }
 
+/* SYNTHWAVE MODE */
+.synthwave {
+  --button-outline: rgba(255, 0, 255, 0.15);
+  --badge-outline: rgba(255, 0, 255, 0.08);
+  --opaque-button-border-intensity: 9;
+  --elevate-1: rgba(255, 0, 255, 0.04);
+  --elevate-2: rgba(255, 0, 255, 0.08);
+  --background: 270 80% 6%;
+  --foreground: 300 100% 95%;
+  --border: 280 60% 25%;
+  --card: 270 60% 10%;
+  --card-foreground: 300 100% 95%;
+  --card-border: 280 60% 20%;
+  --sidebar: 270 60% 12%;
+  --sidebar-foreground: 300 100% 95%;
+  --sidebar-border: 280 60% 22%;
+  --sidebar-primary: 300 100% 60%;
+  --sidebar-primary-foreground: 270 80% 6%;
+  --sidebar-accent: 270 60% 18%;
+  --sidebar-accent-foreground: 300 100% 95%;
+  --sidebar-ring: 300 100% 60%;
+  --popover: 270 60% 12%;
+  --popover-foreground: 300 100% 95%;
+  --popover-border: 280 60% 22%;
+  --primary: 300 100% 60%;
+  --primary-foreground: 270 80% 6%;
+  --secondary: 270 60% 18%;
+  --secondary-foreground: 300 100% 95%;
+  --muted: 270 50% 15%;
+  --muted-foreground: 280 40% 70%;
+  --accent: 195 100% 50%;
+  --accent-foreground: 270 80% 6%;
+  --destructive: 0 84% 42%;
+  --destructive-foreground: 300 100% 95%;
+  --input: 270 50% 20%;
+  --ring: 300 100% 60%;
+}
+
 /* Accent glow on gradient name in dark/nightowl modes */
 .dark .hero-name-glow,
 .nightowl .hero-name-glow {
   filter: drop-shadow(0 0 30px rgba(139, 92, 246, 0.8)) drop-shadow(0 0 60px rgba(99, 102, 241, 0.5));
 }
 
+/* Synthwave hero name — hot pink + electric blue neon */
+.synthwave .hero-name-glow {
+  filter: drop-shadow(0 0 20px rgba(255, 0, 255, 0.9)) drop-shadow(0 0 50px rgba(0, 255, 255, 0.5));
+}
+
 /* Card hover glow for nightowl (Tailwind dark: handles dark mode) */
 .nightowl .rounded-2xl:hover {
   box-shadow: 0 0 40px rgba(99, 102, 246, 0.5);
   border-color: rgba(99, 102, 246, 0.7);
+}
+
+/* Synthwave card hover — hot pink glow */
+.synthwave .rounded-2xl:hover {
+  box-shadow: 0 0 40px rgba(255, 0, 255, 0.5), 0 0 80px rgba(0, 255, 255, 0.2);
+  border-color: rgba(255, 0, 255, 0.6);
 }
 
 /* Footer icons need to be visible on the light DynamicBackground gradient in dark/nightowl modes */
@@ -168,6 +217,13 @@ body.lightbox-open .fixed:not([data-lightbox]) {
 }
 .dark .footer-icon:hover,
 .nightowl .footer-icon:hover {
+  color: hsl(var(--primary));
+}
+
+.synthwave .footer-icon {
+  color: rgba(255, 0, 255, 0.7);
+}
+.synthwave .footer-icon:hover {
   color: hsl(var(--primary));
 }
 

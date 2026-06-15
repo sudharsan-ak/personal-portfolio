@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from "react";
-import { Menu, X, Moon, Sun, Eye, Monitor, Zap } from "lucide-react";
+import { Menu, X, Moon, Sun, Eye, Monitor, Zap, Sparkles } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import InteractiveButton from "@/components/ui/InteractiveButton";
 import headshotImage from "@/assets/generated_images/Sudharsan_Srinivasan_Graduation.jpg";
 
-type ThemeOption = "light" | "dark" | "nightowl" | "system";
+type ThemeOption = "light" | "dark" | "nightowl" | "synthwave" | "system";
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -23,13 +23,14 @@ export default function Navigation() {
     { label: "Light", value: "light", icon: Sun },
     { label: "Dark", value: "dark", icon: Moon },
     { label: "Night Owl", value: "nightowl", icon: Eye },
+    { label: "Synthwave", value: "synthwave", icon: Sparkles },
     { label: "System", value: "system", icon: Monitor },
   ];
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") as ThemeOption | null;
     const hour = new Date().getHours();
-    const timeBasedTheme: ThemeOption = hour >= 6 && hour < 18 ? "light" : "dark";
+    const timeBasedTheme: ThemeOption = hour >= 6 && hour < 18 ? "light" : "synthwave";
     const initialTheme = savedTheme || timeBasedTheme;
     setTheme(initialTheme);
     applyTheme(initialTheme);
@@ -68,7 +69,7 @@ export default function Navigation() {
   }, []);
 
   const applyTheme = (selected: ThemeOption) => {
-    document.documentElement.classList.remove("dark", "light", "nightowl");
+    document.documentElement.classList.remove("dark", "light", "nightowl", "synthwave");
     if (selected === "system") {
       const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
       document.documentElement.classList.add(prefersDark ? "dark" : "light");
