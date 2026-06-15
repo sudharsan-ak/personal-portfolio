@@ -9,7 +9,7 @@ interface ChatProps {
   isOpen: boolean;
   setIsOpen: (v: boolean) => void;
   buttonRef: React.RefObject<HTMLButtonElement>;
-  theme?: "light" | "dark" | "nightowl" | "system";
+  theme?: "light" | "dark" | "nightowl" | "synthwave" | "system";
 }
 
 interface ChatMessage {

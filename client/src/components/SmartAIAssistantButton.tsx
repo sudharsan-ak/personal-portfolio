@@ -5,7 +5,7 @@ import SmartAIAssistantChat from "./SmartAIAssistantChat";
 interface Props {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  theme?: "light" | "dark" | "nightowl" | "system";
+  theme?: "light" | "dark" | "nightowl" | "synthwave" | "system";
 }
 
 export default function SmartAIAssistantButton({ isOpen, setIsOpen, theme }: Props) {

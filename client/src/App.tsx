@@ -14,6 +14,7 @@ import APIPage from "@/pages/API";
 import { useState } from "react";
 import CustomCursor from "@/components/CustomCursor";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
+import CommandPalette from "@/components/CommandPalette";
 
 function Router() {
   return (
@@ -28,15 +29,28 @@ function Router() {
 
 function App() {
   const [location] = useLocation();
-  const [currentTheme, setCurrentTheme] = useState<"light" | "dark" | "nightowl" | "system">("light");
+  const [currentTheme, setCurrentTheme] = useState<"light" | "dark" | "nightowl" | "synthwave" | "system">("light");
   const [isAIOpen, setIsAIOpen] = useState(false);
 
   const hideFloatingButtons = location === "/resume" || location === "/api-docs";
+
+  const handleThemeChange = (theme: "light" | "dark" | "nightowl" | "synthwave" | "system") => {
+    document.documentElement.classList.remove("dark", "light", "nightowl", "synthwave");
+    if (theme === "system") {
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.classList.add(prefersDark ? "dark" : "light");
+    } else {
+      document.documentElement.classList.add(theme);
+    }
+    localStorage.setItem("theme", theme);
+    setCurrentTheme(theme);
+  };
 
   return (
     <QueryClientProvider client={queryClient}>
       <CustomCursor />
       <ScrollProgressBar />
+      <CommandPalette onThemeChange={handleThemeChange} />
       <TooltipProvider>
         <Toaster />
         <DynamicBackground>
