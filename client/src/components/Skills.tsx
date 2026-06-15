@@ -9,12 +9,6 @@ import {
   Monitor,
   Brain,
 } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import InteractiveCard from "@/components/ui/InteractiveCard";
 import FadeInSection from "@/components/ui/FadeInSection";
 
@@ -59,25 +53,17 @@ export default function Skills() {
                   <h3 className="text-lg font-semibold">{cat.category}</h3>
                 </div>
 
-                <TooltipProvider delayDuration={100}>
-                  <div className="flex flex-wrap gap-2">
-                    {cat.skills.map((skill, i) => (
-                      <Tooltip key={i}>
-                        <TooltipTrigger asChild>
-                          <Badge
-                            variant="secondary"
-                            className="px-3 py-1 text-sm cursor-default hover:bg-primary hover:text-white transition-colors duration-200"
-                          >
-                            {skill}
-                          </Badge>
-                        </TooltipTrigger>
-                        <TooltipContent side="top">
-                          <p className="text-xs">{`Experience with ${skill}`}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    ))}
-                  </div>
-                </TooltipProvider>
+                <div className="flex flex-wrap gap-2">
+                  {cat.skills.map((skill, i) => (
+                    <Badge
+                      key={i}
+                      variant="secondary"
+                      className="px-3 py-1 text-sm cursor-default hover:bg-primary hover:text-white transition-colors duration-200"
+                    >
+                      {skill}
+                    </Badge>
+                  ))}
+                </div>
               </InteractiveCard>
             </FadeInSection>
           ))}
