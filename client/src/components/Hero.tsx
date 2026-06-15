@@ -65,7 +65,7 @@ export default function Hero() {
 
             {/* Name */}
             <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight flex items-center gap-3">
-              <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">I’m Sudharsan Srinivasan</span>
+              <span className="hero-name-glow bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">I’m Sudharsan Srinivasan</span>
               <motion.span
                 className="inline-block animate-wave origin-[70%_70%]"
                 whileHover={{ scale: 1.2 }}
