@@ -28,8 +28,9 @@ export default function Navigation() {
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") as ThemeOption | null;
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const initialTheme = savedTheme || (prefersDark ? "dark" : "light");
+    const hour = new Date().getHours();
+    const timeBasedTheme: ThemeOption = hour >= 6 && hour < 18 ? "light" : "dark";
+    const initialTheme = savedTheme || timeBasedTheme;
     setTheme(initialTheme);
     applyTheme(initialTheme);
 
