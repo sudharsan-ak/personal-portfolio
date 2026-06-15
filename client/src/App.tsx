@@ -15,6 +15,7 @@ import { useState } from "react";
 import CustomCursor from "@/components/CustomCursor";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
 import CommandPalette from "@/components/CommandPalette";
+import TerminalEasterEgg from "@/components/TerminalEasterEgg";
 
 function Router() {
   return (
@@ -51,6 +52,7 @@ function App() {
       <CustomCursor />
       <ScrollProgressBar />
       <CommandPalette onThemeChange={handleThemeChange} />
+      <TerminalEasterEgg />
       <TooltipProvider>
         <Toaster />
         <DynamicBackground>
