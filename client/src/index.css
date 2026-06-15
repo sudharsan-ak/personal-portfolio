@@ -178,6 +178,21 @@ body.lightbox-open .fixed:not([data-lightbox]) {
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
+    cursor: none;
+  }
+
+  /* Force hide cursor on ALL elements */
+  @media (pointer: fine) {
+    *, *::before, *::after {
+      cursor: none !important;
+    }
+  }
+
+  /* Restore default cursor on touch devices */
+  @media (pointer: coarse) {
+    body, *, *::before, *::after {
+      cursor: auto !important;
+    }
   }
 }
 

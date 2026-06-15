@@ -12,6 +12,8 @@ import FloatingBookingButton from "@/components/FloatingBookingButton";
 import Resume from "@/pages/Resume";
 import APIPage from "@/pages/API";
 import { useState } from "react";
+import CustomCursor from "@/components/CustomCursor";
+import ScrollProgressBar from "@/components/ScrollProgressBar";
 
 function Router() {
   return (
@@ -33,6 +35,8 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <CustomCursor />
+      <ScrollProgressBar />
       <TooltipProvider>
         <Toaster />
         <DynamicBackground>
