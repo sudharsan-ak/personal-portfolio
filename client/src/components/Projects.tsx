@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Github } from "lucide-react";
 import { useState } from "react";
 import InteractiveCard from "@/components/ui/InteractiveCard";
+import FadeInSection from "@/components/ui/FadeInSection";
 import InteractiveButton from "@/components/ui/InteractiveButton";
 import ImageLightbox from "@/components/ui/ImageLightbox";
 
@@ -80,13 +81,13 @@ export default function Projects() {
       className="py-12 md:py-20 px-4 sm:px-6 lg:px-8 bg-muted/30"
     >
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">
-          Projects
-        </h2>
+        <FadeInSection>
+          <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">Projects</h2>
+        </FadeInSection>
         <div className="space-y-8">
           {projects.map((project, index) => (
+            <FadeInSection key={index} delay={index * 0.1}>
             <InteractiveCard
-              key={index}
               className="group transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
               <div className="grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_320px] lg:items-start">
@@ -180,6 +181,7 @@ export default function Projects() {
                 </div>
               </div>
             </InteractiveCard>
+            </FadeInSection>
           ))}
         </div>
 

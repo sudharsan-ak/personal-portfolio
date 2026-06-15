@@ -5,6 +5,7 @@ import fortressLogo from "@/assets/generated_images/Fortress_Information_Securit
 import merchLogo from "@/assets/generated_images/Merch_company_logo_c16d827e.png";
 import cognizantLogo from "@/assets/generated_images/Cognizant_Technology_Solutions_logo_56621081.png";
 import InteractiveCard from "@/components/ui/InteractiveCard";
+import FadeInSection from "@/components/ui/FadeInSection";
 
 export default function Experience() {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
@@ -75,9 +76,9 @@ export default function Experience() {
   return (
     <section id="experience" className="py-12 md:py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">
-          Experience
-        </h2>
+        <FadeInSection>
+          <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">Experience</h2>
+        </FadeInSection>
 
         <div className="space-y-8">
           {experiences.map((exp, index) => {
@@ -96,7 +97,8 @@ export default function Experience() {
                 : undefined;
 
             return (
-              <InteractiveCard key={index} id={cardId} className="group scroll-mt-28">
+              <FadeInSection key={index} delay={index * 0.1}>
+              <InteractiveCard id={cardId} className="group scroll-mt-28">
                 <div className="flex flex-col md:flex-row gap-6">
                   <div className="flex-shrink-0 flex items-center justify-center md:justify-start">
                     <a href={exp.companyUrl} target="_blank" rel="noopener noreferrer">
@@ -172,6 +174,7 @@ export default function Experience() {
                   </div>
                 </div>
               </InteractiveCard>
+              </FadeInSection>
             );
           })}
         </div>

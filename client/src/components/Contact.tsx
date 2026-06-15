@@ -1,5 +1,6 @@
 import { Mail, Linkedin, Github, Phone } from "lucide-react";
 import InteractiveCard from "@/components/ui/InteractiveCard";
+import FadeInSection from "@/components/ui/FadeInSection";
 import InteractiveButton from "@/components/ui/InteractiveButton";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -46,12 +47,12 @@ export default function Contact() {
       className="py-12 md:py-20 px-4 sm:px-6 lg:px-8 bg-muted/30"
     >
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">
-          Connect With Me
-        </h2>
+        <FadeInSection>
+          <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">Connect With Me</h2>
+        </FadeInSection>
 
         {/* Two-column layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <FadeInSection delay={0.1} className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Left column: Contact cards */}
           <div className="space-y-4">
             <InteractiveCard className="p-4">
@@ -159,7 +160,7 @@ export default function Contact() {
               </InteractiveButton>
             </form>
           </InteractiveCard>
-        </div>
+        </FadeInSection>
       </div>
     </section>
   );
