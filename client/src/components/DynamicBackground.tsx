@@ -7,12 +7,12 @@ interface DynamicBackgroundProps {
 }
 
 const getBackgroundForHour = (hour: number) => {
-  if (hour >= 5 && hour < 12) 
-    return "linear-gradient(135deg, #FFFAF0, #FFEBCD)"; // morning
-  if (hour >= 12 && hour < 17) 
-    return "linear-gradient(135deg, #E0EAFC, #CFDEF3)"; // afternoon
-  if (hour >= 17 && hour < 20) 
-    return "linear-gradient(135deg, #F5E6E8, #D6C1D3)"; // evening
+  if (hour >= 5 && hour < 12)
+    return "linear-gradient(135deg, #EEF2F7, #E2E8F0)"; // morning - cool blue-gray
+  if (hour >= 12 && hour < 17)
+    return "linear-gradient(135deg, #E8EEF7, #DAE4F5)"; // afternoon - soft blue
+  if (hour >= 17 && hour < 20)
+    return "linear-gradient(135deg, #E8EDF5, #DDE4F0)"; // evening - cool slate blue
   return "linear-gradient(135deg, #1F1C2C, #928DAB)"; // night
 };
 

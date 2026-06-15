@@ -5,7 +5,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-border py-12 px-4 sm:px-6 lg:px-8">
+    <footer className="py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
         <p className="text-sm text-muted-foreground text-center md:text-left">
           © {currentYear} Sudharsan Srinivasan. All rights reserved.
@@ -13,25 +13,28 @@ export default function Footer() {
 
         <div className="flex gap-6 mt-4">
           <div className="relative group/tip">
-            <InteractiveIcon as="a" href="https://github.com/sudharsan-ak" target="_blank">
+            <a href="https://github.com/sudharsan-ak" target="_blank" rel="noopener noreferrer"
+              className="footer-icon block text-foreground hover:text-primary transition-colors duration-200">
               <Github className="h-6 w-6" />
-            </InteractiveIcon>
+            </a>
             <span className="absolute bottom-9 left-1/2 -translate-x-1/2 text-xs bg-foreground text-background px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover/tip:opacity-100 transition-opacity duration-200 pointer-events-none">
               GitHub
             </span>
           </div>
           <div className="relative group/tip">
-            <InteractiveIcon as="a" href="https://linkedin.com/in/sudharsan-srinivasan10" target="_blank">
+            <a href="https://linkedin.com/in/sudharsan-srinivasan10" target="_blank" rel="noopener noreferrer"
+              className="footer-icon block text-foreground hover:text-primary transition-colors duration-200">
               <Linkedin className="h-6 w-6" />
-            </InteractiveIcon>
+            </a>
             <span className="absolute bottom-9 left-1/2 -translate-x-1/2 text-xs bg-foreground text-background px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover/tip:opacity-100 transition-opacity duration-200 pointer-events-none">
               LinkedIn
             </span>
           </div>
           <div className="relative group/tip">
-            <InteractiveIcon as="a" href="mailto:sudharsanak1010@gmail.com">
+            <a href="mailto:sudharsanak1010@gmail.com"
+              className="footer-icon block text-foreground hover:text-primary transition-colors duration-200">
               <Mail className="h-6 w-6" />
-            </InteractiveIcon>
+            </a>
             <span className="absolute bottom-9 left-1/2 -translate-x-1/2 text-xs bg-foreground text-background px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover/tip:opacity-100 transition-opacity duration-200 pointer-events-none">
               Email
             </span>

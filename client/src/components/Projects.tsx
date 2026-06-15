@@ -124,7 +124,7 @@ export default function Projects() {
                     {project.highlights.map((highlight, highlightIndex) => (
                       <p
                         key={highlightIndex}
-                        className="text-sm text-muted-foreground leading-relaxed"
+                        className="text-sm text-foreground leading-relaxed"
                       >
                         - {highlight}
                       </p>
