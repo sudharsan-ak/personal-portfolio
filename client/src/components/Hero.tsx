@@ -6,10 +6,60 @@ import InteractiveButton from "@/components/ui/InteractiveButton";
 import InteractiveCard from "@/components/ui/InteractiveCard";
 import ImageLightbox from "@/components/ui/ImageLightbox";
 
+const TITLES = [
+  "Software Engineer",
+  "Full Stack Developer",
+  "Available for New Opportunities",
+  "Building Scalable Web Apps",
+  "6+ Years of Full Stack Experience",
+];
+
+function useTypingEffect(titles: string[]) {
+  const [display, setDisplay] = useState("");
+  const [titleIndex, setTitleIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const [deleting, setDeleting] = useState(false);
+  const [idle, setIdle] = useState(false);
+
+  useEffect(() => {
+    const current = titles[titleIndex];
+    const speed = deleting ? 35 : 65;
+    const pauseAfterType = 1800;
+    const pauseAfterDelete = 400;
+
+    const timeout = setTimeout(() => {
+      if (!deleting) {
+        if (charIndex < current.length) {
+          setIdle(false);
+          setDisplay(current.slice(0, charIndex + 1));
+          setCharIndex(c => c + 1);
+        } else {
+          setIdle(true);
+          setTimeout(() => { setIdle(false); setDeleting(true); }, pauseAfterType);
+        }
+      } else {
+        if (charIndex > 0) {
+          setDisplay(current.slice(0, charIndex - 1));
+          setCharIndex(c => c - 1);
+        } else {
+          setDeleting(false);
+          setTitleIndex(i => (i + 1) % titles.length);
+          setTimeout(() => {}, pauseAfterDelete);
+        }
+      }
+    }, speed);
+
+    return () => clearTimeout(timeout);
+  }, [charIndex, deleting, titleIndex, titles]);
+
+  return { display, idle };
+}
+
 export default function Hero() {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [greeting, setGreeting] = useState("Hello");
   const [greetingIcon, setGreetingIcon] = useState("👋");
+  const { display: typedTitle, idle: cursorIdle } = useTypingEffect(TITLES);
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -76,8 +126,8 @@ export default function Hero() {
             </h2>
 
             {/* Title */}
-            <h3 className="text-2xl sm:text-3xl font-semibold text-muted-foreground">
-              Software Engineer
+            <h3 className="text-2xl sm:text-3xl font-semibold text-muted-foreground min-h-[2.25rem]">
+              {typedTitle}<span className={cursorIdle ? "animate-pulse" : ""}>|</span>
             </h3>
           </motion.div>
 
