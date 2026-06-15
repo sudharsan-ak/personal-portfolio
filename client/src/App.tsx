@@ -53,6 +53,23 @@ function App() {
       <ScrollProgressBar />
       <CommandPalette onThemeChange={handleThemeChange} />
       <TerminalEasterEgg />
+
+      {/* Command Palette trigger hint — bottom left */}
+      <div className="fixed bottom-6 left-6 z-50 group/cmd">
+        <button
+          onClick={() => {
+            const event = new KeyboardEvent("keydown", { key: "/", ctrlKey: true, bubbles: true });
+            window.dispatchEvent(event);
+          }}
+          className="w-10 h-10 rounded-full bg-background border border-border shadow-md flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/50 hover:shadow-lg transition-all duration-200"
+          aria-label="Command Palette"
+        >
+          <span className="text-base font-semibold">⌘</span>
+        </button>
+        <span className="absolute bottom-12 left-0 text-xs bg-foreground text-background px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover/cmd:opacity-100 transition-opacity duration-200 pointer-events-none">
+          Command Palette · Ctrl+/
+        </span>
+      </div>
       <TooltipProvider>
         <Toaster />
         <DynamicBackground>
