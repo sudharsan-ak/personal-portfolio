@@ -53,7 +53,7 @@ export default function Hero() {
             className="space-y-2"
           >
             {/* Greeting */}
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold flex items-center gap-2 transition-colors duration-300 group-hover:text-primary">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-medium flex items-center gap-2 text-muted-foreground">
               {greeting}{" "}
               <motion.span
                 whileHover={{ scale: 1.3, rotate: [0, 15, -15, 0] }}
@@ -64,8 +64,8 @@ export default function Hero() {
             </h1>
 
             {/* Name */}
-            <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight flex items-center gap-3 transition-colors duration-300 group-hover:text-primary">
-              I’m Sudharsan Srinivasan
+            <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight flex items-center gap-3">
+              <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">I’m Sudharsan Srinivasan</span>
               <motion.span
                 className="inline-block animate-wave origin-[70%_70%]"
                 whileHover={{ scale: 1.2 }}
@@ -76,7 +76,7 @@ export default function Hero() {
             </h2>
 
             {/* Title */}
-            <h3 className="text-2xl sm:text-3xl font-semibold text-muted-foreground transition-colors duration-300 group-hover:text-primary">
+            <h3 className="text-2xl sm:text-3xl font-semibold text-muted-foreground">
               Software Engineer
             </h3>
           </motion.div>
