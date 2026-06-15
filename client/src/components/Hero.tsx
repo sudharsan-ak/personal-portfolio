@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import InteractiveButton from "@/components/ui/InteractiveButton";
 import InteractiveCard from "@/components/ui/InteractiveCard";
 import ImageLightbox from "@/components/ui/ImageLightbox";
+import GreetingEmoji from "@/components/ui/GreetingEmoji";
 
 const TITLES = [
   "Software Engineer",
@@ -59,6 +60,7 @@ export default function Hero() {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [greeting, setGreeting] = useState("Hello");
   const [greetingIcon, setGreetingIcon] = useState("👋");
+  const [greetingType, setGreetingType] = useState<"morning" | "afternoon" | "evening" | "night" | "late">("morning");
   const { display: typedTitle, idle: cursorIdle } = useTypingEffect(TITLES);
 
   useEffect(() => {
@@ -67,18 +69,23 @@ export default function Hero() {
     if (hour >= 5 && hour < 12) {
       setGreeting("Good morning,");
       setGreetingIcon("🌅");
+      setGreetingType("morning");
     } else if (hour >= 12 && hour < 18) {
       setGreeting("Good afternoon,");
       setGreetingIcon("🌇");
+      setGreetingType("afternoon");
     } else if (hour >= 18 && hour < 21) {
       setGreeting("Good evening,");
       setGreetingIcon("🌆");
+      setGreetingType("evening");
     } else if (hour >= 21 && hour < 24) {
       setGreeting("Good night,");
       setGreetingIcon("🌙");
+      setGreetingType("night");
     } else {
       setGreeting("Working late?");
       setGreetingIcon("☕");
+      setGreetingType("late");
     }
   }, []);
 
@@ -105,12 +112,7 @@ export default function Hero() {
             {/* Greeting */}
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-medium flex items-center gap-2 text-muted-foreground">
               {greeting}{" "}
-              <motion.span
-                whileHover={{ scale: 1.3, rotate: [0, 15, -15, 0] }}
-                transition={{ duration: 0.6 }}
-              >
-                {greetingIcon}
-              </motion.span>
+              <GreetingEmoji emoji={greetingIcon} type={greetingType} />
             </h1>
 
             {/* Name */}
