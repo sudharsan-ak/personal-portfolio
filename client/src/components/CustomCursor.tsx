@@ -51,6 +51,7 @@ export default function CustomCursor() {
   return (
     <motion.div
       className="fixed top-0 left-0 z-[9999] pointer-events-none"
+      data-cursor
       style={{ x, y }}
       animate={{ opacity: visible ? 1 : 0 }}
       transition={{ duration: 0.15 }}

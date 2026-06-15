@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* Hide all fixed/floating buttons while a lightbox is open */
-body.lightbox-open .fixed:not([data-lightbox]) {
+body.lightbox-open .fixed:not([data-lightbox]):not([data-cursor]) {
   visibility: hidden;
   pointer-events: none;
 }

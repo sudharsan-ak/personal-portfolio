@@ -11,20 +11,22 @@ export default function Projects() {
   const projects = [
     {
       title: "Resume Tailoring Workflow",
-      tagline: "AI-assisted resume tailoring from fit check to recruiter outreach",
+      tagline: "7-stage AI pipeline with local RAG, MCP server, and LaTeX PDF generation",
       description:
-        "A privacy-first, 6-stage AI workflow system that takes a master resume and job description, runs a fit check, rewrites bullets from verified evidence, generates a role-specific LaTeX PDF, and drafts recruiter outreach - all from a single AI coding assistant session with no private data committed to git.",
+        "A privacy-first AI workflow that turns a master resume into a role-specific LaTeX PDF. Includes a local RAG engine for semantic evidence retrieval, an MCP server that fetches full job descriptions from any ATS URL via headless browser, and an autopilot mode that runs the full pipeline with one human checkpoint.",
       technologies: [
+        "TypeScript",
         "PowerShell",
         "LaTeX",
-        "Claude Code",
-        "Docker",
-        "Markdown",
+        "Node.js",
+        "MCP",
+        "RAG",
+        "Vector Search",
       ],
       highlights: [
-        "6-stage pipeline: fit check → suggestions → bullet rewriting → PDF generation → outreach drafting",
-        "Evidence-grounded rewriting - AI only tailors from claims already in your resume, no hallucinated metrics",
-        "Privacy-first architecture: output is gitignored, all candidate data stays local",
+        "Local RAG pipeline - semantic evidence retrieval, fully offline, no API key",
+        "MCP server fetches full JDs from any ATS URL via headless browser - no copy-paste",
+        "Autopilot mode with one human checkpoint + privacy-check script before every commit",
       ],
       imagePath: "/projects/resume-tailoring-workflow.png",
       imageAlt: "Resume Tailoring Workflow running fit check in Cursor with Codex AI assistant",
@@ -120,16 +122,19 @@ export default function Projects() {
                     {project.description}
                   </p>
 
-                  <div className="max-h-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100 group-focus-within:max-h-40 group-focus-within:opacity-100">
-                    <div className="space-y-2">
-                    {project.highlights.map((highlight, highlightIndex) => (
-                      <p
-                        key={highlightIndex}
-                        className="text-sm text-foreground leading-relaxed"
-                      >
-                        - {highlight}
-                      </p>
-                    ))}
+                  <div className="max-h-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:max-h-60 group-hover:opacity-100 group-focus-within:max-h-60 group-focus-within:opacity-100">
+                    <div className="mt-4">
+                      <p className="text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-wide">Highlights</p>
+                      <div className="space-y-2">
+                        {project.highlights.map((highlight, highlightIndex) => (
+                          <p
+                            key={highlightIndex}
+                            className="text-sm text-foreground leading-relaxed"
+                          >
+                            - {highlight}
+                          </p>
+                        ))}
+                      </div>
                     </div>
                   </div>
 
