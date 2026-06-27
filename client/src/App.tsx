@@ -12,7 +12,6 @@ import FloatingBookingButton from "@/components/FloatingBookingButton";
 import Resume from "@/pages/Resume";
 import APIPage from "@/pages/API";
 import { useState } from "react";
-import CustomCursor from "@/components/CustomCursor";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
 import CommandPalette from "@/components/CommandPalette";
 import TerminalEasterEgg from "@/components/TerminalEasterEgg";
@@ -49,8 +48,7 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <CustomCursor />
-      <ScrollProgressBar />
+      {location === "/" && <ScrollProgressBar />}
       <CommandPalette onThemeChange={handleThemeChange} />
       <TerminalEasterEgg />
 
