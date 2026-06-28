@@ -21,6 +21,9 @@ Thumbs.db
 *.local
 *.log
 
+# Lambda fallback — already bundled into dist, not needed in repo
+api/projectsFallback.ts
+
 # Generated scratch files
 client/src/Pasted-*.txt
 Sudharsan-Srinivasan-Portfolio.pdf
