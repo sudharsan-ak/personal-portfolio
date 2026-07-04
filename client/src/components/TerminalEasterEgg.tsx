@@ -33,24 +33,24 @@ const FILES: Record<string, string[]> = {
     "phone    → (682) 283-0833",
   ],
   "projects.txt": [
-    "1. Resume Tailoring Workflow — 7-stage AI pipeline with local RAG + MCP server",
-    "2. LinkedIn Recruiter Finder — Chrome extension for recruiter discovery",
-    "3. JobFlow Automator        — CLI tool that automates job applications end-to-end",
+    "1. Resume Tailoring Workflow - 7-stage AI pipeline with local RAG + MCP server",
+    "2. LinkedIn Recruiter Finder - Chrome extension for recruiter discovery",
+    "3. JobFlow Automator        - CLI tool that automates job applications end-to-end",
   ],
 };
 
 const HELP_TEXT = [
   "Available commands:",
-  "  whoami          — who is this guy?",
-  "  ls              — list available files",
-  "  cat <file>      — read a file (try: cat skills.txt)",
-  "  open github     — open GitHub profile",
-  "  open linkedin   — open LinkedIn profile",
-  "  open resume     — open resume in new tab",
-  "  echo <text>     — echo text back",
-  "  clear           — clear the terminal",
-  "  help            — show this help",
-  "  exit            — close terminal",
+  "  whoami          - who is this guy?",
+  "  ls              - list available files",
+  "  cat <file>      - read a file (try: cat skills.txt)",
+  "  open github     - open GitHub profile",
+  "  open linkedin   - open LinkedIn profile",
+  "  open resume     - open resume in new tab",
+  "  echo <text>     - echo text back",
+  "  clear           - clear the terminal",
+  "  help            - show this help",
+  "  exit            - close terminal",
 ];
 
 function runCommand(input: string): { lines: Line[]; clear?: boolean; close?: boolean } {
@@ -81,7 +81,7 @@ function runCommand(input: string): { lines: Line[]; clear?: boolean; close?: bo
   if (trimmed === "pwd") return { lines: [{ type: "output", text: "/home/sudharsan/portfolio" }] };
   if (trimmed === "date") return { lines: [{ type: "output", text: new Date().toString() }] };
   if (trimmed === "uname" || trimmed === "uname -a") return {
-    lines: [{ type: "output", text: "Portfolio OS 2.0.0 — Built with React + TypeScript + Tailwind" }],
+    lines: [{ type: "output", text: "Portfolio OS 2.0.0 - Built with React + TypeScript + Tailwind" }],
   };
 
   if (trimmed.startsWith("cat ")) {

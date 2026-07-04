@@ -9,8 +9,8 @@ Usage:
     python evals/run_eval.py
 
 Environment variables (add to .env or export):
-    RAG_SERVICE_URL   — defaults to http://localhost:8000
-    ANTHROPIC_API_KEY — required for Claude Haiku scoring
+    RAG_SERVICE_URL   - defaults to http://localhost:8000
+    ANTHROPIC_API_KEY - required for Claude Haiku scoring
 """
 
 import json
@@ -90,7 +90,7 @@ def main():
             "reason": scored["reason"],
         })
 
-        print(f"  Score: {score}/5 — {scored['reason']}\n")
+        print(f"  Score: {score}/5 - {scored['reason']}\n")
 
     avg = total_score / len(qa_pairs)
     print(f"{'='*60}")

@@ -1,7 +1,7 @@
 # Project: LinkedReach AI
 
 ## Overview
-A Chrome extension that automates recruiter outreach research on LinkedIn. When visiting a LinkedIn profile, it scrapes the person's name, company, and domain, then uses AI (Groq LLM) and web search to infer likely email addresses — returning ranked candidates with confidence scores and source links.
+A Chrome extension that automates recruiter outreach research on LinkedIn. When visiting a LinkedIn profile, it scrapes the person's name, company, and domain, then uses AI (Groq LLM) and web search to infer likely email addresses - returning ranked candidates with confidence scores and source links.
 
 ## Technologies
 JavaScript, Chrome Extension API (Manifest V3), Groq LLM, DuckDuckGo Search, Serper API, HTML, CSS

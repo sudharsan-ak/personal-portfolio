@@ -21,7 +21,7 @@ Thumbs.db
 *.local
 *.log
 
-# Lambda fallback — already bundled into dist, not needed in repo
+# Lambda fallback - already bundled into dist, not needed in repo
 api/projectsFallback.ts
 
 # Generated scratch files

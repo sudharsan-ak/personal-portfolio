@@ -2,8 +2,8 @@
 RAG FastAPI service for Sudharsan's portfolio AI assistant.
 
 Endpoints:
-  POST /chat   — retrieve relevant chunks, call Groq Llama 3.1, stream SSE back
-  GET  /health — liveness check
+  POST /chat   - retrieve relevant chunks, call Groq Llama 3.1, stream SSE back
+  GET  /health - liveness check
 
 Environment variables (see .env.example):
   SUPABASE_URL, SUPABASE_SERVICE_KEY, GROQ_API_KEY
@@ -31,7 +31,7 @@ GROQ_API_KEY = os.environ["GROQ_API_KEY"]
 TOP_K = 5
 MATCH_THRESHOLD = 0.05
 
-# module-level singletons — loaded once at startup
+# module-level singletons - loaded once at startup
 _model: SentenceTransformer | None = None
 _supabase: Client | None = None
 _groq: Groq | None = None
@@ -87,9 +87,9 @@ async def stream_groq(context: str, messages: list[Message]) -> AsyncGenerator[s
         "You are a helpful AI assistant on Sudharsan Srinivasan's portfolio website. "
         "Sudharsan is a Full Stack Software Engineer with 5+ years of experience. "
         "Answer questions about Sudharsan in 2-4 friendly, specific sentences. "
-        "Use the context below — it contains his resume, projects, and background. "
+        "Use the context below - it contains his resume, projects, and background. "
         "Be specific: mention technologies, numbers, and achievements when available. "
-        "Never say 'the context' or 'the provided context' — just answer naturally. "
+        "Never say 'the context' or 'the provided context' - just answer naturally. "
         "If you truly don't have the answer, say so briefly without over-explaining.\n\n"
         f"Context:\n{context}"
     )

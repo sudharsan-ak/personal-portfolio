@@ -93,6 +93,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     console.error("Contact API error:", err);
     return res
       .status(500)
-      .json({ message: err.message || "Server error — check logs" });
+      .json({ message: err.message || "Server error - check logs" });
   }
 }

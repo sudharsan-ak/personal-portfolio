@@ -52,7 +52,7 @@ function App() {
       <CommandPalette onThemeChange={handleThemeChange} />
       <TerminalEasterEgg />
 
-      {/* Command Palette trigger hint — bottom left */}
+      {/* Command Palette trigger hint - bottom left */}
       <div className="fixed bottom-6 left-6 z-50 group/cmd">
         <button
           onClick={() => {
