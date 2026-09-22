@@ -46,20 +46,20 @@ export default function Contact() {
       id="contact"
       className="py-12 md:py-20 px-4 sm:px-6 lg:px-8 bg-muted/30"
     >
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <FadeInSection>
           <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">Connect With Me</h2>
         </FadeInSection>
 
         {/* Two-column layout */}
-        <FadeInSection delay={0.1} className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <FadeInSection delay={0.1} className="grid grid-cols-1 md:grid-cols-[0.8fr_1.2fr] gap-8">
           {/* Left column: Contact cards */}
-          <div className="space-y-4">
-            <InteractiveCard className="p-4">
+          <div className="space-y-3">
+            <InteractiveCard className="p-3">
               <div className="flex items-center gap-3">
-                <Mail className="h-5 w-5 text-primary" />
-                <span className="text-sm text-foreground/80">
-                  <strong>Email:</strong> 
+                <Mail className="h-4 w-4 text-primary flex-shrink-0" />
+                <span className="text-sm text-foreground/80 truncate">
+                  <strong>Email:</strong>
                   <a
                     href="mailto:sudharsanak1010@gmail.com"
                     className="ml-1 hover:text-primary transition-colors duration-200"
@@ -70,11 +70,11 @@ export default function Contact() {
               </div>
             </InteractiveCard>
 
-            <InteractiveCard className="p-4">
+            <InteractiveCard className="p-3">
               <div className="flex items-center gap-3">
-                <Phone className="h-5 w-5 text-primary" />
+                <Phone className="h-4 w-4 text-primary flex-shrink-0" />
                 <span className="text-sm text-foreground/80">
-                  <strong>Phone:</strong> 
+                  <strong>Phone:</strong>
                   <a
                     href="tel:+16822830833"
                     className="ml-1 hover:text-primary transition-colors duration-200"
@@ -85,11 +85,11 @@ export default function Contact() {
               </div>
             </InteractiveCard>
 
-            <InteractiveCard className="p-4">
+            <InteractiveCard className="p-3">
               <div className="flex items-center gap-3">
-                <Linkedin className="h-5 w-5 text-primary" />
-                <span className="text-sm text-foreground/80">
-                  <strong>LinkedIn:</strong> 
+                <Linkedin className="h-4 w-4 text-primary flex-shrink-0" />
+                <span className="text-sm text-foreground/80 truncate">
+                  <strong>LinkedIn:</strong>
                   <a
                     href="https://linkedin.com/in/sudharsan-srinivasan10"
                     target="_blank"
@@ -102,11 +102,11 @@ export default function Contact() {
               </div>
             </InteractiveCard>
 
-            <InteractiveCard className="p-4">
+            <InteractiveCard className="p-3">
               <div className="flex items-center gap-3">
-                <Github className="h-5 w-5 text-primary" />
-                <span className="text-sm text-foreground/80">
-                  <strong>GitHub:</strong> 
+                <Github className="h-4 w-4 text-primary flex-shrink-0" />
+                <span className="text-sm text-foreground/80 truncate">
+                  <strong>GitHub:</strong>
                   <a
                     href="https://github.com/sudharsan-ak"
                     target="_blank"

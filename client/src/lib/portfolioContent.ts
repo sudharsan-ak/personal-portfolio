@@ -23,7 +23,7 @@ GitHub: github.com/sudharsan-ak
 *Jun 2023 - Apr 2026*
 - Introduced MongoDB Atlas Search for grid views while preserving backward-compatible search, filters, and sorting, using optimized indexing and aggregation pipelines to cut query latency by 35%.
 - Built a reusable bulk update workflow across multiple business objects, syncing user changes with backend updates, database writes, and aggregation refreshes so grid workflows stayed aligned.
-- Resolved a severe SlickGrid performance issue handling 250K+ records by replacing multiple find queries with a MongoDB aggregation pipeline, restoring reliable grid behavior.
+- Resolved a severe SlickGrid performance issue handling close to 1M records by replacing multiple find queries with a MongoDB aggregation pipeline, restoring reliable grid behavior.
 - Engineered a configurable custom tabs system for 500+ users, translating per-subscription settings into dynamic UI behavior with Redis-backed configuration retrieval.
 - Delivered real-time bidirectional messaging between an AWS-hosted platform and vendor portal using Meteor publish/subscribe and reactive data flows.
 - Led 4 junior engineers through code reviews, improving maintainability and reducing PR turnaround by 10%.

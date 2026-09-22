@@ -30,7 +30,7 @@ export default function Navigation() {
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") as ThemeOption | null;
     const hour = new Date().getHours();
-    const timeBasedTheme: ThemeOption = hour >= 6 && hour < 18 ? "light" : "synthwave";
+    const timeBasedTheme: ThemeOption = hour >= 6 && hour < 18 ? "light" : "dark";
     const initialTheme = savedTheme || timeBasedTheme;
     setTheme(initialTheme);
     applyTheme(initialTheme);

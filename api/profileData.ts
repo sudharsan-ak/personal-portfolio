@@ -38,7 +38,7 @@ export const profileData = {
         "Delivered full-stack features for Cyber Supply Chain and Asset Vulnerability Management using JavaScript/TypeScript, Meteor, React, and MongoDB.",
       achievements: [
         "Introduced MongoDB Atlas Search for grid views, using optimized indexing and aggregation pipelines to cut query latency by 35%.",
-        "Resolved a severe production performance issue in SlickGrid handling 250K+ records by replacing multiple find queries with a single MongoDB aggregation pipeline.",
+        "Resolved a severe production performance issue in SlickGrid handling close to 1M records by replacing multiple find queries with a single MongoDB aggregation pipeline.",
         "Developed a reusable bulk update capability adopted across multiple business objects, eliminating duplicated update logic.",
         "Engineered a configurable custom tabs system for workflow-heavy product surfaces.",
         "Delivered a real-time bi-directional messaging feature using Meteor publish/subscribe.",

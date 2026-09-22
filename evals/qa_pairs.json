@@ -65,7 +65,7 @@
   },
   {
     "question": "How did Sudharsan handle the SlickGrid performance issue?",
-    "expected": "Replaced multiple find queries with a MongoDB aggregation pipeline to handle 250K+ records and reduce latency"
+    "expected": "Replaced multiple find queries with a MongoDB aggregation pipeline to handle close to 1M records and reduce latency"
   },
   {
     "question": "What is Sudharsan's location and is he open to relocation?",
