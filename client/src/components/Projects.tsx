@@ -70,23 +70,23 @@ export default function Projects() {
     },
     {
       title: "Trakt for ChatGPT",
-      tagline: "Read-only OAuth API connecting Trakt to ChatGPT",
+      tagline: "MCP server and Custom GPT Action bridging Trakt to ChatGPT",
       description:
-        "A backend service that lets ChatGPT query a Trakt.tv account, watch history, watchlist, ratings, and more, through a set of small, OAuth-protected endpoints.",
+        "A backend that connects a Trakt.tv account to ChatGPT two ways: a Custom GPT Action and a Model Context Protocol server, with OAuth-gated read and write access to watch history, watchlists, and ratings.",
       technologies: [
         "TypeScript",
         "Node.js",
+        "MCP",
         "OAuth",
         "Supabase",
-        "REST API",
       ],
       highlights: [
-        "Full OAuth 2.0 flow with CSRF-protected state and automatic token refresh",
-        "One endpoint per data section, keeping every response under ChatGPT's action size limit",
-        "Write access gated behind a search-then-confirm-then-write flow, never a raw title match",
+        "Read and write access, gated behind search-then-confirm-then-write, never a raw title match",
+        "MCP server built alongside the original REST API as ChatGPT migrates off Custom GPT Actions",
+        "Continue Watching logic rebuilt to match Trakt's own website, not just raw playback data",
       ],
       imagePath: "/projects/trakt-bridge.svg",
-      imageAlt: "Trakt for ChatGPT architecture diagram: Custom GPT to backend to Trakt API and Supabase",
+      imageAlt: "Trakt for ChatGPT architecture diagram showing Custom GPT and MCP client both connecting to the backend, then to Trakt API and Supabase",
       githubUrl: "https://github.com/sudharsan-ak/trakt-bridge",
     },
     {
