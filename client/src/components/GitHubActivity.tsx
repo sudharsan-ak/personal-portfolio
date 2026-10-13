@@ -27,7 +27,7 @@ export default function GitHubActivity() {
   }, []);
 
   return (
-    <section className="py-12 md:py-20 px-4 sm:px-6 lg:px-8">
+    <section id="github-activity" className="py-12 md:py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <FadeInSection>
           <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">GitHub Activity</h2>

@@ -1,14 +1,22 @@
 import { Badge } from "@/components/ui/badge";
-import { Github, Star } from "lucide-react";
+import { Github, Star, PlayCircle, Maximize } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import InteractiveCard from "@/components/ui/InteractiveCard";
 import FadeInSection from "@/components/ui/FadeInSection";
 import InteractiveButton from "@/components/ui/InteractiveButton";
 import ImageLightbox from "@/components/ui/ImageLightbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function Projects() {
   const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const [videoOpenIndex, setVideoOpenIndex] = useState<number | null>(null);
+  const videoRefs = useRef<Record<number, HTMLVideoElement>>({});
   const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -47,8 +55,11 @@ export default function Projects() {
         "MCP server fetches full JDs from any ATS URL via headless browser - no copy-paste",
         "Autopilot mode with one human checkpoint + privacy-check script before every commit",
       ],
-      imagePath: "/projects/resume-tailoring-workflow.png",
-      imageAlt: "Resume Tailoring Workflow running fit check in Cursor with Codex AI assistant",
+      imagePath: "/projects/resume-tailoring-architecture.svg",
+      imageAlt: "Resume Tailoring Workflow system architecture: AI agent runtime, MCP servers, domain services, and human review gates",
+      secondaryImagePath: "/projects/resume-tailoring-workflow.png",
+      secondaryImageAlt: "Resume Tailoring Workflow running fit check in Cursor with Codex AI assistant",
+      demoVideoPath: "/projects/Resume-Tailoring-Workflow-Demo.mp4",
       githubUrl: "https://github.com/sudharsan-ak/resume-tailoring-workflow",
     },
     {
@@ -201,8 +212,54 @@ export default function Projects() {
                   </p>
                 )}
 
+                {project.demoVideoPath && (
+                  <Dialog
+                    open={videoOpenIndex === index}
+                    onOpenChange={(open) => setVideoOpenIndex(open ? index : null)}
+                  >
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setVideoOpenIndex(index);
+                      }}
+                      className="flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline w-fit"
+                    >
+                      <PlayCircle className="h-3.5 w-3.5" />
+                      View Demo
+                    </button>
+                    <DialogContent className="max-w-2xl">
+                      <DialogHeader>
+                        <DialogTitle>{project.title}: Demo</DialogTitle>
+                      </DialogHeader>
+                      <div className="relative group/video">
+                        <video
+                          ref={(el) => {
+                            if (el) videoRefs.current[index] = el;
+                          }}
+                          src={project.demoVideoPath}
+                          controls
+                          controlsList="nodownload"
+                          onContextMenu={(e) => e.preventDefault()}
+                          autoPlay
+                          className="w-full rounded-lg"
+                        />
+                        <button
+                          onClick={() => {
+                            const el = videoRefs.current[index];
+                            if (el?.requestFullscreen) el.requestFullscreen();
+                          }}
+                          title="Fullscreen"
+                          className="absolute top-2 right-2 p-1.5 rounded-md bg-black/60 text-white hover:bg-black/80 transition-colors opacity-0 group-hover/video:opacity-100 focus:opacity-100"
+                        >
+                          <Maximize className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                )}
+
                 {/* Description */}
-                <p className="text-sm leading-relaxed text-muted-foreground">
+                <p className="text-sm leading-relaxed text-muted-foreground transition-colors duration-200 group-hover:text-foreground">
                   {project.description}
                 </p>
 
@@ -219,6 +276,22 @@ export default function Projects() {
                         </p>
                       ))}
                     </div>
+
+                    {project.secondaryImagePath && (
+                      <div className="mt-3 rounded-lg border border-border/60 overflow-hidden">
+                        <img
+                          src={project.secondaryImagePath}
+                          alt={project.secondaryImageAlt}
+                          className="w-full h-auto max-h-[180px] object-contain object-top cursor-zoom-in bg-white/50"
+                          onClick={() =>
+                            setLightbox({
+                              src: project.secondaryImagePath!,
+                              alt: project.secondaryImageAlt!,
+                            })
+                          }
+                        />
+                      </div>
+                    )}
                   </div>
                 )}
 
