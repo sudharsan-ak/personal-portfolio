@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { Github } from "lucide-react";
+import { Github, Star } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import InteractiveCard from "@/components/ui/InteractiveCard";
 import FadeInSection from "@/components/ui/FadeInSection";
@@ -26,7 +26,11 @@ export default function Projects() {
   const projects = [
     {
       title: "Resume Tailoring Workflow",
+      featured: true,
       tagline: "7-stage AI pipeline with local RAG, MCP server, and LaTeX PDF generation",
+      proofStatLead: "21 recruiter callbacks",
+      proofStatSuffix: "and counting, from companies including",
+      proofStatCompanies: ["Google", "Visa", "Chime", "Bloomberg"],
       description:
         "A privacy-first AI workflow that turns a master resume into a role-specific LaTeX PDF, using local RAG for evidence retrieval and an autopilot mode with one human checkpoint.",
       technologies: [
@@ -126,8 +130,18 @@ export default function Projects() {
           {projects.map((project, index) => (
             <FadeInSection key={index} delay={index * 0.1}>
             <InteractiveCard
-              className="group h-full flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+              className={`group h-full flex flex-col relative transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
+                project.featured
+                  ? "border-2 border-primary shadow-[0_0_20px_rgba(59,130,246,0.25)]"
+                  : ""
+              }`}
             >
+              {project.featured && (
+                <div className="absolute -top-3 -left-3 bg-primary text-primary-foreground rounded-full p-2 shadow-md">
+                  <Star className="h-4 w-4 fill-primary-foreground" />
+                </div>
+              )}
+
               <div className="flex gap-4 items-start">
                 <div className="w-24 sm:w-28 flex-shrink-0 rounded-xl border border-border/60 bg-gradient-to-br from-slate-100 via-white to-slate-200 p-1.5 shadow-sm">
                   <div className="rounded-lg border border-dashed border-primary/20 bg-white/70 overflow-hidden">
@@ -169,6 +183,23 @@ export default function Projects() {
                     </InteractiveButton>
                   )}
                 </div>
+
+                {project.proofStatLead && (
+                  <p className="text-xs text-foreground/80 bg-primary/10 rounded-md px-2.5 py-1.5 w-fit">
+                    <span className="font-bold text-primary">{project.proofStatLead}</span>{" "}
+                    {project.proofStatSuffix}{" "}
+                    {project.proofStatCompanies?.map((company, i) => (
+                      <span key={company}>
+                        <span className="font-bold text-primary">{company}</span>
+                        {i < project.proofStatCompanies!.length - 2
+                          ? ", "
+                          : i === project.proofStatCompanies!.length - 2
+                          ? ", and "
+                          : ""}
+                      </span>
+                    ))}
+                  </p>
+                )}
 
                 {/* Description */}
                 <p className="text-sm leading-relaxed text-muted-foreground">
