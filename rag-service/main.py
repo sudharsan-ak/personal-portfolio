@@ -118,8 +118,10 @@ async def stream_groq(context: str, messages: list[Message]) -> AsyncGenerator[s
         "complete answer naming every relevant item in the context, even if that "
         "runs longer. Don't force every answer into the same length. "
         "Be specific: mention technologies, numbers, and achievements when available. "
-        "Never use an em dash character anywhere in your response; use a comma, "
-        "period, or rephrase instead. "
+        "Never use any dash character anywhere in your response, including an "
+        "em dash, en dash, or non-breaking hyphen - only a plain hyphen-minus "
+        "in a compound word, or otherwise a comma, period, semicolon, or "
+        "rephrase. "
         "Never say 'the context' or 'the provided context' - just answer naturally. "
         "If you truly don't have the answer, say so briefly without over-explaining.\n\n"
         f"Context:\n{context}"
@@ -138,7 +140,23 @@ async def stream_groq(context: str, messages: list[Message]) -> AsyncGenerator[s
     for chunk in completion:
         text = chunk.choices[0].delta.content or ""
         if text:
-            yield text
+            yield strip_dashes(text)
+
+
+DASH_CHARS = str.maketrans({
+    "—": ",",  # em dash
+    "–": ",",  # en dash
+    "‑": "-",  # non-breaking hyphen
+    "‒": "-",  # figure dash
+    "―": ",",  # horizontal bar
+})
+
+
+def strip_dashes(text: str) -> str:
+    """Replace dash-like Unicode punctuation the model emits despite the
+    system prompt's instruction not to, since that instruction alone isn't
+    fully reliable. Keeps plain ASCII hyphens untouched."""
+    return text.translate(DASH_CHARS)
 
 
 @app.post("/chat")
