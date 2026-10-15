@@ -98,7 +98,7 @@ async def stream_groq(context: str, messages: list[Message]) -> AsyncGenerator[s
     chat_messages += [{"role": m.role, "content": m.content} for m in messages]
 
     completion = _groq.chat.completions.create(
-        model="llama-3.1-8b-instant",
+        model="llama-3.3-70b-versatile",
         messages=chat_messages,
         stream=True,
         temperature=0.7,
