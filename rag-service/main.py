@@ -71,15 +71,23 @@ _scope_cache: str | None = None
 
 
 def get_scope_summary() -> str:
-    """Compact, always-on map of everything on the site (one overview line
-    per project, in source order) so the model always knows the full set of
+    """Compact, always-on map of everything on the site (full resume.md,
+    covering identity, skills, and every work-experience entry, plus one
+    overview line per project) so the model always knows the full set of
     topics that exist, regardless of how a question is phrased. Cached after
     first call since source data only changes via ingest, not per-request."""
     global _scope_cache
     if _scope_cache is not None:
         return _scope_cache
 
-    result = (
+    resume_result = (
+        _supabase.table("portfolio_chunks")
+        .select("source, chunk_index, content")
+        .like("source", "%resume.md")
+        .order("chunk_index")
+        .execute()
+    )
+    projects_result = (
         _supabase.table("portfolio_chunks")
         .select("source, chunk_index, content")
         .like("source", "%projects%")
@@ -87,7 +95,8 @@ def get_scope_summary() -> str:
         .order("source")
         .execute()
     )
-    _scope_cache = "\n\n".join(row["content"] for row in (result.data or []))
+    rows = (resume_result.data or []) + (projects_result.data or [])
+    _scope_cache = "\n\n".join(row["content"] for row in rows)
     return _scope_cache
 
 
