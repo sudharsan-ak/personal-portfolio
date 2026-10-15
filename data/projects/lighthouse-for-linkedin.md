@@ -1,4 +1,4 @@
-# Project: LinkedIn Recruiter Finder
+# Project: Lighthouse for LinkedIn
 
 ## Overview
 A Chrome extension that scans LinkedIn job and People pages to find recruiter profiles, track outreach history, and reduce manual research time during job searches.
@@ -13,4 +13,4 @@ JavaScript, Chrome Extension API, HTML, CSS
 - Uses Chrome storage API for persistent history across sessions
 
 ## Links
-- GitHub: https://github.com/sudharsan-ak/recruiter-finder
+- GitHub: https://github.com/sudharsan-ak/lighthouse-for-linkedin

@@ -63,10 +63,10 @@ export default function Projects() {
       githubUrl: "https://github.com/sudharsan-ak/resume-tailoring-workflow",
     },
     {
-      title: "LinkedIn Recruiter Finder",
-      tagline: "Automate recruiter discovery while you browse LinkedIn",
+      title: "Lighthouse for LinkedIn",
+      tagline: "AI-assisted job hunting copilot for LinkedIn",
       description:
-        "A Chrome extension that surfaces technical recruiters at any company directly from LinkedIn job pages, with bulk scanning and local caching.",
+        "A Chrome extension that finds recruiters, captures job descriptions, and drafts application answers using your profile and the JD, running as a persistent side panel that keeps working in the background.",
       technologies: [
         "JavaScript",
         "Chrome Extension APIs",
@@ -75,13 +75,13 @@ export default function Projects() {
         "CSS",
       ],
       highlights: [
-        "Bulk company scanning with queue-based processing",
-        "Auto-scan mode while browsing LinkedIn jobs",
-        "CSV/JSON export and company intelligence detection",
+        "AI-generated application answers grounded in your profile and the job description",
+        "Captures job descriptions three ways: one-click copy, manual paste, or screenshot, plus company tech stack and visa-sponsorship detection",
+        "Smart recruiter filtering with automatic retry and a persistent background scan queue",
       ],
       imagePath: "/projects/recruiter-finder.png",
-      imageAlt: "LinkedIn Recruiter Finder extension interface",
-      githubUrl: "https://github.com/sudharsan-ak/recruiter-finder",
+      imageAlt: "Lighthouse for LinkedIn extension interface",
+      githubUrl: "https://github.com/sudharsan-ak/lighthouse-for-linkedin",
     },
     {
       title: "Trakt for ChatGPT",

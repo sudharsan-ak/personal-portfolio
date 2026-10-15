@@ -34,7 +34,7 @@ const FILES: Record<string, string[]> = {
   ],
   "projects.txt": [
     "1. Resume Tailoring Workflow - 7-stage AI pipeline with local RAG + MCP server",
-    "2. LinkedIn Recruiter Finder - Chrome extension for recruiter discovery",
+    "2. Lighthouse for LinkedIn - Chrome extension for recruiter discovery",
     "3. JobFlow Automator        - CLI tool that automates job applications end-to-end",
   ],
 };

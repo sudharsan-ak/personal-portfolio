@@ -40,7 +40,7 @@
     "expected": "A TypeScript/Node.js CLI tool with Playwright that automates job applications across 3 job boards, reducing manual effort by 75%"
   },
   {
-    "question": "What is the LinkedIn Recruiter Finder?",
+    "question": "What is Lighthouse for LinkedIn?",
     "expected": "A Chrome extension that scans LinkedIn job and People pages to find recruiter profiles and track outreach history"
   },
   {
