@@ -2,7 +2,7 @@
 RAG FastAPI service for Sudharsan's portfolio AI assistant.
 
 Endpoints:
-  POST /chat   - retrieve relevant chunks, call Groq Llama 3.1, stream SSE back
+  POST /chat   - retrieve relevant chunks, call Groq, stream SSE back
   GET  /health - liveness check
 
 Environment variables (see .env.example):
@@ -67,6 +67,30 @@ class ChatRequest(BaseModel):
     messages: list[Message]
 
 
+_scope_cache: str | None = None
+
+
+def get_scope_summary() -> str:
+    """Compact, always-on map of everything on the site (one overview line
+    per project, in source order) so the model always knows the full set of
+    topics that exist, regardless of how a question is phrased. Cached after
+    first call since source data only changes via ingest, not per-request."""
+    global _scope_cache
+    if _scope_cache is not None:
+        return _scope_cache
+
+    result = (
+        _supabase.table("portfolio_chunks")
+        .select("source, chunk_index, content")
+        .like("source", "%projects%")
+        .eq("chunk_index", 0)
+        .order("source")
+        .execute()
+    )
+    _scope_cache = "\n\n".join(row["content"] for row in (result.data or []))
+    return _scope_cache
+
+
 def retrieve_chunks(query: str) -> list[str]:
     """Embed query, run pgvector similarity search, return top-k content strings."""
     embedding = _model.encode(query).tolist()
@@ -86,9 +110,16 @@ async def stream_groq(context: str, messages: list[Message]) -> AsyncGenerator[s
     system_prompt = (
         "You are a helpful AI assistant on Sudharsan Srinivasan's portfolio website. "
         "Sudharsan is a Full Stack Software Engineer with 5+ years of experience. "
-        "Answer questions about Sudharsan in 2-4 friendly, specific sentences. "
         "Use the context below - it contains his resume, projects, and background. "
+        "Read the question carefully and judge its scope yourself: a specific "
+        "question gets a short, specific answer (2-4 sentences); a broad question "
+        "like 'tell me about him' gets a brief highlight-driven answer; a question "
+        "that explicitly asks for everything (e.g. 'list all his projects') gets a "
+        "complete answer naming every relevant item in the context, even if that "
+        "runs longer. Don't force every answer into the same length. "
         "Be specific: mention technologies, numbers, and achievements when available. "
+        "Never use an em dash character anywhere in your response; use a comma, "
+        "period, or rephrase instead. "
         "Never say 'the context' or 'the provided context' - just answer naturally. "
         "If you truly don't have the answer, say so briefly without over-explaining.\n\n"
         f"Context:\n{context}"
@@ -123,7 +154,9 @@ async def chat(req: ChatRequest):
         raise HTTPException(status_code=400, detail="no user message found")
 
     chunks = retrieve_chunks(user_query)
-    context = "\n\n---\n\n".join(chunks) if chunks else "No relevant context found."
+    scope = get_scope_summary()
+    all_parts = [scope] + chunks if scope else chunks
+    context = "\n\n---\n\n".join(all_parts) if all_parts else "No relevant context found."
 
     return StreamingResponse(
         stream_groq(context, req.messages),
