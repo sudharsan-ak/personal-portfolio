@@ -75,25 +75,19 @@ Sudharsan has a Master of Science in Computer Science from the University of Tex
 Sudharsan has a Bachelor of Engineering in Computer Science and Engineering from Anna University. He attended from July 2013 to April 2017. His undergraduate degree is from Anna University in India.
 
 ## Projects - Personal Portfolio Website
-Sudharsan built his personal portfolio website at https://sudharsansrinivasan.com. It is built with React, TypeScript, Python, FastAPI, Supabase, and AWS Lambda. It features an AI chat assistant powered by a Python FastAPI RAG service with Supabase pgvector and a chunked ingestion pipeline for semantic retrieval. The RAG service is containerized with Docker and deployed on Railway. It includes a serverless contact form and Projects REST API using Supabase/PostgreSQL, Nodemailer, and AWS Lambda. The portfolio is deployed on Vercel.
+Sudharsan built his personal portfolio website at https://sudharsansrinivasan.com. It is built with React, TypeScript, Python, FastAPI, Supabase, and AWS Lambda. It features an AI chat assistant powered by a Python FastAPI RAG service with Supabase pgvector and a chunked ingestion pipeline for semantic retrieval. The RAG service is containerized with Docker and deployed on Render. It includes a serverless contact form and Projects REST API using Supabase/PostgreSQL, Nodemailer, and AWS Lambda. The portfolio is deployed on Vercel.
 
 ## Projects - Lighthouse for LinkedIn
 Lighthouse for LinkedIn is a Chrome extension built by Sudharsan using JavaScript and Chrome Extension Manifest V3. It has a side panel and background scans to automate recruiter discovery on LinkedIn. It builds job intelligence workflows to capture job descriptions, metadata, tech stacks, fit scores, and repost signals. It adds company history caching, scan queues, and bulk company scanning to speed recruiter discovery. GitHub: https://github.com/sudharsan-ak/lighthouse-for-linkedin.
 
 ## Projects - Resume Tailoring Workflow
-The Resume Tailoring Workflow is an open-source, privacy-first AI workflow system built by Sudharsan. It is a 6-stage pipeline that takes a master resume and job description, runs a fit check with scoring, rewrites bullets from verified evidence only, generates a role-specific LaTeX PDF, and drafts recruiter outreach - all from a single AI coding assistant session (Claude Code, Codex, or Copilot). No private candidate data is committed to git. Built with PowerShell, LaTeX, Claude Code, Docker, and Markdown. GitHub: https://github.com/sudharsan-ak/resume-tailoring-workflow.
+The Resume Tailoring Workflow is an open-source, privacy-first AI workflow system built by Sudharsan. It is a 7-stage pipeline that takes a master resume and job description, runs a fit check with scoring, retrieves supporting evidence with a fully offline local RAG pipeline, rewrites bullets from verified evidence only, generates a role-specific LaTeX PDF, and drafts recruiter outreach - all from a single AI coding assistant session with an autopilot mode and one human checkpoint. No private candidate data is committed to git. It has generated 21 recruiter callbacks and counting, from companies including Google, Visa, Chime, and Bloomberg. Built with TypeScript, PowerShell, LaTeX, Node.js, MCP, and vector search. GitHub: https://github.com/sudharsan-ak/resume-tailoring-workflow.
 
-## Projects - JobFlow Automator
-The JobFlow Automator is a TypeScript and Node.js CLI tool built by Sudharsan. It uses Playwright browser automation with a human-in-the-loop workflow to automate job applications across 3 job boards, reducing manual job application effort by 75%. GitHub: https://github.com/sudharsan-ak/job-autopilot. Technologies: TypeScript, Node.js, Playwright.
+## Projects - Trakt for ChatGPT
+Trakt for ChatGPT is a backend built by Sudharsan that connects a Trakt.tv account to ChatGPT two ways, a Custom GPT Action and a Model Context Protocol (MCP) server, with OAuth-gated read and write access to watch history, watchlists, and ratings. It uses a search-then-confirm-then-write flow instead of raw title matching. Built with TypeScript, Node.js, MCP, OAuth, and Supabase. GitHub: https://github.com/sudharsan-ak/trakt-bridge.
 
-## Projects - LinkedReach AI
-LinkedReach AI is a Chrome extension built by Sudharsan that automates recruiter email discovery on LinkedIn. When visiting a LinkedIn profile, it scrapes the person's name, company, and domain, then uses Groq LLM and web search to infer likely email addresses with confidence scores. It is privacy-conscious - all API keys stay on-device. Built with JavaScript, Chrome Extension Manifest V3, and Groq. GitHub: https://github.com/sudharsan-ak/linkedin-reach-ai.
-
-## Projects - Event Management System
-The Event Management System is a Java web application built by Sudharsan for event booking and cancellation using Java Servlets and JSP. It has 100% statement coverage and PIT mutation coverage achieved through automated Selenium tests and JUnit. GitHub: https://github.com/sudharsan-ak/CSE-6329-Catering-Management-System. Technologies: Java, JSP, MySQL Workbench, JUnit, Selenium, Eclipse.
-
-## Projects - Semantic Understanding of Image using Multi-Label Image Annotation
-This is a MATLAB-based computer vision project by Sudharsan that performs semantic understanding of images using multi-label image annotation techniques. It identifies multiple objects and concepts in a single image. Technologies: MATLAB, Computer Vision, Image Processing, Multi-Label Classification. GitHub: https://github.com/sudharsan-ak/Multi-Label-Image-Annotation.
+## Projects - TV Control Suite
+TV Control Suite is a cross-platform system built by Sudharsan connecting an Android phone, Windows PC, and Android TV, with remote control, cursor mode, and bidirectional clipboard and file sync, all coordinated over ADB. It includes an on-screen cursor and touchpad drag on the TV via an accessibility-service overlay, Wake-on-LAN over Sony's IRCC-IP protocol, and a watchdog that self-heals disabled services. Built with Kotlin, C#/.NET, Android, ADB, and WPF. GitHub: https://github.com/sudharsan-ak/TV-File-Bridge.
 
 ## Languages Spoken
 - English: Fluent
