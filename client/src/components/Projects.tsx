@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { Github, Star, PlayCircle, Maximize } from "lucide-react";
+import { ExternalLink, Github, Star, PlayCircle, Maximize } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import InteractiveCard from "@/components/ui/InteractiveCard";
 import FadeInSection from "@/components/ui/FadeInSection";
@@ -33,9 +33,32 @@ export default function Projects() {
   }, [expandedIndex]);
   const projects = [
     {
-      title: "Resume Tailoring Workflow",
+      title: "Haven TV Launcher",
       featured: true,
-      tagline: "7-stage AI pipeline with local RAG, MCP server, and LaTeX PDF generation",
+      spotlight: true,
+      tagline: "Ad-free, customizable home screen for Android TV and Google TV",
+      description:
+        "A remote-first launcher that replaces sponsored home rows with organized app collections, cinematic themes, rotating photo wallpapers, Watch Now, live NBA information, and advanced TV controls.",
+      technologies: [
+        "Kotlin",
+        "Java",
+        "Jetpack Compose",
+        "Android TV",
+        "ADB",
+      ],
+      highlights: [
+        "Kingdom and Tide themes with day/night styling and rotating photo wallpapers",
+        "Custom app collections, universal search, Watch Now, and live NBA views",
+        "Integrated ADB setup, Private DNS controls, and reversible system cleanup",
+      ],
+      imagePath: "/projects/haven-tv-launcher.jpg",
+      imageAlt: "Haven TV Launcher Kingdom theme showing app collections and Watch Now content",
+      websiteUrl: "https://haventv-launcher.vercel.app/",
+      githubUrl: "https://github.com/sudharsan-ak/haventv-launcher",
+    },
+    {
+      title: "Resume Tailoring Workflow",
+      tagline: "10-stage AI pipeline with local RAG, MCP server, and LaTeX PDF generation",
       proofStatLead: "21 recruiter callbacks",
       proofStatSuffix: "and counting, from companies including",
       proofStatCompanies: ["Google", "Visa", "Chime", "Bloomberg"],
@@ -139,7 +162,11 @@ export default function Projects() {
         </FadeInSection>
         <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {projects.map((project, index) => (
-            <FadeInSection key={index} delay={index * 0.1}>
+            <FadeInSection
+              key={index}
+              delay={index * 0.1}
+              className={project.spotlight ? "md:col-span-2" : ""}
+            >
             <InteractiveCard
               className={`group h-full flex flex-col relative transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
                 project.featured
@@ -153,14 +180,14 @@ export default function Projects() {
                 </div>
               )}
 
-              <div className="flex gap-4 items-start">
-                <div className="w-24 sm:w-28 flex-shrink-0 rounded-xl border border-border/60 bg-gradient-to-br from-slate-100 via-white to-slate-200 p-1.5 shadow-sm">
+              <div className={`flex gap-4 items-start ${project.spotlight ? "flex-col md:flex-row md:gap-6" : ""}`}>
+                <div className={`${project.spotlight ? "w-full md:w-[48%]" : "w-24 sm:w-28"} flex-shrink-0 rounded-xl border border-border/60 bg-gradient-to-br from-slate-100 via-white to-slate-200 p-1.5 shadow-sm`}>
                   <div className="rounded-lg border border-dashed border-primary/20 bg-white/70 overflow-hidden">
                     {project.imagePath ? (
                       <img
                         src={project.imagePath}
                         alt={project.imageAlt}
-                        className="w-full h-auto max-h-[220px] object-contain object-top cursor-zoom-in"
+                        className={`w-full cursor-zoom-in ${project.spotlight ? "aspect-video object-cover" : "h-auto max-h-[220px] object-contain object-top"}`}
                         onClick={() => setLightbox({ src: project.imagePath!, alt: project.imageAlt })}
                       />
                     ) : (
@@ -182,17 +209,34 @@ export default function Projects() {
                       {project.tagline}
                     </p>
                   </div>
-                  {project.githubUrl && (
-                    <InteractiveButton variant="ghost" size="icon" asChild>
-                      <a
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <Github className="h-4 w-4" />
-                      </a>
-                    </InteractiveButton>
-                  )}
+                  <div className="flex items-center gap-1">
+                    {project.websiteUrl && (
+                      <InteractiveButton variant="ghost" size="icon" asChild>
+                        <a
+                          href={project.websiteUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={`${project.title} live website`}
+                          title="Live website"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </a>
+                      </InteractiveButton>
+                    )}
+                    {project.githubUrl && (
+                      <InteractiveButton variant="ghost" size="icon" asChild>
+                        <a
+                          href={project.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={`${project.title} GitHub repository`}
+                          title="GitHub repository"
+                        >
+                          <Github className="h-4 w-4" />
+                        </a>
+                      </InteractiveButton>
+                    )}
+                  </div>
                 </div>
 
                 {project.proofStatLead && (
