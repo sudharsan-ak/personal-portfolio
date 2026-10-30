@@ -34,9 +34,9 @@ export default defineConfig({
     // ✅ ADD THIS PROXY
     proxy: {
       "/api": {
-        target: "https://sudharsansrinivasan.com",
+        target: process.env.LOCAL_API ? "http://localhost:5190" : "https://sudharsansrinivasan.com",
         changeOrigin: true,
-        secure: true,
+        secure: !process.env.LOCAL_API,
       },
     },
     fs: {

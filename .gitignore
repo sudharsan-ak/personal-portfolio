@@ -28,3 +28,9 @@ api/projectsFallback.ts
 # Generated scratch files
 client/src/Pasted-*.txt
 Sudharsan-Srinivasan-Portfolio.pdf
+
+# Local-only test server (vercel dev doesn't work reliably on this machine)
+dev-api-server.mjs
+
+.vercel
+.env*
